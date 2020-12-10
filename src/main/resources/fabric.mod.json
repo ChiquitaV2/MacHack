@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "machack",
+  "version": "${version}",
+
+  "name": "Mac Hack",
+  "description": "Based and red pill",
+  "authors": [
+    "ChiquitaV2#3814"
+  ],
+  "contact": {
+    "homepage": "https://github.com/ChiquitaV2/",
+    "sources": "https://github.com/ChiquitaV2/machack"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/machack/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "mac.hack.MacHack"
+    ]
+  },
+  "mixins": [
+    "machack.mixins.json"
+  ]
+}
