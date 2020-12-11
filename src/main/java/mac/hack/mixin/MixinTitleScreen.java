@@ -1,6 +1,7 @@
 package mac.hack.mixin;
 
 import mac.hack.gui.LoginScreen;
+import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -24,6 +25,12 @@ public class MixinTitleScreen extends Screen {
 
         this.addButton(new ButtonWidget(this.width / 2 - 100 + 205, y + spacingY * 2, 98, 20, new LiteralText("Alts"), (buttonWidget) -> {
             this.client.openScreen(new LoginScreen((TitleScreen)client.currentScreen));
+        }));
+    }@Inject(at = @At("RETURN"), method = "initWidgetsNormal")
+    private void ECME(int y, int spacingY, CallbackInfo ci){
+
+        this.addButton(new ButtonWidget(this.width / 2 - 100 + 205, y + spacingY * 1, 98, 20, new LiteralText("Endcrystal.me"), (buttonWidget) -> {
+            this.client.openScreen((Screen) new ConnectScreen((Screen) this, this.client, "endcrystal.me", 25565));
         }));
     }
 }

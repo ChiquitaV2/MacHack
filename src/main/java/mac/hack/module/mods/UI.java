@@ -11,6 +11,7 @@ import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.ColorUtils;
+import mac.hack.utils.EntityUtils;
 import mac.hack.utils.FabricReflect;
 import mac.hack.utils.RenderUtils;
 import com.google.common.eventbus.Subscribe;
@@ -175,9 +176,13 @@ public class UI extends Module {
 				new SettingToggle("Impact+", true), //18
 				new SettingToggle("Player Model", false).withChildren( //25
 						new SettingSlider("Size", 10, 50, 25, 0),
+						new SettingSlider("x", 1, 3840, 80, 0).withDesc("x coordinates"),
+						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates")
+				),
+				new SettingToggle("Direction", false).withChildren( //26
 						new SettingSlider("x", 1, 3840, 1, 0).withDesc("x coordinates"),
 						new SettingSlider("y", 1, 3840, 320, 0).withDesc("y coordinates")
-						)
+				)
 		);
 	}
 
@@ -674,6 +679,26 @@ public class UI extends Module {
 		}
 		if (getSetting(25).asToggle().state && !mc.options.debugEnabled) {
 			InventoryScreen.drawEntity((int) getSetting(25).asToggle().getChild(1).asSlider().getValue(), (int) getSetting(25).asToggle().getChild(2).asSlider().getValue(), (int) getSetting(25).asToggle().getChild(0).asSlider().getValue(), 0, 0, mc.player );
+		}
+
+		if (getSetting(26).asToggle().state) {
+			String FD = "ND";
+			switch (EntityUtils.GetFacing()) {
+				case North:
+					FD = "N";
+					break;
+				case East:
+					FD = "E";
+					break;
+				case South:
+					FD = "S";
+					break;
+				case West:
+					FD = "W";
+					break;
+			}
+			if (!mc.options.debugEnabled)
+				mc.textRenderer.drawWithShadow(event.matrix, "Facing: " + FD, (int) getSetting(26).asToggle().getChild(0).asSlider().getValue(), (int) getSetting(26).asToggle().getChild(1).asSlider().getValue(), ColorUtils.guiColour());
 		}
 	}
 
