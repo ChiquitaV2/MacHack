@@ -1,5 +1,8 @@
 package mac.hack.gui.window;
 
+import mac.hack.module.ModuleManager;
+import mac.hack.module.mods.ClickGui;
+import mac.hack.utils.Snow;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -7,10 +10,13 @@ import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public abstract class AbstractWindowScreen extends Screen {
 
 	public List<Window> windows = new ArrayList<>();
+
+	private ArrayList<Snow> _snowList = new ArrayList<Snow>();
 
 	public AbstractWindowScreen(Text text_1) {
 		super(text_1);
@@ -42,6 +48,32 @@ public abstract class AbstractWindowScreen extends Screen {
 		if (selected >= 0) onRenderWindow(matrix, selected, mouseX, mouseY);
 		if (noneSelected >= 0) windows.get(noneSelected).selected = true;
 		if (close) this.onClose();
+
+		if (!_snowList.isEmpty() && ModuleManager.getModule(ClickGui.class).getSetting(5).asToggle().state)
+		{
+			_snowList.forEach(snow -> snow.Update());
+
+			if (!ModuleManager.getModule(ClickGui.class).isDrawn()) {
+				_snowList.clear();
+			}
+
+			if (_snowList.size() >= 120) {
+				for (int i = 120; i < _snowList.size(); i++) {
+					_snowList.remove(i);
+				}
+			}
+		}
+
+		Random random = new Random();
+
+		for (int i = 0; i < 100; ++i)
+		{
+			for (int y = 0; y < 3; ++y)
+			{
+				Snow snow = new Snow(25 * i, y * -50, random.nextInt(3) + 1, random.nextInt(2)+1);
+				_snowList.add(snow);
+			}
+		}
 
 		super.render(matrix, mouseX, mouseY, delta);
 	}

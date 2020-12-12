@@ -6,6 +6,7 @@ import mac.hack.module.mods.ClickGui;
 import mac.hack.setting.base.SettingBase;
 import mac.hack.utils.ColorUtils;
 import mac.hack.utils.RenderUtils;
+import mac.hack.utils.Snow;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -16,11 +17,8 @@ import net.minecraft.sound.SoundEvents;
 import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 public class ModuleWindow extends ClickGuiWindow {
 
@@ -34,6 +32,10 @@ public class ModuleWindow extends ClickGuiWindow {
 	private Set<Module> searchedModules;
 
 	int MousePlayAnim = 0;
+
+	int MousePlayAnim2 = 12;
+
+	private ArrayList<Snow> _snowList = new ArrayList<Snow>();
 
 	private Triple<Integer, Integer, String> tooltip = null;
 
@@ -59,7 +61,16 @@ public class ModuleWindow extends ClickGuiWindow {
 		x2 = x + len + 1;
 
 		if (lmDown) {
-			MousePlayAnim = 15;
+			MousePlayAnim = 12;
+		}
+
+		if (rmDown) {
+			MousePlayAnim2 = 0;
+		}
+
+		if (MousePlayAnim2 < 10) {
+			MousePlayAnim2++;
+			RenderUtils.DrawPolygon(mouseX, mouseY, MousePlayAnim2, 360, 0xffffffff);
 		}
 
 		if (MousePlayAnim > 0) {

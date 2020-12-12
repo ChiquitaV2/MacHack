@@ -51,6 +51,6 @@ public class MacLogger {
 	}
 
 	private static String getBHText(Formatting color) {
-		return color + "\u00A77[\u00A7dMacHack\u00A77] \u00A7d";
+		return color + "\u00A77[\u00A7dMacHack\u00A77] \u00A7f";
 	}
 }

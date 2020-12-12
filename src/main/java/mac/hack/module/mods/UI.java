@@ -178,7 +178,7 @@ public class UI extends Module {
 						new SettingSlider("Size", 10, 50, 25, 0),
 						new SettingSlider("x", 1, 3840, 80, 0).withDesc("x coordinates"),
 						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates")
-				),
+						),
 				new SettingToggle("Direction", false).withChildren( //26
 						new SettingSlider("x", 1, 3840, 1, 0).withDesc("x coordinates"),
 						new SettingSlider("y", 1, 3840, 320, 0).withDesc("y coordinates")
@@ -698,7 +698,7 @@ public class UI extends Module {
 					break;
 			}
 			if (!mc.options.debugEnabled)
-				mc.textRenderer.drawWithShadow(event.matrix, "Facing: " + FD, (int) getSetting(26).asToggle().getChild(0).asSlider().getValue(), (int) getSetting(26).asToggle().getChild(1).asSlider().getValue(), ColorUtils.guiColour());
+				mc.textRenderer.drawWithShadow(event.matrix, "Facing: " + (getSetting(24).asToggle().state ? "\u00a7f" : "") + FD, (int) getSetting(26).asToggle().getChild(0).asSlider().getValue(), (int) getSetting(26).asToggle().getChild(1).asSlider().getValue(), ColorUtils.guiColour());
 		}
 	}
 

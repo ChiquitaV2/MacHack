@@ -104,6 +104,7 @@ public class ModuleManager {
 			new HighwayNuker(),
 			new LiquidRemover(),
 			new OffhandCrash(),
+			new OffHand(),
 			new OldAnimations(),
 			new PacketFly(),
 			new PlayerCrash(),

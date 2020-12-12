@@ -7,15 +7,14 @@ import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.EntityUtils;
+import com.google.common.collect.Maps;
+import com.google.common.eventbus.Subscribe;
 import mac.hack.utils.FabricReflect;
 import mac.hack.utils.WorldUtils;
 import mac.hack.utils.file.MacFileMang;
-import com.google.common.collect.Maps;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -128,7 +127,10 @@ public class HighwayNuker extends Module {
 
         int broken = 0;
         for (BlockPos pos : blocks) {
-            if (!canSeeBlock(pos) && mc.world.getBlockState(pos).getBlock() == Blocks.NETHERRACK)
+            if (!canSeeBlock(pos) || mc.world.getBlockState(pos).getBlock() != Blocks.NETHERRACK)
+                continue;
+
+            if (!getSettings().get(3).asToggle().state && !blockList.contains(mc.world.getBlockState(pos).getBlock()))
                 continue;
 
             Vec3d vec = Vec3d.of(pos).add(0.5, 0.5, 0.5);
@@ -156,9 +158,10 @@ public class HighwayNuker extends Module {
                 mc.player.pitch = prevRot[1];
             }
 
-            mc.interactionManager.attackBlock(pos, dir);
+            if (getSettings().get(0).asMode().mode == 1) mc.interactionManager.attackBlock(pos, dir);
+            else mc.interactionManager.attackBlock(pos, dir);
 
-            mc.player.swingHand(Hand.MAIN_HAND);
+//            mc.player.swingHand(Hand.MAIN_HAND);
 
             broken++;
             if (getSettings().get(0).asMode().mode == 0

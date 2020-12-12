@@ -30,7 +30,7 @@ public class MacFileHelper {
 		for (Module m : ModuleManager.getModules()) {
 			JsonObject mo = new JsonObject();
 
-			if (m.isToggled() && !m.getName().equals("ClickGui") && !m.getName().equals("Freecam")) {
+			if (m.isToggled() && !m.getName().equals("ClickGui") && !m.getName().equals("Freecam") && !m.getName().equals("ACGameSense")) {
 				mo.add("toggled", new JsonPrimitive(true));
 			}
 

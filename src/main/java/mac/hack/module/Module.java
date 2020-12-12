@@ -59,6 +59,20 @@ public class Module {
 		}
 	}
 
+	public void toggleNoSave()
+	{
+		this.setToggled(!this.isToggled());
+		if (this.isToggled())
+		{
+			this.onEnable();
+		}
+		else
+		{
+			this.onDisable();
+		}
+		this.onEnable();
+	}
+
 	public void onDisable() {
 		MacFileHelper.SCHEDULE_SAVE_MODULES = true;
 

@@ -77,6 +77,7 @@ public class EntityUtils {
 			case 0:
 			case 1:
 				return FacingDirection.South;
+			case 2:
 			case 3:
 				return FacingDirection.West;
 			case 4:

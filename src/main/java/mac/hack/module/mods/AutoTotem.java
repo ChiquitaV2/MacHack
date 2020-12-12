@@ -5,6 +5,7 @@ import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.setting.base.SettingToggle;
 import com.google.common.eventbus.Subscribe;
+import mac.hack.utils.MacLogger;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
@@ -32,6 +33,7 @@ public class AutoTotem extends Module {
 
 					if (itemInOffhand)
 						mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
+					MacLogger.infoMessage("Your offhand is now a totem");
 
 					return;
 				}
