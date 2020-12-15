@@ -33,7 +33,7 @@ public class AutoTotem extends Module {
 
 					if (itemInOffhand)
 						mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
-					MacLogger.infoMessage("Your offhand is now a totem");
+					MacLogger.infoMessage("Your offhand now has a totem");
 
 					return;
 				}
