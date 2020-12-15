@@ -50,7 +50,7 @@ public class OffHand extends Module {
 
                         if (itemInOffhand)
                             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
-                        MacLogger.infoMessage("Your offhand is now a golden apple");
+                        MacLogger.infoMessage("Your offhand is now has golden apples");
 
                         return;
                     }
@@ -72,7 +72,7 @@ public class OffHand extends Module {
 
                         if (itemInOffhand)
                             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
-                        MacLogger.infoMessage("Your offhand is now a end crystal");
+                        MacLogger.infoMessage("Your offhand is now has endcrystals");
 
                         return;
                     }
