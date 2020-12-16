@@ -28,4 +28,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: MacHack
-          path: build/libs/MacHack-1501.jar
+          path: build/libs/MacHack-1502.jar
