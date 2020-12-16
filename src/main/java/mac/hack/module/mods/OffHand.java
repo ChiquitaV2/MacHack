@@ -9,9 +9,12 @@ import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import com.google.common.eventbus.Subscribe;
 import mac.hack.utils.MacLogger;
+import mac.hack.utils.MacNotify;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
+
+import java.io.IOException;
 
 public class OffHand extends Module {
 
@@ -24,7 +27,7 @@ public class OffHand extends Module {
     }
 
     @Subscribe
-    public void onTick(EventTick event) {
+    public void onTick(EventTick event) throws IOException {
         if (ModuleManager.getModule(AutoTotem.class).isToggled()) {
             ModuleManager.getModule(AutoTotem.class).setToggled(false);
             return;
@@ -50,7 +53,9 @@ public class OffHand extends Module {
 
                         if (itemInOffhand)
                             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
-                        MacLogger.infoMessage("Your offhand is now has golden apples");
+                        MacLogger.infoMessage("Your offhand now has golden apples");
+                        if (ModuleManager.getModule(Notifications.class).isToggled() && ModuleManager.getModule(Notifications.class).getSetting(2).asToggle().state)
+                            MacNotify.Notifications("OffHand", "Your offhand now has golden apples");
 
                         return;
                     }
@@ -72,7 +77,10 @@ public class OffHand extends Module {
 
                         if (itemInOffhand)
                             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
-                        MacLogger.infoMessage("Your offhand is now has endcrystals");
+                        MacLogger.infoMessage("Your offhand now has endcrystals");
+                        if (ModuleManager.getModule(Notifications.class).isToggled() && ModuleManager.getModule(Notifications.class).getSetting(2).asToggle().state){
+                            MacNotify.Notifications("Offhand", "Your offhand now has endcrystals");
+                        }
 
                         return;
                     }

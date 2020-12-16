@@ -3,6 +3,7 @@ package mac.hack;
 import mac.hack.module.Module;
 import mac.hack.module.ModuleManager;
 import mac.hack.module.mods.ClickGui;
+//import mac.hack.utils.CapeUtils;
 import mac.hack.utils.FriendManager;
 import mac.hack.utils.Rainbow;
 import mac.hack.utils.file.MacFileHelper;
@@ -14,12 +15,13 @@ import net.minecraft.client.util.Window;
 
 public class MacHack implements ModInitializer {
 
-	public static final String VERSION = "B1501";
+	public static final String VERSION = "B1502";
 	public static final int INTVERSION = 24;
 
 	public static EventBus eventBus = new EventBus();
 
 	public static FriendManager friendMang;
+//	public static CapeUtils capeUtils;
 
 	@Override
 	public void onInitialize() {

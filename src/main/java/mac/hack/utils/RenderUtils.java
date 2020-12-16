@@ -165,6 +165,7 @@ public class RenderUtils {
 		GL11.glPopMatrix();
 	}
 
+
 	public static void DrawPolygon(double x, double y, int radius, int sides, int color)
 	{
 		GL11.glEnable(GL11.GL_BLEND);

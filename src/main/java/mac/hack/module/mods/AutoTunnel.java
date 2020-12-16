@@ -3,6 +3,7 @@ package mac.hack.module.mods;
 import mac.hack.event.events.EventClientMove;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
+import mac.hack.module.ModuleManager;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
@@ -27,7 +28,7 @@ public class AutoTunnel extends Module
     {
         super("AutoTunnel", KEY_UNBOUND, Category.WORLD, "Automines 2d tunnels.",
                 new SettingMode("Blocks", "1x3", "2x3", "3x3", "Highway"),
-                new SettingMode("Mode", "Packet", "Normal"),
+                new SettingMode("Mode", "Packet"),
                 new SettingSlider("TimerForPause", 0, 10, 5, 1),
                 new SettingToggle("PauseAutoWalk", true),
                 new SettingToggle("UseTimerPause", false));
@@ -40,6 +41,9 @@ public class AutoTunnel extends Module
     @Subscribe
     public void onMove(EventClientMove event)
     {
+        AutoEat autoEat = (AutoEat) ModuleManager.getModule(AutoEat.class);
+        if (autoEat.isEating()) return;
+
         _blocksToDestroy.clear();
 
         BlockPos playerPos = new BlockPos(Math.floor(mc.player.getX()), Math.floor(mc.player.getY()), Math.floor(mc.player.getZ()));
@@ -367,7 +371,7 @@ public class AutoTunnel extends Module
             {
                 case 0:
                     if (td != Blocks.AIR && td != Blocks.NETHERRACK) {
-                        mc.player.swingHand(MAIN_HAND);
+//                        mc.player.swingHand(MAIN_HAND);
                         mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(
                                 PlayerActionC2SPacket.Action.START_DESTROY_BLOCK, toDestroy, UP));
                         mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK,
@@ -383,20 +387,6 @@ public class AutoTunnel extends Module
         else
             _needPause = false;
     }
-
-//    @Subscribe
-//    public void onTick(EventTick event){
-//        if (getSetting(4).asToggle().state) {
-//            if (!_needPause && pauseTimer.passed(getSetting(2).asSlider().getValue() * 1000)) {
-//                _needPause = true;
-//                pauseTimer.reset();
-//            }
-//            if (_needPause && pauseTimer.passed(5500)) {
-//                _needPause = false;
-//                pauseTimer.reset();
-//            }
-//        }
-//    }
 
     public boolean PauseAutoWalk()
     {

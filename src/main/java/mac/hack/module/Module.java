@@ -1,13 +1,16 @@
 package mac.hack.module;
 
 import mac.hack.MacHack;
+import mac.hack.module.mods.Notifications;
 import mac.hack.module.mods.ToggleMSGs;
 import mac.hack.setting.base.SettingBase;
 import mac.hack.utils.MacLogger;
+import mac.hack.utils.MacNotify;
 import mac.hack.utils.file.MacFileHelper;
 import com.google.common.eventbus.Subscribe;
 import net.minecraft.client.MinecraftClient;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +60,13 @@ public class Module {
 		if (ModuleManager.getModule(ToggleMSGs.class).isToggled() && !this.getName().equals("ClickGUI") && !this.getName().equals("ColourChooser")){
 			MacLogger.infoMessage(this.getName() + "\u00A7a Enabled");
 		}
+		if (ModuleManager.getModule(Notifications.class).isToggled() && ModuleManager.getModule(Notifications.class).getSetting(0).asToggle().state) {
+			try {
+				MacNotify.Notifications("Toggled", this.getName() + "Enabled");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void toggleNoSave()
@@ -88,6 +98,13 @@ public class Module {
 		}
 		if (ModuleManager.getModule(ToggleMSGs.class).isToggled() && !this.getName().equals("ClickGUI") && !this.getName().equals("ColourChooser")){
 			MacLogger.infoMessage(this.getName() + "\u00A7c Disabled");
+		}
+		if (ModuleManager.getModule(Notifications.class).isToggled() && ModuleManager.getModule(Notifications.class).getSetting(0).asToggle().state) {
+			try {
+				MacNotify.Notifications("Toggled", this.getName() + "Disabled");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

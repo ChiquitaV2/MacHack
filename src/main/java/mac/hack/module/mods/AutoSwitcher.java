@@ -3,6 +3,7 @@ package mac.hack.module.mods;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
+import mac.hack.module.ModuleManager;
 import mac.hack.setting.base.SettingMode;
 import com.google.common.eventbus.Subscribe;
 import net.minecraft.client.MinecraftClient;
@@ -18,6 +19,8 @@ public class AutoSwitcher extends Module {
 
     @Subscribe
     public void onTick(EventTick event) {
+        AutoEat autoEat = (AutoEat) ModuleManager.getModule(AutoEat.class);
+        if (autoEat.isEating()) return;
         MinecraftClient mc = MinecraftClient.getInstance();
         PlayerEntity player = mc.player;
         int mode = getSettings().get(0).asMode().mode;

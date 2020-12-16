@@ -6,15 +6,16 @@
   "name": "Mac Hack",
   "description": "Based and red pill",
   "authors": [
-    "ChiquitaV2#3814"
+    "ChiquitaV2#3814",
+    "Ethius#5699 ;)"
   ],
   "contact": {
     "homepage": "https://github.com/ChiquitaV2/",
-    "sources": "https://github.com/ChiquitaV2/machack"
+    "sources": "https://github.com/ChiquitaV2/MacHack"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/machack/icon.png",
+  "icon": "assets/machack/MacHack.png",
 
   "environment": "*",
   "entrypoints": {

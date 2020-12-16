@@ -41,7 +41,8 @@
     "MixinScreen",
     "MixinServerScreen",
     "MixinTextRenderer",
-    "MixinSignBlockEntityRenderer"
+    "MixinSignBlockEntityRenderer",
+    "IKeyBinding"
   ],
   "injectors": {
     "defaultRequire": 1

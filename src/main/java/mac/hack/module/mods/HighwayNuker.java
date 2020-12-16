@@ -3,6 +3,7 @@ package mac.hack.module.mods;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
+import mac.hack.module.ModuleManager;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
@@ -110,6 +111,10 @@ public class HighwayNuker extends Module {
 //				}
 //			}
 //		}
+
+        AutoEat autoEat = (AutoEat) ModuleManager.getModule(AutoEat.class);
+
+        if (autoEat.isEating()) return;
 
         if (blocks.isEmpty()) return;
 
