@@ -47,7 +47,7 @@ public class DiscordRPCMod extends Module {
 		silent = getSettings().get(3).asToggle().state;
 
 		tick = 0;
-		DiscordRPCManager.start(silent ? "783894759671332864" : "725237549563379724");
+		DiscordRPCManager.start(silent ? "783894759671332864" : "783894759671332864");
 
 		super.onEnable();
 	}
@@ -136,7 +136,7 @@ public class DiscordRPCMod extends Module {
 
 			DiscordRPC.discordUpdatePresence(
 					new DiscordRichPresence.Builder(text2)
-					.setBigImage("machack", silent ? "Minecraft " + SharedConstants.getGameVersion().getName() : "MacHack " + MacHack.VERSION)
+					.setBigImage("machacklogo", silent ? "Minecraft " + SharedConstants.getGameVersion().getName() : "MacHack " + MacHack.VERSION)
 					.setDetails(text1).setStartTimestamps(start).build());
 		}
 

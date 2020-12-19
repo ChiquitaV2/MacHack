@@ -1,10 +1,14 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
+import mac.hack.event.events.EventReadPacket;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.setting.base.SettingSlider;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.GameOptions;
+import net.minecraft.network.packet.s2c.play.CloseScreenS2CPacket;
+import net.minecraft.network.packet.s2c.play.DisconnectS2CPacket;
 
 public class CustomFOV extends Module {
 
@@ -13,6 +17,8 @@ public class CustomFOV extends Module {
                 new SettingSlider("Scale", 0, 1, 0.3, 1));
     }
 
+    public double prevFov;
+
     public void toggleNoSave() {
 
     }
@@ -20,6 +26,7 @@ public class CustomFOV extends Module {
     public void onEnable() {
         MinecraftClient mc = MinecraftClient.getInstance();
         GameOptions options = mc.options;
+        prevFov = mc.options.fov;
         if (mc.world != null) {
             options.fov = options.fov * (1 + getSetting(0).asSlider().getValue());
         }
@@ -27,7 +34,13 @@ public class CustomFOV extends Module {
 
     public void onDisable() {
         MinecraftClient mc = MinecraftClient.getInstance();
+        mc.options.fov = prevFov;
         GameOptions options = mc.options;
-        options.fov = options.fov / (1 + getSetting(0).asSlider().getValue());
+    }
+
+    @Subscribe
+    private void EventDisconnect(EventReadPacket event) {
+        if (event.getPacket() instanceof CloseScreenS2CPacket || event.getPacket() instanceof DisconnectS2CPacket)
+            setToggled(false);
     }
 }

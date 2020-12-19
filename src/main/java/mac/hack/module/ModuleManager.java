@@ -25,7 +25,6 @@ import mac.hack.event.events.EventKeyPress;
 import mac.hack.module.mods.*;
 import org.lwjgl.glfw.GLFW;
 
-import mac.hack.module.mods.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 
@@ -38,6 +37,7 @@ public class ModuleManager {
 
 	private static List<Module> mods = Arrays.asList(
 			new AllahHaram(),
+	//		new ACGameSense(),
 			new Ambience(),
 			new AntiHunger(),
 			new AntiChunkBan(),
@@ -49,7 +49,6 @@ public class ModuleManager {
 			new AutoEat(),
 			new AutoSwim(),
 			new AutoTunnel(),
-			new AutoDonkeyDupe(),
 			new AutoReconnect(),
 			new AutoRespawn(),
 			new AutoSign(),
@@ -59,7 +58,6 @@ public class ModuleManager {
 			new AutoWither(),
 			new AutoWalk(),
 			new BetterPortal(),
-			new BlockParty(),
 			new BowBot(),
 			new CameraClip(),
 			new ChestESP(),
@@ -68,7 +66,7 @@ public class ModuleManager {
 			new CleanChat(),
 			new Colours(),
 			new Criticals(),
-			new CrystalAura(),
+	//		new CrystalAura(),
 			new CustomChat(),
 			new CustomFOV(),
 			new DiscordRPCMod(),
@@ -88,7 +86,6 @@ public class ModuleManager {
 			new HandProgress(),
 			new HoleESP(),
 			new HoleTP(),
-			new HotbarCache(),
 			new Jesus(),
 			new Killaura(),
 			new MountBypass(),
@@ -100,17 +97,18 @@ public class ModuleManager {
 			new NoSlow(),
 			new Notebot(),
 			new NotebotStealer(),
-			new NoToolCooldown(),
 			new NoVelocity(),
 			new Nuker(),
 			new Notifications(),
 			new HighwayNuker(),
 			new LiquidRemover(),
+		//	new LogoutSpots(),
 			new OffhandCrash(),
 			new OffHand(),
 			new OldAnimations(),
 			new PacketFly(),
 			new PlayerCrash(),
+			new RenderAxis(),
 			new SafeWalk(),
 			new Scaffold(),
 			new ShulkerView(),
@@ -120,6 +118,7 @@ public class ModuleManager {
 			new SpeedMine(),
 			new Sprint(),
 			new StashFinder(),
+			new OffAxisAlarm(),
 			new PortalESP(),
 		//	new PopCounter(),
 			new Peek(),
@@ -131,11 +130,11 @@ public class ModuleManager {
 			new TunnelESP(),
 			new Tracers(),
 			new Trail(),
+			new Trident(),
 			new Trajectories(),
 			new Twerk(),
 			new Xray(),
 			new Yaw(),
-			new VoidESP(),
 			new Zoom(),
 			new UI()
 

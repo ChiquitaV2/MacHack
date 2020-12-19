@@ -182,7 +182,15 @@ public class UI extends Module {
 				new SettingToggle("Direction", false).withChildren( //26
 						new SettingSlider("x", 1, 3840, 1, 0).withDesc("x coordinates"),
 						new SettingSlider("y", 1, 3840, 320, 0).withDesc("y coordinates")
-				)
+				),
+				new SettingToggle("Picks", true).withDesc("Shows how many beds you have in your inventory").withChildren( // 27
+						new SettingSlider("x", 1, 3840, 1, 0).withDesc("x coordinates"),
+						new SettingSlider("y", 1, 3840, 320, 0).withDesc("y coordinates"),
+						new SettingToggle("Right Align", true),
+						new SettingToggle("Screen Alert", false).withChildren(
+								new SettingSlider("Value", 0, 10, 3, 0)
+						)
+						)
 		);
 	}
 
@@ -195,7 +203,7 @@ public class UI extends Module {
 
 			if (getSetting(0).asToggle().state) {
 				for (Module m : ModuleManager.getModules())
-					if (m.isToggled() && m.isDrawn() && !m.getName().equals("UI")) lines.add(m.getName());
+					if (m.isToggled() && m.isDrawn() && !m.getName().equals("UI") && !m.isHidden()) lines.add(m.getName());
 
 				lines.sort((a, b) -> Integer.compare(mc.textRenderer.getWidth(b), mc.textRenderer.getWidth(a)));
 			}
@@ -678,7 +686,7 @@ public class UI extends Module {
 			GL11.glPopMatrix();
 		}
 		if (getSetting(25).asToggle().state && !mc.options.debugEnabled) {
-			InventoryScreen.drawEntity((int) getSetting(25).asToggle().getChild(1).asSlider().getValue(), (int) getSetting(25).asToggle().getChild(2).asSlider().getValue(), (int) getSetting(25).asToggle().getChild(0).asSlider().getValue(), 0, 0, mc.player );
+			InventoryScreen.drawEntity((int) getSetting(25).asToggle().getChild(1).asSlider().getValue(), (int) getSetting(25).asToggle().getChild(2).asSlider().getValue(), (int) getSetting(25).asToggle().getChild(0).asSlider().getValue(), 0, -(int)mc.player.pitch, mc.player );
 		}
 
 		if (getSetting(26).asToggle().state) {
@@ -699,6 +707,29 @@ public class UI extends Module {
 			}
 			if (!mc.options.debugEnabled)
 				mc.textRenderer.drawWithShadow(event.matrix, "Facing: " + (getSetting(24).asToggle().state ? "\u00a7f" : "") + FD, (int) getSetting(26).asToggle().getChild(0).asSlider().getValue(), (int) getSetting(26).asToggle().getChild(1).asSlider().getValue(), ColorUtils.guiColour());
+		}
+		if (getSetting(27).asToggle().state && !mc.options.debugEnabled) {
+			String pickcountvar = "Picks" + (getSetting(24).asToggle().state ? " \u00a7f" : "\u00a77: \u00a7r") + this.getPicks();
+			if (getSetting(27).asToggle().getChild(2).asToggle().state) {
+				mc.textRenderer.drawWithShadow(event.matrix, pickcountvar,
+						(int) getSetting(27).asToggle().getChild(0).asSlider().getValue(),
+						(int) getSetting(27).asToggle().getChild(1).asSlider().getValue(),
+						ColorUtils.guiColour());
+			} else{
+				mc.textRenderer.drawWithShadow(event.matrix, pickcountvar,
+						(int) getSetting(27).asToggle().getChild(0).asSlider().getValue() - mc.textRenderer.getWidth(pickcountvar),
+						(int) getSetting(27).asToggle().getChild(1).asSlider().getValue(),
+						ColorUtils.guiColour());
+
+			}
+		}
+		if (getSetting(27).asToggle().getChild(3).asToggle().state && getSetting(27).asToggle().state) {
+			double min_picks = getSetting(27).asToggle().getChild(3).asToggle().getChild(0).asSlider().getValue();
+			int	pick_count = this.getPicks();
+			if (pick_count < min_picks) {
+				String text = (getSetting(24).asToggle().state ? "\u00a7f" : "") + pick_count + (getSetting(24).asToggle().state ? " \u00a7r" : " ") + (pick_count == 1 ? "Picks Remaining" : "Picks Remaining");
+				alertList.add(text);
+			}
 		}
 	}
 
@@ -962,6 +993,27 @@ public class UI extends Module {
 					|| this.mc.player.inventory.getStack(i).getItem() == Items.RED_BED
 					|| this.mc.player.inventory.getStack(i).getItem() == Items.WHITE_BED
 					|| this.mc.player.inventory.getStack(i).getItem() == Items.YELLOW_BED
+			)
+			{
+				++c;
+			}
+		}
+
+		return c;
+	}
+	private int getPicks()
+	{
+		int c = 0;
+
+		for (int i = 0; i < 45; ++i)
+		{
+			if (this.mc.player.inventory.getStack(i).getItem() == Items.BLACK_BED
+					|| this.mc.player.inventory.getStack(i).getItem() == Items.DIAMOND_PICKAXE
+					|| this.mc.player.inventory.getStack(i).getItem() == Items.GOLDEN_PICKAXE
+					|| this.mc.player.inventory.getStack(i).getItem() == Items.IRON_PICKAXE
+					|| this.mc.player.inventory.getStack(i).getItem() == Items.NETHERITE_PICKAXE
+					|| this.mc.player.inventory.getStack(i).getItem() == Items.STONE_PICKAXE
+					|| this.mc.player.inventory.getStack(i).getItem() == Items.WOODEN_PICKAXE
 			)
 			{
 				++c;

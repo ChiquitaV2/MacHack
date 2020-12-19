@@ -53,15 +53,15 @@ public class WorldRenderUtils {
         GL11.glScaled(0.4 * scale, 0.4 * scale, 0);
 
         GL11.glTranslated(offX, offY, 0);
-        if (item.getItem() instanceof BlockItem) GL11.glRotatef(180F, 1F, 180F, 10F);
-        mc.getItemRenderer().renderItem(new ItemStack(
-                item.getItem()), Mode.GUI, 0, 0, new MatrixStack(), mc.getBufferBuilders().getEntityVertexConsumers());
+       if (item.getItem() instanceof BlockItem) GL11.glRotatef(180F, 1F, 180F, 10F);
+       mc.getItemRenderer().renderItem(new ItemStack(
+                item.getItem()), Mode.NONE, 0, 0, new MatrixStack(), mc.getBufferBuilders().getEntityVertexConsumers());
         if (item.getItem() instanceof BlockItem) GL11.glRotatef(-180F, -1F, -180F, -10F);
         GL11.glDisable(GL11.GL_LIGHTING);
 
         GL11.glScalef(-0.05F, -0.05F, 0);
 
-        if (item.getCount() > 0) {
+        if (item.getCount() > 1) {
             int w = mc.textRenderer.getWidth("x" + item.getCount()) / 2;
             mc.textRenderer.drawWithShadow(new MatrixStack(), "x" + item.getCount(), 7 - w, 5, 0xffffff);
         }

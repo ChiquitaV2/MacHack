@@ -22,7 +22,8 @@ public class OffHand extends Module {
         super("OffHand", KEY_UNBOUND, Category.COMBAT, "AutoTotem for other stuff",
                 new SettingToggle("Override", true).withDesc("Equips even if theres another item in the offhand"),
                 new SettingMode("Mode", "Gap", "Crystal"),
-                new SettingSlider("ToggleHealth", 0, 36, 13, 1).withDesc("What Health to toggle autototem on")
+                new SettingSlider("ToggleHealth", 0, 36, 13, 1).withDesc("What Health to toggle autototem on"),
+                new SettingToggle("Chat", true).withDesc("send you a chat notification when an item is placed in your off hand")
                 );
     }
 
@@ -53,7 +54,9 @@ public class OffHand extends Module {
 
                         if (itemInOffhand)
                             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
-                        MacLogger.infoMessage("Your offhand now has golden apples");
+                        if (getSetting(3).asToggle().state) {
+                            MacLogger.infoMessage("Your offhand now has golden apples");
+                        }
                         if (ModuleManager.getModule(Notifications.class).isToggled() && ModuleManager.getModule(Notifications.class).getSetting(2).asToggle().state)
                             MacNotify.Notifications("OffHand", "Your offhand now has golden apples");
 
@@ -77,7 +80,9 @@ public class OffHand extends Module {
 
                         if (itemInOffhand)
                             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
-                        MacLogger.infoMessage("Your offhand now has endcrystals");
+                        if (getSetting(3).asToggle().state) {
+                            MacLogger.infoMessage("Your offhand now has endcrystals");
+                        }
                         if (ModuleManager.getModule(Notifications.class).isToggled() && ModuleManager.getModule(Notifications.class).getSetting(2).asToggle().state){
                             MacNotify.Notifications("Offhand", "Your offhand now has endcrystals");
                         }

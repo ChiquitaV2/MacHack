@@ -38,6 +38,10 @@ public class MacFileHelper {
 				mo.add("bind", new JsonPrimitive(m.getKey()));
 			}
 
+			if (m.isHidden()) {
+				mo.add("hidden", new JsonPrimitive(true));
+			}
+
 			if (!m.getSettings().isEmpty()) {
 				JsonObject so = new JsonObject();
 				// Seperate JsonObject with all the settings to keep the extra number so when it reads, it doesn't mess up the order
@@ -85,11 +89,12 @@ public class MacFileHelper {
 				if (mo.has("toggled")) {
 					mod.setToggled(true);
 				}
-
 				if (mo.has("bind") && mo.get("bind").isJsonPrimitive() && mo.get("bind").getAsJsonPrimitive().isNumber()) {
 					mod.setKey(mo.get("bind").getAsInt());
 				}
-
+				if (mo.has("hidden")) {
+					mod.setHidden(true);
+				}
 				if (mo.has("settings") && mo.get("settings").isJsonObject()) {
 					for (Entry<String, JsonElement> se : mo.get("settings").getAsJsonObject().entrySet()) {
 						// Map to keep track if there are multiple settings with the same name

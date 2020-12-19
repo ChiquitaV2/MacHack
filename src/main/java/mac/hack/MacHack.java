@@ -26,7 +26,6 @@ public class MacHack implements ModInitializer {
 	@Override
 	public void onInitialize() {
 
-
 		MacFileMang.init();
 		MacFileHelper.readModules();
 

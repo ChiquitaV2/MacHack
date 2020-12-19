@@ -18,7 +18,8 @@ public class AutoTotem extends Module {
 
 	public AutoTotem() {
 		super("AutoTotem", KEY_UNBOUND, Category.COMBAT, "Automatically equips totems.",
-				new SettingToggle("Override", true).withDesc("Equips a totem even if theres another item in the offhand"));
+				new SettingToggle("Override", true).withDesc("Equips a totem even if theres another item in the offhand"),
+				new SettingToggle("Chat", true).withDesc("Sends you a chat when a totem is placed"));
 	}
 
 	@Subscribe
@@ -37,13 +38,11 @@ public class AutoTotem extends Module {
 
 					if (itemInOffhand)
 						mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
-					MacLogger.infoMessage("Your offhand now has totem");
+					if (getSetting(1).asToggle().state) {
+						MacLogger.infoMessage("Your offhand now has totem");
+					}
 					if (ModuleManager.getModule(Notifications.class).isToggled() && ModuleManager.getModule(Notifications.class).getSetting(1).asToggle().state)
 						MacNotify.Notifications("AutoTotem", "Your offhand now has totem");
-
-
-
-
 					return;
 				}
 			}

@@ -23,6 +23,7 @@ public class Module {
 	private int key;
 	private final int defaultKey;
 	private boolean toggled;
+	private boolean hidden;
 	private final Category category;
 	private final String desc;
 	private List<SettingBase> settings = new ArrayList<>();
@@ -36,6 +37,7 @@ public class Module {
 		desc = d;
 		settings = Arrays.asList(s);
 		toggled = false;
+		hidden = false;
 		drawn = true;
 	}
 
@@ -134,6 +136,13 @@ public class Module {
 
 	public boolean isToggled() {
 		return toggled;
+	}
+	public boolean isHidden() {
+		return hidden;
+	}
+	public void setHidden(boolean h) {
+		MacFileHelper.SCHEDULE_SAVE_MODULES = true;
+		hidden = h;
 	}
 
 	public void setToggled(boolean toggled) {

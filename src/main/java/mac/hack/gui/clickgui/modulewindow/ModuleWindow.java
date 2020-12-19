@@ -22,10 +22,9 @@ import java.util.Map.Entry;
 
 public class ModuleWindow extends ClickGuiWindow {
 
+	public static boolean hiding;
 	public List<Module> modList = new ArrayList<>();
 	public LinkedHashMap<Module, Boolean> mods = new LinkedHashMap<>();
-
-	public boolean hiding;
 
 	private int len;
 
@@ -44,7 +43,6 @@ public class ModuleWindow extends ClickGuiWindow {
 
 		this.len = len;
 		modList = mods;
-
 		for (Module m : mods)
 			this.mods.put(m, false);
 		y2 = getHeight();
@@ -94,10 +92,7 @@ public class ModuleWindow extends ClickGuiWindow {
 		int curY = 0;
 		for (Entry<Module, Boolean> m : new LinkedHashMap<>(mods).entrySet()) {
 			if (m.getValue()) {
-				//fillReverseGrey(x, y + curY, x+len-1, y + 12 + curY);
 				fillGreySides(matrix, x, y + curY, x + len - 1, y + 12 + curY);
-				//DrawableHelper.fill(matrix, x, y + curY, x + len - 2, y + curY + 1, 0x90000000);
-				//DrawableHelper.fill(matrix, x + len - 3, y + curY + 1, x + len - 2, y + curY + 12, 0x90b0b0b0);
 			}
 			DrawableHelper.fill(matrix, x, y + curY, x + len, y + 12 + curY,
 					mouseOver(x, y + curY, x + len, y + 12 + curY) ? ColorUtils.guiColour() + 0x00020202 - 0xcf000000 : 0x00000000);
@@ -139,17 +134,15 @@ public class ModuleWindow extends ClickGuiWindow {
 				drawBindSetting(matrix, m.getKey(), keyDown, x, y + curY, textRend);
 				curY += 12;
 				//fill(x+len-1, y+(count*12), x+len, y+12+(count*12), 0x9f70fff0);
+				drawHiddenSetting(matrix, m.getKey(), x, y + curY, textRend);
+				curY += 12;
 			}
 		}
 	}
 
 	public void drawBindSetting(MatrixStack matrix, Module m, int key, int x, int y, TextRenderer textRend) {
-		//DrawableHelper.fill(matrix, x, y + 11, x + len - 2, y + 12, 0x90b0b0b0);
-		//DrawableHelper.fill(matrix, x + len - 2, y, x + len - 1, y + 12, 0x90b0b0b0);
-		//DrawableHelper.fill(matrix, x, y - 1, x + 1, y + 11, 0x90000000);
-
 		if (key >= 0 && mouseOver(x, y, x + len, y + 12))
-			m.setKey((key != GLFW.GLFW_KEY_DELETE && key != GLFW.GLFW_KEY_ESCAPE) ? key : Module.KEY_UNBOUND);
+			m.setKey((key != GLFW.GLFW_KEY_DELETE && key != GLFW.GLFW_KEY_ESCAPE && key != GLFW.GLFW_KEY_BACKSPACE) ? key : Module.KEY_UNBOUND);
 
 		String name = m.getKey() < 0 ? "NONE" : InputUtil.fromKeyCode(m.getKey(), -1).getLocalizedText().getString();
 		if (name == null)
@@ -158,6 +151,15 @@ public class ModuleWindow extends ClickGuiWindow {
 			name = "NONE";
 
 		textRend.drawWithShadow(matrix, "Bind: " + name + (mouseOver(x, y, x + len, y + 12) ? "..." : ""), x + 2, y + 2,
+				mouseOver(x, y, x + len, y + 12) ? 0xcfc3cf : 0xcfe0cf);
+	}
+
+	public void drawHiddenSetting(MatrixStack matrix, Module m, int x, int y, TextRenderer textRend) {
+		if (lmDown && mouseOver(x, y, x + len, y + 12)) {
+			mc.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+			m.setHidden(!m.isHidden());
+		}
+		textRend.drawWithShadow(matrix, "Hidden: " + m.isHidden(), x + 2, y + 2,
 				mouseOver(x, y, x + len, y + 12) ? 0xcfc3cf : 0xcfe0cf);
 	}
 
@@ -195,16 +197,14 @@ public class ModuleWindow extends ClickGuiWindow {
 		int h = 1;
 		for (Entry<Module, Boolean> e : mods.entrySet()) {
 			h += 12;
-
 			if (e.getValue()) {
 				for (SettingBase s : e.getKey().getSettings()) {
 					h += s.getHeight(len);
 				}
-
-				h += 12;
+				h += 24;
 			}
 		}
-
 		return h;
 	}
+
 }

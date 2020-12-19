@@ -3,6 +3,7 @@ package mac.hack.gui.clickgui;
 import mac.hack.MacHack;
 import mac.hack.command.Command;
 import mac.hack.gui.clickgui.modulewindow.ClickGuiWindow;
+import mac.hack.gui.clickgui.modulewindow.MHLogo;
 import mac.hack.gui.clickgui.modulewindow.ModuleWindow;
 import mac.hack.gui.window.AbstractWindowScreen;
 import mac.hack.gui.window.Window;
@@ -13,14 +14,18 @@ import mac.hack.module.mods.ClickGui;
 import mac.hack.module.mods.UI;
 import mac.hack.utils.ColorUtils;
 import mac.hack.utils.file.MacFileHelper;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.LiteralText;
+import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,6 +41,7 @@ public class ClickGuiScreen extends AbstractWindowScreen {
 	private boolean rmDown = false;
 	private boolean lmHeld = false;
 	private int mwScroll = 0;
+	private static final Identifier identifier = new Identifier("machack", "assets/machack/machack3.png");
 
 	private TextFieldWidget searchField;
 
@@ -52,7 +58,6 @@ public class ClickGuiScreen extends AbstractWindowScreen {
 	}
 
 	public void initWindows() {
-
 		int len = (int) ModuleManager.getModule(ClickGui.class).getSetting(0).asSlider().getValue();
 
 		int i = 10;
@@ -95,11 +100,10 @@ public class ClickGuiScreen extends AbstractWindowScreen {
 
 	public void render(MatrixStack matrix, int mX, int mY, float float_1) {
 		MacFileHelper.SCHEDULE_SAVE_CLICKGUI = true;
-
 		searchField.visible = ModuleManager.getModule(ClickGui.class).getSetting(1).asToggle().state;
-
+		MHLogo.render(matrix);
 		this.renderBackground(matrix);
-		String watermark = "MacHack " + (ModuleManager.getModule(UI.class).getSetting(24).asToggle().state ? "\u00A7f" : "")  + MacHack.VERSION + (ModuleManager.getModule(UI.class).getSetting(24).asToggle().state ? "+" : "");
+		String watermark = "MacHack " + (ModuleManager.getModule(UI.class).getSetting(24).asToggle().state ? "\u00A7f" : "")  + MacHack.VERSION;
 		textRenderer.drawWithShadow(matrix, watermark, 1, 1, ColorUtils.guiColour());
 		if (ModuleManager.getModule(ClickGui.class).getSetting(2).asToggle().state) {
 			textRenderer.drawWithShadow(matrix,

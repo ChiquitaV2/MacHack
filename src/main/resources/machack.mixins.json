@@ -35,7 +35,6 @@
     "MixinMapRenderer",
     "MixinSkyProperties",
     "MixinPlayerEntity",
-    "MixinNoToolCooldown",
     "MixinParticleManager",
     "MixinSoundSystem",
     "MixinScreen",

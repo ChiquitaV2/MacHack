@@ -8,7 +8,7 @@ public class MacNotify {
 
     public static void Notifications(String subtitle, String message) throws IOException {
         String os = System.getProperty("os.name");
-        String title = "MacHack";
+        String title = "MacHack+";
         Image image = ImageIO.read(MacNotify.class.getResource("/assets/machack/MacHack.png"));
         if (os.contains("Linux")) {
             ProcessBuilder builder = new ProcessBuilder(
@@ -30,8 +30,14 @@ public class MacNotify {
             TrayIcon trayIcon = new TrayIcon(image, "MacHack");
             trayIcon.setImageAutoSize(true);
             trayIcon.setImage(image);
+            try
+            {
+                trayIcon.displayMessage(title, message, TrayIcon.MessageType.INFO);
+            }
+            catch (Exception e)
+            {
 
-            trayIcon.displayMessage(title, message, TrayIcon.MessageType.INFO);
+            }
         }
     }
 }

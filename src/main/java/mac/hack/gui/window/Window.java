@@ -1,5 +1,6 @@
 package mac.hack.gui.window;
 
+import mac.hack.gui.clickgui.modulewindow.ModuleWindow;
 import mac.hack.utils.ColorUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -23,6 +24,8 @@ public class Window {
 	public int y1;
 	public int x2;
 	public int y2;
+
+	boolean hiding = ModuleWindow.hiding;
 
 	public String title;
 	public ItemStack icon;

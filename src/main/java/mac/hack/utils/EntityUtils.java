@@ -137,4 +137,63 @@ public class EntityUtils {
 		return rotationYaw * 0.017453292f;
 	}
 
+	public static int determineHighway() {
+		MinecraftClient mc = MinecraftClient.getInstance();
+		PlayerEntity player = mc.player;
+		int highwayNum = 0;
+		if (player.getX() >= 100) {
+			if (player.getZ() >= -5 && player.getZ() <= 5) {
+				//+X highway
+				highwayNum = 1;
+			}
+			else if (player.getZ() - player.getX() >= -50 && player.getZ() - player.getX() <= 50) {
+				//+X+Z highway
+				highwayNum = 2;
+			}
+			else if (player.getZ() + player.getX() >= -50 && player.getZ() + player.getX() <= 50) {
+				//+X-Z highway
+				highwayNum = 3;
+			}
+			else {
+				MacLogger.errorMessage("I have no idea where you are, but it probably isn't a highway.");
+			}
+		}
+		else if (player.getX() <= -100) {
+			if (player.getZ() >= -5 && player.getZ() <= 5) {
+				//-X highway
+				highwayNum = 4;
+			}
+			else if (player.getX() + player.getZ() >= -50 && player.getX() + player.getZ() <= 50) {
+				//-X+Z highway
+				highwayNum = 5;
+			}
+			else if (player.getZ() <= player.getX() + 100 && player.getZ() >= player.getX() - 100) {
+				//-X-Z highway
+				highwayNum = 6;
+			}
+			else {
+				MacLogger.errorMessage("I have no idea where you are, but it probably isn't a highway.");
+			}
+		}
+		else if (player.getZ() >= 100) {
+			if (player.getX() >= -5 && player.getX() <= 5) {
+				//+Z highway
+				highwayNum = 7;
+			}
+			else {
+				MacLogger.errorMessage("I have no idea where you are, but it probably isn't a highway.");
+			}
+		}
+		else if (player.getZ() <= -100) {
+			if (player.getX() >= -5 && player.getX() <= 5) {
+				//-Z highway
+				highwayNum = 8;
+			}
+			else {
+				MacLogger.errorMessage("I have no idea where you are, but it probably isn't a highway.");
+			}
+		}
+		return highwayNum;
+	}
+
 }

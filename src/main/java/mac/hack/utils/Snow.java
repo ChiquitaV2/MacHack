@@ -43,11 +43,11 @@ public class Snow
 
     public void Update()
     {
-        RenderUtils.drawRect(getX(), getY(), getX()+_size, getY()+_size, 0xC9C5C5, 0x99);
+        RenderUtils.drawRect(getX(), getY(), getX()+_size, getY()+_size, 0xC9C5C5, 0x90);
 
         setY(getY() + _fallingSpeed);
 
-        if (getY() > mc.getWindow().getScaledHeight() + 10 || getY() < -10)
+        if (getY() > mc.getWindow().getScaledHeight() - 10 || getY() < -10)
         {
             setY(-10);
 

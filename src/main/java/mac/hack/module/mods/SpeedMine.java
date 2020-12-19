@@ -17,7 +17,7 @@ public class SpeedMine extends Module {
 				new SettingMode("Mode", "Haste", "OG"),
 				new SettingSlider("Haste Lvl", 1, 3, 1, 0),
 				new SettingSlider("Cooldown", 0, 4, 1, 0),
-				new SettingSlider("Multiplier", 1, 3, 1.3, 1),
+				new SettingSlider("Multiplier", 1, 9, 1.3, 1),
 				new SettingToggle("AntiFatigue", true),
 				new SettingToggle("AntiOffGround", true));
 	}

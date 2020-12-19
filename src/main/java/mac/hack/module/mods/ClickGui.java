@@ -19,7 +19,8 @@ public class ClickGui extends Module {
 				new SettingToggle("Help", true),
 				new SettingToggle("Static descriptions", true),
 				new SettingMode("Theme", "Default"),
-				new SettingToggle("Snow", false));
+				new SettingToggle("Snow", false),
+				new SettingToggle("BRIcon", false).withDesc("NEEDS TEXTURE PACK :("));
 	}
 
 	public void onEnable() {

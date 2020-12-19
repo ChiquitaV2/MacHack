@@ -10,10 +10,12 @@ import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.EntityUtils;
 import mac.hack.utils.WorldRenderUtils;
 import com.google.common.eventbus.Subscribe;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Objects;
@@ -22,7 +24,10 @@ public class Nametags extends Module {
 	public int theirPing;
 	public Nametags() {
 		super("Nametags", KEY_UNBOUND, Category.RENDER, "Shows bigger/cooler nametags above entities.",
-				new SettingMode("Armor", "H", "V", "None").withDesc("How to show items/armor"),
+				new SettingToggle("Items", true).withChildren(
+						new SettingToggle("Hands", true),
+						new SettingToggle("Armor", true)
+				),
 				new SettingMode("Health", "Number", "Bar", "Percent").withDesc("How to show health"),
 				new SettingToggle("Players", true).withDesc("show player nametags").withChildren(
 						new SettingSlider("Size", 0.5, 5, 2, 1).withDesc("Size of the nametags")),
@@ -120,6 +125,30 @@ public class Nametags extends Module {
 						(e.prevY + (e.getY() - e.prevY) * mc.getTickDelta()) + e.getHeight() + (0.5f * scale),
 						e.prevZ + (e.getZ() - e.prevZ) * mc.getTickDelta(), scale);
 			}
+
+			if (getSetting(0).asToggle().getChild(0).asToggle().state) {
+				WorldRenderUtils.drawItem(e.prevX + (e.getX() - e.prevX) * mc.getTickDelta(),
+						(e.prevY + (e.getY() - e.prevY) * mc.getTickDelta()) + e.getHeight() + (0.75 * scale),
+						e.prevZ + (e.getZ() - e.prevZ) * mc.getTickDelta(), -2.5, 0, scale, e.getEquippedStack(EquipmentSlot.MAINHAND));
+				WorldRenderUtils.drawItem(e.prevX + (e.getX() - e.prevX) * mc.getTickDelta(),
+						(e.prevY + (e.getY() - e.prevY) * mc.getTickDelta()) + e.getHeight() + (0.75 * scale),
+						e.prevZ + (e.getZ() - e.prevZ) * mc.getTickDelta(), 2.5, 0, scale, e.getEquippedStack(EquipmentSlot.OFFHAND));
+			}
+			if (getSetting(0).asToggle().getChild(1).asToggle().state) {
+				WorldRenderUtils.drawItem(e.prevX + (e.getX() - e.prevX) * mc.getTickDelta(),
+						(e.prevY + (e.getY() - e.prevY) * mc.getTickDelta()) + e.getHeight() + (0.75 * scale),
+						e.prevZ + (e.getZ() - e.prevZ) * mc.getTickDelta(), +1.5, 0, scale, e.getEquippedStack(EquipmentSlot.HEAD));
+				WorldRenderUtils.drawItem(e.prevX + (e.getX() - e.prevX) * mc.getTickDelta(),
+						(e.prevY + (e.getY() - e.prevY) * mc.getTickDelta()) + e.getHeight() + (0.75 * scale),
+						e.prevZ + (e.getZ() - e.prevZ) * mc.getTickDelta(), +0.5, 0, scale, e.getEquippedStack(EquipmentSlot.CHEST));
+				WorldRenderUtils.drawItem(e.prevX + (e.getX() - e.prevX) * mc.getTickDelta(),
+						(e.prevY + (e.getY() - e.prevY) * mc.getTickDelta()) + e.getHeight() + (0.75 * scale),
+						e.prevZ + (e.getZ() - e.prevZ) * mc.getTickDelta(), -0.5, 0, scale, e.getEquippedStack(EquipmentSlot.LEGS));
+				WorldRenderUtils.drawItem(e.prevX + (e.getX() - e.prevX) * mc.getTickDelta(),
+						(e.prevY + (e.getY() - e.prevY) * mc.getTickDelta()) + e.getHeight() + (0.75 * scale),
+						e.prevZ + (e.getZ() - e.prevZ) * mc.getTickDelta(), -1.5, 0, scale, e.getEquippedStack(EquipmentSlot.FEET));
+			}
+
 
 			/* Drawing Items */
 			//double c = 0;
