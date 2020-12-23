@@ -3,6 +3,7 @@ package mac.hack.mixin;
 import mac.hack.MacHack;
 import mac.hack.event.events.EventDrawContainer;
 import mac.hack.module.ModuleManager;
+import mac.hack.module.mods.AutoDonkeyDupe;
 import mac.hack.module.mods.MountBypass;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -40,6 +41,10 @@ public abstract class MixinContainerScreen extends Screen {
 		}
 
 		AbstractDonkeyEntity entity = (AbstractDonkeyEntity) MinecraftClient.getInstance().player.getVehicle();
+
+		addButton(new ButtonWidget(titleX + 82, titleY + 4, 44, 12, new LiteralText("AutoDupe"), button -> {
+			ModuleManager.getModule(AutoDonkeyDupe.class).setToggled(true);
+		}));
 
 		addButton(new ButtonWidget(titleX + 130, titleY + 4, 39, 12, new LiteralText("Dupe"), (button) -> {
 			((MountBypass) ModuleManager.getModule(MountBypass.class)).dontCancel = true;

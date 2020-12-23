@@ -175,7 +175,7 @@ public class UI extends Module {
 				new SettingSlider("HueSpeed", 0.1, 50, 10, 1).withDesc("Rainbow Speed"), // 17
 				new SettingToggle("Impact+", true), //18
 				new SettingToggle("Player Model", false).withChildren( //25
-						new SettingSlider("Size", 10, 50, 25, 0),
+						new SettingSlider("Size", 10, 100, 25, 0),
 						new SettingSlider("x", 1, 3840, 80, 0).withDesc("x coordinates"),
 						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates")
 						),

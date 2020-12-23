@@ -35,7 +35,7 @@ public class OffAxisAlarm extends Module {
                             MacLogger.errorMessage("You're off axis!");
                             chatTimer.reset();
                         }
-                        if (logTimer.passed(15000)) {
+                        if (logTimer.passed(15000) && getSetting(0).asToggle().state) {
                             mc.player.networkHandler.onDisconnect(new DisconnectS2CPacket(new LiteralText("Your were off axis")));
                             logTimer.reset();
                         }
@@ -49,7 +49,7 @@ public class OffAxisAlarm extends Module {
                             MacLogger.errorMessage("You're off axis!");
                             chatTimer.reset();
                         }
-                        if (logTimer.passed(15000)) {
+                        if (logTimer.passed(15000) && getSetting(0).asToggle().state) {
                             mc.player.networkHandler.onDisconnect(new DisconnectS2CPacket(new LiteralText("Your were off axis")));
                             logTimer.reset();
                         }
@@ -63,7 +63,7 @@ public class OffAxisAlarm extends Module {
                             MacLogger.errorMessage("You're off axis!");
                             chatTimer.reset();
                         }
-                        if (logTimer.passed(15000)) {
+                        if (logTimer.passed(15000) && getSetting(0).asToggle().state) {
                             mc.player.networkHandler.onDisconnect(new DisconnectS2CPacket(new LiteralText("Your were off axis")));
                             logTimer.reset();
                         }
@@ -77,7 +77,7 @@ public class OffAxisAlarm extends Module {
                             MacLogger.errorMessage("You're off axis!");
                             chatTimer.reset();
                         }
-                        if (logTimer.passed(15000)) {
+                        if (logTimer.passed(15000) && getSetting(0).asToggle().state) {
                             mc.player.networkHandler.onDisconnect(new DisconnectS2CPacket(new LiteralText("Your were off axis")));
                             logTimer.reset();
                         }

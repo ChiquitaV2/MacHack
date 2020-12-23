@@ -59,7 +59,6 @@ public class ClickGuiScreen extends AbstractWindowScreen {
 
 	public void initWindows() {
 		int len = (int) ModuleManager.getModule(ClickGui.class).getSetting(0).asSlider().getValue();
-
 		int i = 10;
 		windows.add(new ModuleWindow(ModuleManager.getModulesInCat(Category.COMBAT), i, 35, len,
 				StringUtils.capitalize(StringUtils.lowerCase(Category.COMBAT.toString())), new ItemStack(Items.ARMOR_STAND)));
@@ -110,7 +109,6 @@ public class ClickGuiScreen extends AbstractWindowScreen {
 					"Current prefix is: \"" + Command.PREFIX + "\" (" + Command.PREFIX + "help)", 2, height - 20, ColorUtils.guiColour());
 			textRenderer.drawWithShadow(matrix, "Use " + Command.PREFIX + "guireset to reset the gui", 2, height - 10,
 					ColorUtils.guiColour());
-
 		}
 		if (ModuleManager.getModule(ClickGui.class).getSetting(1).asToggle().state) {
 			searchField.setSuggestion(searchField.getText().isEmpty() ? "Search here" : "");

@@ -14,28 +14,28 @@ public class CustomFOV extends Module {
 
     public CustomFOV() {
         super ("CustomFOV", KEY_UNBOUND, Category.RENDER, "a s d f",
-                new SettingSlider("Scale", 0, 1, 0.3, 1));
+                new SettingSlider("Scale", 0, 1, 0.3, 1),
+                new SettingSlider("PrevFOV", 30, 110, 100, 0));
     }
-
-    public double prevFov;
 
     public void toggleNoSave() {
 
     }
 
     public void onEnable() {
+        if (mc.options == null) {
+            return;
+        }
         MinecraftClient mc = MinecraftClient.getInstance();
         GameOptions options = mc.options;
-        prevFov = mc.options.fov;
         if (mc.world != null) {
-            options.fov = options.fov * (1 + getSetting(0).asSlider().getValue());
+            options.fov = getSetting(1).asSlider().getValue() * (1 + getSetting(0).asSlider().getValue());
         }
     }
 
     public void onDisable() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        mc.options.fov = prevFov;
-        GameOptions options = mc.options;
+        mc.options.fov = getSetting(1).asSlider().getValue();
     }
 
     @Subscribe

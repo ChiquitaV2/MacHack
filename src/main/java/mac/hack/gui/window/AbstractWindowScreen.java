@@ -51,7 +51,7 @@ public abstract class AbstractWindowScreen extends Screen {
 
 		if (!_snowList.isEmpty() && ModuleManager.getModule(ClickGui.class).getSetting(5).asToggle().state)
 		{
-			_snowList.forEach(snow -> snow.Update());
+			_snowList.forEach(Snow::Update);
 
 			if (!ModuleManager.getModule(ClickGui.class).isDrawn()) {
 				_snowList.clear();

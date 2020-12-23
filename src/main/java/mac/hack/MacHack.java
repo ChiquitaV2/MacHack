@@ -13,12 +13,14 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
 
+
 public class MacHack implements ModInitializer {
 
 	public static final String VERSION = "B1502";
 	public static final int INTVERSION = 24;
 
 	public static EventBus eventBus = new EventBus();
+
 
 	public static FriendManager friendMang;
 //	public static CapeUtils capeUtils;

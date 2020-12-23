@@ -28,9 +28,11 @@ public class MixinTitleScreen extends Screen {
         this.addButton(new ButtonWidget(this.width / 2 - 100 + 205, y + spacingY * 2, 98, 20, new LiteralText("Alts"), (buttonWidget) -> {
             this.client.openScreen(new LoginScreen((TitleScreen)client.currentScreen));
         }));
-    } @Inject(at = @At("RETURN"), method = "initWidgetsNormal")
+    }
 
 
+    /*
+    @Inject(at = @At("RETURN"), method = "initWidgetsNormal")
     private void ECME(int y, int spacingY, CallbackInfo ci){
 
         this.addButton(new ButtonWidget(this.width / 2 - 100 + 205, y + spacingY * 1, 98, 20, new LiteralText("Endcrystal.me"), (buttonWidget) -> {
@@ -38,6 +40,9 @@ public class MixinTitleScreen extends Screen {
             this.client.openScreen((Screen) new ConnectScreen((Screen) this, this.client, "endcrystal.me", 25565));
         }));
     }
+
+     */
+
 
 
 }
