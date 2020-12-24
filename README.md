@@ -22,3 +22,8 @@ Extract the zip and put the jar into your mods folder
 This is a Bleachhack port/fork so I owe tons of credit to Bleach, epearl,
  and everyone who has done anything for bleachhack
  and also thanks to ionar for salhack.
+
+## Showcase
+
+![GUI](https://cdn.discordapp.com/attachments/776949484588498967/791746875162230805/Screen_Shot_2020-12-24_at_1.18.58_PM.png)  
+[Showcase video](https://www.youtube.com/watch?v=V6GmXzHvpCE)
