@@ -6,7 +6,7 @@ Very cool client made by Bleach and epearl
 
 This is designed for people who want to use Bleach had epearl edition
 but can't because they are on mac or linux. Anyone should be able to use this no matter their OS.
-The only big difference between MacHack and MacHack+, is that MacHack+ has BA and gets modules faster but those modules will come to MacHack with time(like a day or two)
+The only big difference between MacHack and MacHack+, is that MacHack+ has BA and gets modules faster but those modules will come to MacHack with time(like a day or two.) 
 
 Works on fabric 1.16.2/3/4
 
@@ -18,7 +18,7 @@ Download [fabric for minecraft 1.16.4](https://fabricmc.net/use/)
 Download the lastest compiled version of MacHack for your Minecraft version [from the Actions section](https://github.com/ChiquitaV2/MacHack/actions)  
 Extract the zip and put the jar into your mods folder  
 
-##Credits
+## Credits
 This is a Bleachhack port/fork so I owe tons of credit to Bleach, epearl,
  and everyone who has done anything for bleachhack
  and also thanks to ionar for salhack.
