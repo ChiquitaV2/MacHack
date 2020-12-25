@@ -10,10 +10,7 @@ import mac.hack.module.ModuleManager;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
-import mac.hack.utils.ColorUtils;
-import mac.hack.utils.EntityUtils;
-import mac.hack.utils.FabricReflect;
-import mac.hack.utils.RenderUtils;
+import mac.hack.utils.*;
 import com.google.common.eventbus.Subscribe;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.shorts.ShortList;
@@ -180,7 +177,8 @@ public class UI extends Module {
 				new SettingToggle("Player Model", false).withChildren( //25
 						new SettingSlider("Size", 10, 50, 25, 0),
 						new SettingSlider("x", 1, 3840, 80, 0).withDesc("x coordinates"),
-						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates")
+						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates"),
+						new SettingToggle("Legacy", false)
 				),
 				new SettingToggle("Direction", false).withChildren( //26
 						new SettingSlider("x", 1, 3840, 1, 0).withDesc("x coordinates"),
@@ -193,7 +191,14 @@ public class UI extends Module {
 						new SettingToggle("Screen Alert", false).withChildren(
 								new SettingSlider("Value", 0, 10, 3, 0)
 						)
+				)/* r333mo WIP,
+				new SettingToggle("NearPlayerRender", false).withDesc("Renders the nearest player to you.").withChildren(	// 28. Just following the pattern here! - r333mo
+						new SettingSlider("Size", 10, 50, 25, 0).withDesc("Scale"),
+						new SettingSlider("x", 1, 3840, 80, 0).withDesc("x coordinates"),
+						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates")
 				)
+
+				 */
 		);
 	}
 
@@ -706,7 +711,17 @@ public class UI extends Module {
 			GL11.glPopMatrix();
 		}
 		if (getSetting(25).asToggle().state && !mc.options.debugEnabled) {
-			InventoryScreen.drawEntity((int) getSetting(25).asToggle().getChild(1).asSlider().getValue(), (int) getSetting(25).asToggle().getChild(2).asSlider().getValue(), (int) getSetting(25).asToggle().getChild(0).asSlider().getValue(), -(int)mc.player.yaw, -(int)mc.player.pitch, mc.player );
+			if (getSetting(25).asToggle().getChild(3).asToggle().state) {
+				InventoryScreen.drawEntity((int) getSetting(25).asToggle().getChild(1).asSlider().getValue(),
+						(int) getSetting(25).asToggle().getChild(2).asSlider().getValue(),
+						(int) getSetting(25).asToggle().getChild(0).asSlider().getValue(),
+						0, -(int)mc.player.pitch, mc.player );
+			} else {
+				InventoryScreen.drawEntity((int) getSetting(25).asToggle().getChild(1).asSlider().getValue(),
+						(int) getSetting(25).asToggle().getChild(2).asSlider().getValue(),
+						(int) getSetting(25).asToggle().getChild(0).asSlider().getValue(),
+						-(int)mc.player.yaw, -(int)mc.player.pitch, mc.player );
+			}
 		}
 
 		if (getSetting(26).asToggle().state) {
@@ -750,6 +765,31 @@ public class UI extends Module {
 				String text = (getSetting(24).asToggle().state ? "\u00a7f" : "") + pick_count + (getSetting(24).asToggle().state ? " \u00a7r" : " ") + (pick_count == 1 ? "Picks Remaining" : "Picks Remaining");
 				alertList.add(text);
 			}
+		}
+
+		if (getSetting(28).asToggle().state && !mc.options.debugEnabled) {
+			String playerType = "";
+			int responseTime = -1;
+			Entity p = null;
+
+			/*
+			for (Entity player : mc.world.getPlayers().stream().sorted((a, b) -> Double.compare(mc.player.getPos().distanceTo(a.getPos()), mc.player.getPos().distanceTo(b.getPos())))
+					.collect(Collectors.toList())) {
+				if (player == mc.player) continue;
+
+				int dist = (int) round(mc.player.getPos().distanceTo(player.getPos()));
+
+				String text = player.getDisplayName().getString() + (getSetting(8).asToggle().getChild(4).asToggle().state ? " \u00a77[\u00a7r" + player.getBlockPos().getX() + " " + player.getBlockPos().getY() + " " + player.getBlockPos().getZ() + "\u00a77]\u00a7r " : " ")
+						+ "\u00a77(\u00a7r" + dist + "m\u00a77)\u00a7r";
+			}
+			 */
+
+
+			InventoryScreen.drawEntity((int) getSetting(28).asToggle().getChild(1).asSlider().getValue(), (
+							int) getSetting(28).asToggle().getChild(2).asSlider().getValue(),
+					(int) getSetting(28).asToggle().getChild(0).asSlider().getValue(),
+					-(int)mc.player.yaw, -(int)mc.player.pitch,
+					mc.world.getClosestPlayer(p, 100d));
 		}
 	}
 
