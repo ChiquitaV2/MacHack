@@ -10,10 +10,7 @@ import mac.hack.module.ModuleManager;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
-import mac.hack.utils.ColorUtils;
-import mac.hack.utils.EntityUtils;
-import mac.hack.utils.FabricReflect;
-import mac.hack.utils.RenderUtils;
+import mac.hack.utils.*;
 import com.google.common.eventbus.Subscribe;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.shorts.ShortList;
@@ -58,6 +55,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.zip.DeflaterOutputStream;
+
+import static java.lang.Math.round;
 
 public class UI extends Module {
 
@@ -135,7 +134,8 @@ public class UI extends Module {
 				new SettingToggle("Welcome", true).withDesc("Shows your username").withChildren( // 13
 						new SettingSlider("x", 1, 3840, 1, 0).withDesc("x coordinates"),
 						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates"),
-						new SettingToggle("Right Align", true)),
+						new SettingToggle("Right Align", true),
+						new SettingToggle("Legacy", false)),
 				new SettingToggle("Biome", true).withDesc("Shows your current biome").withChildren( // 14
 						new SettingSlider("x", 1, 3840, 1, 0).withDesc("x coordinates"),
 						new SettingSlider("y", 1, 3840, 280, 0).withDesc("y coordinates"),
@@ -175,10 +175,11 @@ public class UI extends Module {
 				new SettingSlider("HueSpeed", 0.1, 50, 10, 1).withDesc("Rainbow Speed"), // 17
 				new SettingToggle("Impact+", true), //18
 				new SettingToggle("Player Model", false).withChildren( //25
-						new SettingSlider("Size", 10, 100, 25, 0),
+						new SettingSlider("Size", 10, 50, 25, 0),
 						new SettingSlider("x", 1, 3840, 80, 0).withDesc("x coordinates"),
-						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates")
-						),
+						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates"),
+						new SettingToggle("Legacy", false)
+				),
 				new SettingToggle("Direction", false).withChildren( //26
 						new SettingSlider("x", 1, 3840, 1, 0).withDesc("x coordinates"),
 						new SettingSlider("y", 1, 3840, 320, 0).withDesc("y coordinates")
@@ -190,7 +191,14 @@ public class UI extends Module {
 						new SettingToggle("Screen Alert", false).withChildren(
 								new SettingSlider("Value", 0, 10, 3, 0)
 						)
-						)
+				)/* r333mo WIP,
+				new SettingToggle("NearPlayerRender", false).withDesc("Renders the nearest player to you.").withChildren(	// 28. Just following the pattern here! - r333mo
+						new SettingSlider("Size", 10, 50, 25, 0).withDesc("Scale"),
+						new SettingSlider("x", 1, 3840, 80, 0).withDesc("x coordinates"),
+						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates")
+				)
+
+				 */
 		);
 	}
 
@@ -242,7 +250,7 @@ public class UI extends Module {
 					.collect(Collectors.toList())) {
 				if (e == mc.player) continue;
 
-				int dist = (int) Math.round(mc.player.getPos().distanceTo(e.getPos()));
+				int dist = (int) round(mc.player.getPos().distanceTo(e.getPos()));
 
 				String text = e.getDisplayName().getString() + (getSetting(8).asToggle().getChild(4).asToggle().state ? " \u00a77[\u00a7r" + e.getBlockPos().getX() + " " + e.getBlockPos().getY() + " " + e.getBlockPos().getZ() + "\u00a77]\u00a7r " : " ")
 						+ "\u00a77(\u00a7r" + dist + "m\u00a77)\u00a7r";
@@ -427,11 +435,28 @@ public class UI extends Module {
 
 		}
 
-
-
-
 		if (getSetting(13).asToggle().state && !mc.options.debugEnabled) {
-			String welcome = "Welcome" + (getSetting(24).asToggle().state ? " \u00a7f" : "\u00a77, \u00a7r") + mc.player.getName().asString();
+			String welcome = "";
+
+			if (getSetting(13).asToggle().getChild(3).asToggle().state) {
+				welcome = "Welcome" + (getSetting(24).asToggle().state ? " \u00a7f" : "\u00a77, \u00a7r") + mc.player.getName().asString();
+			} else {
+				Calendar c = Calendar.getInstance();
+				int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
+
+				if (timeOfDay >= 6 && timeOfDay < 12) {
+					welcome = "Good Morning," + (getSetting(24).asToggle().state ? " \u00a7f" : "\u00a77, \u00a7r") + mc.player.getName().asString();
+				} else if (timeOfDay >= 12 && timeOfDay < 17) {
+					welcome = "Good Afternoon," + (getSetting(24).asToggle().state ? " \u00a7f" : "\u00a77, \u00a7r") + mc.player.getName().asString();
+				} else if (timeOfDay >= 17 && timeOfDay < 22) {
+					welcome = "Good Evening," + (getSetting(24).asToggle().state ? " \u00a7f" : "\u00a77, \u00a7r") + mc.player.getName().asString();
+				} else if (timeOfDay >= 22 || timeOfDay < 6) {
+					welcome = "Good Night," + (getSetting(24).asToggle().state ? " \u00a7f" : "\u00a77, \u00a7r") + mc.player.getName().asString();
+				} else {
+					welcome = "Hello," + mc.player.getName().asString() + ".. psst! something went wrong!";
+				}
+			}
+
 			if (getSetting(13).asToggle().getChild(2).asToggle().state) {
 				mc.textRenderer.drawWithShadow(event.matrix, welcome,
 						(int) getSetting(13).asToggle().getChild(0).asSlider().getValue(),
@@ -686,23 +711,33 @@ public class UI extends Module {
 			GL11.glPopMatrix();
 		}
 		if (getSetting(25).asToggle().state && !mc.options.debugEnabled) {
-			InventoryScreen.drawEntity((int) getSetting(25).asToggle().getChild(1).asSlider().getValue(), (int) getSetting(25).asToggle().getChild(2).asSlider().getValue(), (int) getSetting(25).asToggle().getChild(0).asSlider().getValue(), 0, -(int)mc.player.pitch, mc.player );
+			if (getSetting(25).asToggle().getChild(3).asToggle().state) {
+				InventoryScreen.drawEntity((int) getSetting(25).asToggle().getChild(1).asSlider().getValue(),
+						(int) getSetting(25).asToggle().getChild(2).asSlider().getValue(),
+						(int) getSetting(25).asToggle().getChild(0).asSlider().getValue(),
+						0, -(int)mc.player.pitch, mc.player );
+			} else {
+				InventoryScreen.drawEntity((int) getSetting(25).asToggle().getChild(1).asSlider().getValue(),
+						(int) getSetting(25).asToggle().getChild(2).asSlider().getValue(),
+						(int) getSetting(25).asToggle().getChild(0).asSlider().getValue(),
+						-(int)mc.player.yaw, -(int)mc.player.pitch, mc.player );
+			}
 		}
 
 		if (getSetting(26).asToggle().state) {
 			String FD = "ND";
 			switch (EntityUtils.GetFacing()) {
 				case North:
-					FD = "N";
+					FD = "N" + " (" + round(mc.player.yaw) + ")";
 					break;
 				case East:
-					FD = "E";
+					FD = "E" + " (" + round(mc.player.yaw) + ")";
 					break;
 				case South:
-					FD = "S";
+					FD = "S" + " (" + round(mc.player.yaw) + ")";
 					break;
 				case West:
-					FD = "W";
+					FD = "W" + " (" + round(mc.player.yaw) + ")";
 					break;
 			}
 			if (!mc.options.debugEnabled)
@@ -731,6 +766,31 @@ public class UI extends Module {
 				alertList.add(text);
 			}
 		}
+
+		if (getSetting(28).asToggle().state && !mc.options.debugEnabled) {
+			String playerType = "";
+			int responseTime = -1;
+			Entity p = null;
+
+			/*
+			for (Entity player : mc.world.getPlayers().stream().sorted((a, b) -> Double.compare(mc.player.getPos().distanceTo(a.getPos()), mc.player.getPos().distanceTo(b.getPos())))
+					.collect(Collectors.toList())) {
+				if (player == mc.player) continue;
+
+				int dist = (int) round(mc.player.getPos().distanceTo(player.getPos()));
+
+				String text = player.getDisplayName().getString() + (getSetting(8).asToggle().getChild(4).asToggle().state ? " \u00a77[\u00a7r" + player.getBlockPos().getX() + " " + player.getBlockPos().getY() + " " + player.getBlockPos().getZ() + "\u00a77]\u00a7r " : " ")
+						+ "\u00a77(\u00a7r" + dist + "m\u00a77)\u00a7r";
+			}
+			 */
+
+
+			InventoryScreen.drawEntity((int) getSetting(28).asToggle().getChild(1).asSlider().getValue(), (
+							int) getSetting(28).asToggle().getChild(2).asSlider().getValue(),
+					(int) getSetting(28).asToggle().getChild(0).asSlider().getValue(),
+					-(int)mc.player.yaw, -(int)mc.player.pitch,
+					mc.world.getClosestPlayer(p, 100d));
+		}
 	}
 
 	@Subscribe
@@ -740,7 +800,7 @@ public class UI extends Module {
 			long time = System.currentTimeMillis();
 			if (time < 500) return;
 			long timeOffset = Math.abs(1000 - (time - prevTime)) + 1000;
-			tps = Math.round(MathHelper.clamp(20 / ((double) timeOffset / 1000), 0, 20) * 100d) / 100d;
+			tps = round(MathHelper.clamp(20 / ((double) timeOffset / 1000), 0, 20) * 100d) / 100d;
 			prevTime = time;
 		}
 	}
