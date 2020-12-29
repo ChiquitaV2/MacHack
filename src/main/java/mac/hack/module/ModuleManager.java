@@ -53,6 +53,7 @@ public class ModuleManager {
 			new AutoReconnect(),
 			new AutoRespawn(),
 			new AutoBedrockBreak(),
+			new AutoLog(),
 		//	new AutoPiston(),
 			new AutoSign(),
 			new AutoSwitcher(),
