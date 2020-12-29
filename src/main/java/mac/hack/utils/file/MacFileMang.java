@@ -20,7 +20,7 @@ public class MacFileMang {
 		dir = Paths.get(MinecraftClient.getInstance().runDirectory.getPath(), "mac/");
 		if (!dir.toFile().exists()) {
 			dir.toFile().mkdirs();
-			ModuleManager.getModuleByName("UI").setToggled(true);
+			ModuleManager.getModuleByName("HUD").setToggled(true);
 			first_run = true;
 			//ModuleManager.getModuleByName("IRC").setToggled(true);
 		}

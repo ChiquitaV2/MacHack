@@ -208,4 +208,15 @@ public class WorldUtils {
 		return Math.sqrt(dX * dX + dY * dY + dZ * dZ);
 	}
 
+	public static boolean isInterceptedByOther(final BlockPos pos)
+	{
+		for (final Entity entity : mc.world.getEntities())
+		{
+			if (entity.equals(mc.player)) continue;
+			if (new Box(pos).intersects(entity.getBoundingBox())) return true;
+		}
+
+		return false;
+	}
+
 }

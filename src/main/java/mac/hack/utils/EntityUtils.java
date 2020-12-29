@@ -3,6 +3,7 @@ package mac.hack.utils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.AmbientEntity;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.WaterCreatureEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -34,6 +35,11 @@ public class EntityUtils {
 
 		entity.setGlowing(true);
 	}
+
+	public static boolean isPassive(Entity entity) {
+		return !(entity instanceof HostileEntity);
+	}
+
 	public static double[] calculateLookAt(double px, double py, double pz, PlayerEntity me)
 	{
 		double dirx = me.getX() - px;

@@ -20,10 +20,10 @@ package mac.hack.module.mods;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 
-public class AntiChunkBan extends Module {
+public class AntiPacketKick extends Module {
 
-	public AntiChunkBan() {
-		super("AntiChunkBan", KEY_UNBOUND, Category.EXPLOITS, "bypasses chunks bans");
+	public AntiPacketKick() {
+		super("AntiPacketKick", KEY_UNBOUND, Category.EXPLOITS, "bypasses chunks bans and limits packet kicks");
 	}
 
 }

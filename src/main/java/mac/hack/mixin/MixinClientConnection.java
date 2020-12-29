@@ -23,7 +23,7 @@ import mac.hack.command.CommandManager;
 import mac.hack.event.events.EventReadPacket;
 import mac.hack.event.events.EventSendPacket;
 import mac.hack.module.ModuleManager;
-import mac.hack.module.mods.AntiChunkBan;
+import mac.hack.module.mods.AntiPacketKick;
 import mac.hack.utils.MacLogger;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -79,7 +79,7 @@ public class MixinClientConnection {
 	// Packet kick blocc
 	@Inject(method = "exceptionCaught(Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Throwable;)V", at = @At("HEAD"), cancellable = true)
 	public void exceptionCaught(ChannelHandlerContext channelHandlerContext_1, Throwable throwable_1, CallbackInfo callback) {
-		if (!ModuleManager.getModule(AntiChunkBan.class).isToggled()) return;
+		if (!ModuleManager.getModule(AntiPacketKick.class).isToggled()) return;
 
 		if (!(throwable_1 instanceof PacketEncoderException)) {
 			MacLogger.warningMessage("Canceled Defect Packet: " + throwable_1);

@@ -11,11 +11,9 @@ import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.module.ModuleManager;
 import mac.hack.module.mods.ClickGui;
-import mac.hack.module.mods.UI;
+import mac.hack.module.mods.HUD;
 import mac.hack.utils.ColorUtils;
 import mac.hack.utils.file.MacFileHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -25,7 +23,6 @@ import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -102,7 +99,7 @@ public class ClickGuiScreen extends AbstractWindowScreen {
 		searchField.visible = ModuleManager.getModule(ClickGui.class).getSetting(1).asToggle().state;
 		MHLogo.render(matrix);
 		this.renderBackground(matrix);
-		String watermark = "MacHack " + (ModuleManager.getModule(UI.class).getSetting(24).asToggle().state ? "\u00A7f" : "")  + MacHack.VERSION;
+		String watermark = MacHack.NAME + (ModuleManager.getModule(HUD.class).getSetting(24).asToggle().state ? "\u00A7f" : "")  + MacHack.VERSION;
 		textRenderer.drawWithShadow(matrix, watermark, 1, 1, ColorUtils.guiColour());
 		if (ModuleManager.getModule(ClickGui.class).getSetting(2).asToggle().state) {
 			textRenderer.drawWithShadow(matrix,

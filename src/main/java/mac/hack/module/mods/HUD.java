@@ -58,7 +58,7 @@ import java.util.zip.DeflaterOutputStream;
 
 import static java.lang.Math.round;
 
-public class UI extends Module {
+public class HUD extends Module {
 
 	private long prevTime = 0;
 	private double tps = 20;
@@ -68,8 +68,8 @@ public class UI extends Module {
 
 	public List<String> alertList = new ArrayList<>();
 
-	public UI() {
-		super("UI", KEY_UNBOUND, Category.CLIENT, "Shows stuff onscreen.",
+	public HUD() {
+		super("HUD", KEY_UNBOUND, Category.CLIENT, "Shows stuff onscreen.",
 				new SettingToggle("Arraylist", true).withDesc("Shows the module list").withChildren( // 0
 						new SettingSlider("x", 1, 3840, 1, 0).withDesc("x coordinates"),
 						new SettingSlider("y", 1, 3840, 11, 0).withDesc("y coordinates"),
@@ -175,7 +175,7 @@ public class UI extends Module {
 				new SettingSlider("HueSpeed", 0.1, 50, 10, 1).withDesc("Rainbow Speed"), // 17
 				new SettingToggle("Impact+", true), //18
 				new SettingToggle("Player Model", false).withChildren( //25
-						new SettingSlider("Size", 10, 50, 25, 0),
+						new SettingSlider("Size", 10, 100, 25, 0),
 						new SettingSlider("x", 1, 3840, 80, 0).withDesc("x coordinates"),
 						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates"),
 						new SettingToggle("Legacy", false)
@@ -197,7 +197,6 @@ public class UI extends Module {
 						new SettingSlider("x", 1, 3840, 80, 0).withDesc("x coordinates"),
 						new SettingSlider("y", 1, 3840, 190, 0).withDesc("y coordinates")
 				)
-
 				 */
 		);
 	}
@@ -211,7 +210,7 @@ public class UI extends Module {
 
 			if (getSetting(0).asToggle().state) {
 				for (Module m : ModuleManager.getModules())
-					if (m.isToggled() && m.isDrawn() && !m.getName().equals("UI") && !m.isHidden()) lines.add(m.getName());
+					if (m.isToggled() && m.isDrawn() && !m.getName().equals("HUD") && !m.isHidden()) lines.add(m.getName());
 
 				lines.sort((a, b) -> Integer.compare(mc.textRenderer.getWidth(b), mc.textRenderer.getWidth(a)));
 			}
@@ -298,7 +297,7 @@ public class UI extends Module {
 		}
 
 		if (getSetting(1).asToggle().state && !mc.options.debugEnabled) {
-			String watermark = "MacHack " + (getSetting(24).asToggle().state ? "\u00A7f" : "")  + MacHack.VERSION;
+			String watermark = MacHack.NAME + (getSetting(24).asToggle().state ? "\u00A7f" : "")  + MacHack.VERSION;
 			if (getSetting(1).asToggle().getChild(2).asToggle().state) {
 				mc.textRenderer.drawWithShadow(event.matrix, watermark, (int) getSetting(1).asToggle().getChild(0).asSlider().getValue(), (int) getSetting(1).asToggle().getChild(1).asSlider().getValue(), ColorUtils.guiColour());
 			} else{
@@ -758,39 +757,25 @@ public class UI extends Module {
 
 			}
 		}
-		if (getSetting(27).asToggle().getChild(3).asToggle().state && getSetting(27).asToggle().state) {
+		if (getSetting(27).asToggle().getChild(2).asToggle().state && getSetting(27).asToggle().state) {
 			double min_picks = getSetting(27).asToggle().getChild(3).asToggle().getChild(0).asSlider().getValue();
 			int	pick_count = this.getPicks();
 			if (pick_count < min_picks) {
-				String text = (getSetting(24).asToggle().state ? "\u00a7f" : "") + pick_count + (getSetting(24).asToggle().state ? " \u00a7r" : " ") + (pick_count == 1 ? "Picks Remaining" : "Picks Remaining");
+				String text = (getSetting(24).asToggle().state ? "\u00a7f" : "") + pick_count + (getSetting(24).asToggle().state ? " \u00a7r" : " ") + (pick_count == 1 ? "Pick Remaining" : "Picks Remaining");
 				alertList.add(text);
 			}
 		}
 
-		if (getSetting(28).asToggle().state && !mc.options.debugEnabled) {
-			String playerType = "";
-			int responseTime = -1;
-			Entity p = null;
-
-			/*
-			for (Entity player : mc.world.getPlayers().stream().sorted((a, b) -> Double.compare(mc.player.getPos().distanceTo(a.getPos()), mc.player.getPos().distanceTo(b.getPos())))
-					.collect(Collectors.toList())) {
-				if (player == mc.player) continue;
-
-				int dist = (int) round(mc.player.getPos().distanceTo(player.getPos()));
-
-				String text = player.getDisplayName().getString() + (getSetting(8).asToggle().getChild(4).asToggle().state ? " \u00a77[\u00a7r" + player.getBlockPos().getX() + " " + player.getBlockPos().getY() + " " + player.getBlockPos().getZ() + "\u00a77]\u00a7r " : " ")
-						+ "\u00a77(\u00a7r" + dist + "m\u00a77)\u00a7r";
-			}
-			 */
-
-
-			InventoryScreen.drawEntity((int) getSetting(28).asToggle().getChild(1).asSlider().getValue(), (
-							int) getSetting(28).asToggle().getChild(2).asSlider().getValue(),
-					(int) getSetting(28).asToggle().getChild(0).asSlider().getValue(),
-					-(int)mc.player.yaw, -(int)mc.player.pitch,
-					mc.world.getClosestPlayer(p, 100d));
-		}
+//		if (getSetting(28).asToggle().state && !mc.options.debugEnabled) { yo r333mo you commented out the setting but you didn't comment out the code so it blew up that's why
+//			String playerType = "";
+//			int responseTime = -1;
+//			Entity p = null;
+//			InventoryScreen.drawEntity((int) getSetting(28).asToggle().getChild(1).asSlider().getValue(), (
+//							int) getSetting(28).asToggle().getChild(2).asSlider().getValue(),
+//					(int) getSetting(28).asToggle().getChild(0).asSlider().getValue(),
+//					-(int)mc.player.yaw, -(int)mc.player.pitch,
+//					mc.world.getClosestPlayer(p, 100d));
+//		}
 	}
 
 	@Subscribe
@@ -1099,7 +1084,7 @@ public class UI extends Module {
 	}
 
 	public static int getRainbowFromSettings(int offset) {
-		Module ui = ModuleManager.getModule(UI.class);
+		Module ui = ModuleManager.getModule(HUD.class);
 
 		if (ui == null) return getRainbow(0.5f, 0.5f, 10, 0);
 

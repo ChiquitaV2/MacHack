@@ -17,6 +17,7 @@ import net.minecraft.client.util.Window;
 public class MacHack implements ModInitializer {
 
 	public static final String VERSION = "B1502";
+	public static final String NAME = "MacHack ";
 	public static final int INTVERSION = 24;
 
 	public static EventBus eventBus = new EventBus();
@@ -53,6 +54,8 @@ public class MacHack implements ModInitializer {
 		}
 		MinecraftClient.getInstance().execute(this::updateTitle);
 
+		//if (MinecraftClient.getInstance().player.getName().toString() == "EskerePvP") MinecraftClient.getInstance().close();
+
 		if (!MacFileMang.fileExists("cleanchat.txt")) {
 			MacFileMang.createFile("cleanchat.txt");
 			MacFileMang.appendFile("nigger", "cleanchat.txt");
@@ -70,6 +73,6 @@ public class MacHack implements ModInitializer {
 	}
 	private void updateTitle(){
 		final Window window = MinecraftClient.getInstance().getWindow();
-		window.setTitle("MacHack " + VERSION);
+		window.setTitle("MacHack+ " + VERSION);
 	}
 }

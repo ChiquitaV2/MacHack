@@ -1,7 +1,7 @@
 package mac.hack.mixin;
 
 import mac.hack.module.ModuleManager;
-import mac.hack.module.mods.AntiChunkBan;
+import mac.hack.module.mods.AntiPacketKick;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -26,7 +26,7 @@ public class MixinPacketInflater {
 	@Inject(at = @At("HEAD"), method = "decode(Lio/netty/channel/ChannelHandlerContext;Lio/netty/buffer/ByteBuf;Ljava/util/List;)V", cancellable = true)
 	protected void decode(ChannelHandlerContext channelHandlerContext_1, ByteBuf byteBuf_1, List<Object> list_1, CallbackInfo info) throws Exception {
 
-		if (!ModuleManager.getModule(AntiChunkBan.class).isToggled()) return;
+		if (!ModuleManager.getModule(AntiPacketKick.class).isToggled()) return;
 
 		info.cancel();
 

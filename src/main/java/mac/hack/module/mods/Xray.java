@@ -44,6 +44,10 @@ public class Xray extends Module {
 				new SettingToggle("Fluids", false));
 	}
 
+	public void toggleNoSave() {
+
+	}
+
 	public boolean isVisible(Block block) {
 		return !this.isToggled() || this.visibleBlocks.contains(block);
 	}
@@ -63,15 +67,14 @@ public class Xray extends Module {
 	@Override
 	public void onEnable() {
 		visibleBlocks.clear();
-
 		for (String s: MacFileMang.readFileLines("xrayblocks.txt")) {
 			setVisible(Registry.BLOCK.get(new Identifier(s)));
 		}
 
-		mc.worldRenderer.reload();
-
-		gamma = mc.options.gamma;
-
+		if (mc.worldRenderer != null) {
+			mc.worldRenderer.reload();
+			gamma = mc.options.gamma;
+		}
 		super.onEnable();
 	}
 
