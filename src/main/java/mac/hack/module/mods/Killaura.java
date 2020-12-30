@@ -1,20 +1,3 @@
-/*
- * This file is part of the MacHack distribution (https://github.com/BleachDrinker420/bleachhack-1.14/).
- * Copyright (c) 2019 Bleach.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package mac.hack.module.mods;
 
 import mac.hack.MacHack;
@@ -24,6 +7,7 @@ import mac.hack.module.Module;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.setting.other.SettingRotate;
+import mac.hack.utils.CrystalUtils;
 import mac.hack.utils.EntityUtils;
 import mac.hack.utils.WorldUtils;
 import com.google.common.collect.Streams;
@@ -33,6 +17,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket.Mode;
 import net.minecraft.util.Hand;
@@ -43,6 +28,8 @@ import java.util.stream.Collectors;
 public class Killaura extends Module {
 
 	private int delay = 0;
+	int oldSlot = -1;
+	int counter = 0;
 
 	public Killaura() {
 		super("Killaura", KEY_UNBOUND, Category.COMBAT, "Automatically attacks entities",
@@ -54,11 +41,23 @@ public class Killaura extends Module {
 				new SettingToggle("Thru Walls", true),
 				new SettingToggle("1.9 Delay", true),
 				new SettingSlider("Range", 0, 6, 4.25, 2),
-				new SettingSlider("CPS", 0, 20, 8, 0));
+				new SettingSlider("CPS", 0, 20, 8, 0),
+				new SettingToggle("AutoSword", false)
+		);
+	}
+
+	public void
+	onDisable()
+	{
+		super.onDisable();
+		if(oldSlot != -1)
+			mc.player.inventory.selectedSlot = oldSlot;
+		oldSlot = -1;
 	}
 
 	@Subscribe
 	public void onTick(EventTick event) {
+		this.oldSlot = -1; //move to on onEnable
 		delay++;
 		int reqDelay = (int) Math.round(20 / getSetting(8).asSlider().getValue());
 
@@ -95,5 +94,9 @@ public class Killaura extends Module {
 				delay = 0;
 			}
 		}
+		if(getSetting(9).asToggle().state && mc.player.getMainHandStack().getItem() != Items.NETHERITE_SWORD)
+			oldSlot = CrystalUtils.changeHotbarSlotToItem(Items.NETHERITE_SWORD);
+
+		if (mc.player.getMainHandStack().getItem() != Items.NETHERITE_SWORD) {return;}
 	}
 }
