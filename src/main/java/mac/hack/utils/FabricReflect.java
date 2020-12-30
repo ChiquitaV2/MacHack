@@ -17,11 +17,10 @@
  */
 package mac.hack.utils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+
+import java.lang.reflect.Field;
 
 public class FabricReflect {
 
@@ -30,27 +29,38 @@ public class FabricReflect {
 
 		Field field = null;
 		for (Class<?> cls1 = cls; cls1 != null; cls1 = cls1.getSuperclass()) {
-			try { field = cls1.getDeclaredField(obfName); } catch (Exception e) {}
-			try { field = cls1.getDeclaredField(deobfName); } catch (Exception e) {}
+			try {
+				field = cls1.getDeclaredField(obfName);
+			} catch (Exception e) {
+				try {
+					field = cls1.getDeclaredField(deobfName);
+				} catch (Exception e1) {
+					continue;
+				}
+			}
 
-			if (field == null) continue;
+			if (!field.isAccessible()) {
+				field.setAccessible(true);
+			}
 
-			if (!Modifier.isPublic(field.getModifiers())) field.setAccessible(true);
 			return field;
 		}
 
 		for (final Class<?> class1 : ClassUtils.getAllInterfaces(cls)) {
-			try { field = class1.getField(obfName); } catch (Exception e) {}
-			try { field = class1.getField(deobfName); } catch (Exception e) {}
+			try {
+				field = class1.getField(obfName);
+			} catch (Exception e) {
+				try {
+					field = class1.getField(deobfName);
+				} catch (Exception e1) {
+					continue;
+				}
+			}
 
-			if (field != null) break;
+			return field;
 		}
-		
-		if (field == null) {
-			throw new RuntimeException("Error reflecting field: " + deobfName + "/" + obfName + " @" + cls.getSimpleName());
-		}
-		
-		return field;
+
+		throw new RuntimeException("Error reflecting field: " + deobfName + "/" + obfName + " @" + cls.getSimpleName());
 	}
 
 	public static Object getFieldValue(final Object target, String obfName, String deobfName) {
@@ -59,13 +69,20 @@ public class FabricReflect {
 		Class<?> cls = target.getClass();
 		Field field = null;
 		for (Class<?> cls1 = cls; cls1 != null; cls1 = cls1.getSuperclass()) {
-			try { field = cls1.getDeclaredField(obfName); } catch (Exception e) {}
-			try { field = cls1.getDeclaredField(deobfName); } catch (Exception e) {}
+			try {
+				field = cls1.getDeclaredField(obfName);
+			} catch (Exception e) {
+				try {
+					field = cls1.getDeclaredField(deobfName);
+				} catch (Exception e1) {
+					continue;
+				}
+			}
 
-			if (field == null) continue;
+			if (!field.isAccessible()) {
+				field.setAccessible(true);
+			}
 
-			if (!Modifier.isPublic(field.getModifiers())) field.setAccessible(true);
-			
 			try {
 				return field.get(target);
 			} catch (Exception e) {
@@ -74,17 +91,24 @@ public class FabricReflect {
 		}
 
 		for (final Class<?> class1 : ClassUtils.getAllInterfaces(cls)) {
-			try { field = class1.getField(obfName); } catch (Exception e) {}
-			try { field = class1.getField(deobfName); } catch (Exception e) {}
+			try {
+				field = class1.getField(obfName);
+			} catch (Exception e) {
+				try {
+					field = class1.getField(deobfName);
+				} catch (Exception e1) {
+					continue;
+				}
+			}
 
-			if (field != null) break;
+			try {
+				return field.get(target);
+			} catch (Exception e) {
+				throw new RuntimeException("Error getting reflected field value: " + deobfName + "/" + obfName + " @" + target.getClass().getSimpleName());
+			}
 		}
-		
-		try {
-			return field.get(target);
-		} catch (Exception e) {
-			throw new RuntimeException("Error getting reflected field value: " + deobfName + "/" + obfName + " @" + target.getClass().getSimpleName());
-		}
+
+		throw new RuntimeException("Error getting reflected field value: " + deobfName + "/" + obfName + " @" + target.getClass().getSimpleName());
 	}
 
 	public static void writeField(final Object target, final Object value, String obfName, String deobfName) {
@@ -108,12 +132,15 @@ public class FabricReflect {
 	public static Object invokeMethod(Object target, String obfName, String deobfName, Object... args) {
 		/* i just gave up here */
 		Object o = null;
-		try { o = MethodUtils.invokeMethod(target, true, obfName, args); } catch (Exception e) {
-			try { o = MethodUtils.invokeMethod(target, true, deobfName, args); } catch (Exception e1) {
+		try {
+			o = MethodUtils.invokeMethod(target, true, obfName, args);
+		} catch (Exception e) {
+			try {
+				o = MethodUtils.invokeMethod(target, true, deobfName, args);
+			} catch (Exception e1) {
 				throw new RuntimeException("Error reflecting method: " + deobfName + "/" + obfName + " @" + target.getClass().getSimpleName());
 			}
 		}
-		
 		return o;
 	}
 }

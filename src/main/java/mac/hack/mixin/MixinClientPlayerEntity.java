@@ -13,6 +13,7 @@ import mac.hack.utils.MacQueue;
 import mac.hack.utils.file.MacFileHelper;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -90,6 +91,21 @@ public class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 			super.move(event.type, event.vec3d);
 			this.autoJump((float) (this.getX() - double_1), (float) (this.getZ() - double_2));
 			info.cancel();
+		}
+	}
+
+
+	@Redirect(method = "updateNausea()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;closeHandledScreen()V", ordinal = 0))
+	private void updateNausea_closeHandledScreen(ClientPlayerEntity player) {
+		if (!ModuleManager.getModule(BetterPortal.class).isToggled() || !ModuleManager.getModule(BetterPortal.class).getSetting(0).asToggle().state) {
+			closeHandledScreen();
+		}
+	}
+
+	@Redirect(method = "updateNausea()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;openScreen(Lnet/minecraft/client/gui/screen/Screen;)V", ordinal = 0))
+	private void updateNausea_openScreen(MinecraftClient player, Screen screen_1) {
+		if (!ModuleManager.getModule(BetterPortal.class).isToggled() || !ModuleManager.getModule(BetterPortal.class).getSetting(0).asToggle().state) {
+			client.openScreen(screen_1);
 		}
 	}
 

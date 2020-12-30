@@ -225,7 +225,7 @@ public class Peek extends Module {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
-    public void fillGradient(MatrixStack matrix, int x1, int y1, int x2, int y2, int color1, int color2) {
+    private void fillGradient(MatrixStack matrix, int x1, int y1, int x2, int y2, int color1, int color2) {
         float float_1 = (color1 >> 24 & 255) / 255.0F;
         float float_2 = (color1 >> 16 & 255) / 255.0F;
         float float_3 = (color1 >> 8 & 255) / 255.0F;
