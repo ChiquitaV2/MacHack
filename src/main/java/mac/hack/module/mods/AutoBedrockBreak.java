@@ -13,6 +13,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -193,22 +194,26 @@ public class AutoBedrockBreak extends Module {
                     break;
             }
         }
-        //if (ticksPassed == 7) {
-        //    switch(direction) {
-        //        case "west":
-        //            CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY(), coords.getZ()+1), Hand.MAIN_HAND, Direction.UP);
-        //            break;
-        //        case "east":
-        //            CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY(), coords.getZ()-1), Hand.MAIN_HAND, Direction.UP);
-        //            break;
-        //        case "north":
-        //            CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY(), coords.getZ()-1), Hand.MAIN_HAND, Direction.UP);
-        //            break;
-        //        case "south":
-        //            CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY(), coords.getZ()+1), Hand.MAIN_HAND, Direction.UP);
-        //            break;
-        //    }
-        //}
+        if (ticksPassed == 7) {
+            switch(direction) {
+                case "west":
+                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN_HAND,
+                            new BlockHitResult(mc.player.getPos(), Direction.UP, new BlockPos(coords.getX()-1, coords.getY()+1, coords.getZ()-1), true));
+                    break;
+                case "east":
+                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN_HAND,
+                            new BlockHitResult(mc.player.getPos(), Direction.UP, new BlockPos(coords.getX()+1, coords.getY()+1, coords.getZ()+1), true));
+                    break;
+                case "north":
+                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN_HAND,
+                            new BlockHitResult(mc.player.getPos(), Direction.UP, new BlockPos(coords.up().north().east()), true));
+                    break;
+                case "south":
+                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN_HAND,
+                            new BlockHitResult(mc.player.getPos(), Direction.UP, new BlockPos(coords.getX()-1, coords.getY()+1, coords.getZ()+1), true));
+                    break;
+            }
+        }
         if (ticksPassed > 60 && enabled) {
             if (mc.world.getBlockState(pistonPos.down(1)).getBlock() == Blocks.BEDROCK) {
                 CrystalUtils.changeHotbarSlotToItem(pistonType);
