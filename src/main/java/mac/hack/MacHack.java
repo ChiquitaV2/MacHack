@@ -16,7 +16,7 @@ import net.minecraft.client.util.Window;
 
 public class MacHack implements ModInitializer {
 
-	public static final String VERSION = "B1502";
+	public static final String VERSION = "B1503";
 	public static final String NAME = "MacHack ";
 	public static final int INTVERSION = 24;
 
