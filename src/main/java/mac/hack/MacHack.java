@@ -73,6 +73,6 @@ public class MacHack implements ModInitializer {
 	}
 	private void updateTitle(){
 		final Window window = MinecraftClient.getInstance().getWindow();
-		window.setTitle("MacHack+ " + VERSION);
+		window.setTitle(NAME + VERSION);
 	}
 }
