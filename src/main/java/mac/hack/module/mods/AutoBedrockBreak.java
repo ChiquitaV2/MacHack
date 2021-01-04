@@ -2,12 +2,15 @@ package mac.hack.module.mods;
 
 import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
+import mac.hack.event.events.EventWorldRender;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.setting.base.SettingMode;
+import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.CrystalUtils;
 import mac.hack.utils.MacLogger;
+import mac.hack.utils.RenderUtils;
 import mac.hack.utils.WorldUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
@@ -16,8 +19,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import org.lwjgl.opengl.GL11;
 
 public class AutoBedrockBreak extends Module {
 
@@ -29,12 +34,15 @@ public class AutoBedrockBreak extends Module {
     BlockPos lookingCoords;
     BlockPos coords;
     String direction;
-
+    // TODO: make player obstructing check && make sufficient blocks check
     public AutoBedrockBreak() {
         super("AutoBedrockBreak", KEY_UNBOUND, Category.EXPLOITS, "automatically breaks bedrock (IN DEVELOPMENT)",
-                new SettingMode(" Piston Type", "Piston", "Sticky Piston"),
+                new SettingMode("Piston Type", "Piston", "Sticky Piston"),
                 new SettingToggle("Debug", true),
-                new SettingMode("Structure Type", "Obsidian", "Cobblestone", "Iron Block")
+                new SettingMode("Structure Type", "Obsidian", "Cobblestone", "Iron Block"),
+                new SettingSlider("R: ", 0.0D, 255.0D, 255.0D, 0),
+                new SettingSlider("G: ", 0.0D, 255.0D, 0.0D, 0),
+                new SettingSlider("B: ", 0.0D, 255.0D, 0.0D, 0)
         );
     }
 
@@ -52,7 +60,49 @@ public class AutoBedrockBreak extends Module {
 
         if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) {return;}
         lookingCoords = mc.crosshairTarget.getType() == HitResult.Type.BLOCK ? ((BlockHitResult) mc.crosshairTarget).getBlockPos() : null;
-        direction = mc.player.getHorizontalFacing().getName();
+        if(
+                WorldUtils.isBlockEmpty(lookingCoords.up()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2)) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up().east()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2).east()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up().east(2)) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2).east(2))
+        ) {
+            direction = "north";
+        } else if (
+                WorldUtils.isBlockEmpty(lookingCoords.up()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2)) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up().south()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2).south()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up().south(2)) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2).south(2))
+        ) {
+            direction = "east";
+        } else if (
+                WorldUtils.isBlockEmpty(lookingCoords.up()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2)) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up().west()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2).west()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up().west(2)) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2).west(2))
+        ) {
+            direction = "south";
+        } else if (
+                WorldUtils.isBlockEmpty(lookingCoords.up()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2)) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up().north()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2).north()) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up().north(2)) &&
+                        WorldUtils.isBlockEmpty(lookingCoords.up(2).north(2))
+        ) {
+            direction = "west";
+        } else {
+            MacLogger.infoMessage("NO BEDROCK BREAK POSITION FOUND!");
+            enabled = false;
+            ticksPassed = 0;
+            active = false;
+            super.setToggled(false);
+        }
         switch(direction) {
             case "west":
                 coords = lookingCoords.north().east().up();
@@ -67,7 +117,6 @@ public class AutoBedrockBreak extends Module {
                 coords = lookingCoords.west().north().up();
                 break;
         }
-        //BleachLogger.infoMessage(lookingCoords.toString() + "||" + coords);
     }
 
     @Subscribe
@@ -294,7 +343,7 @@ public class AutoBedrockBreak extends Module {
                     break;
             }
         }
-        if (ticksPassed > 60 && enabled) {
+        if (ticksPassed > 83 && enabled) {
             //if (
             //        mc.world.getBlockState(pistonPos.down(1)).getBlock() == Blocks.BEDROCK &&
             //                mc.world.getBlockState(pistonPos).getEntries().toString().contains("DirectionProperty{name=facing, clazz=class net.minecraft.util.math.Direction, values=[north, east, south, west, up, down]}=down")
@@ -337,4 +386,65 @@ public class AutoBedrockBreak extends Module {
             }
         }
     }
+
+    @Subscribe
+    public void onRender(EventWorldRender event) {
+
+        if(!active) return;
+        if(lookingCoords == null) return;
+
+
+        GL11.glPushMatrix();
+        GL11.glBlendFunc(770, 771);
+        GL11.glEnable(3042);
+        GL11.glDisable(3553);
+        GL11.glDisable(2929);
+        GL11.glDepthMask(false);
+        GL11.glLineWidth(2.0F);
+
+        float blue = (float) (System.currentTimeMillis() / 10L % 512L) / 255.0F;
+        float red = (float) (System.currentTimeMillis() / 16L % 512L) / 255.0F;
+
+        if (blue > 1.0F)
+        {
+            blue = 1.0F - blue;
+        }
+
+        if (red > 1.0F)
+        {
+            red = 1.0F - red;
+        }
+
+        this.drawFilledBlockBox(lookingCoords, red, 0.7F, blue, 0.25F);
+
+        GL11.glEnable(2929);
+        GL11.glEnable(3553);
+        GL11.glDepthMask(true);
+        GL11.glDisable(3042);
+        GL11.glPopMatrix();
+    }
+
+    public void drawFilledBlockBox(BlockPos blockPos, float r, float g, float b, float a)
+    {
+        double x = (double) blockPos.getX();
+        double y = (double) blockPos.getY();
+        double z = (double) blockPos.getZ();
+
+        float or = (float) (this.getSettings().get(3).asSlider().getValue() / 255.0D);
+        float og = (float) (this.getSettings().get(4).asSlider().getValue() / 255.0D);
+        float ob = (float) (this.getSettings().get(5).asSlider().getValue() / 255.0D);
+        RenderUtils.drawFilledBox(new Box(x, y, z, x + 1.0D, y + 1.0D, z), or, og, ob, a);
+        RenderUtils.drawFilledBox(new Box(x, y, z, x + 1.0D, y + 1.0D, z), or, og, ob, a * 1.5F);
+        RenderUtils.drawFilledBox(new Box(x, y, z, x, y + 1.0D, z + 1.0D), or, og, ob, a);
+        RenderUtils.drawFilledBox(new Box(x, y, z, x, y + 1.0D, z + 1.0D), or, og, ob, a * 1.5F);
+        RenderUtils.drawFilledBox(new Box(x + 1.0D, y, z, x + 1.0D, y + 1.0D, z + 1.0D), or, og, ob, a);
+        RenderUtils.drawFilledBox(new Box(x + 1.0D, y, z, x + 1.0D, y + 1.0D, z + 1.0D), or, og, ob, a * 1.5F);
+        RenderUtils.drawFilledBox(new Box(x, y, z + 1.0D, x + 1.0D, y + 1.0D, z + 1.0D), or, og, ob, a);
+        RenderUtils.drawFilledBox(new Box(x, y, z + 1.0D, x + 1.0D, y + 1.0D, z + 1.0D), or, og, ob, a * 1.5F);
+        RenderUtils.drawFilledBox(new Box(x, y, z, x + 1.0D, y, z + 1.0D), or, og, ob, a);
+        RenderUtils.drawFilledBox(new Box(x, y, z, x + 1.0D, y, z + 1.0D), or, og, ob, a * 1.5F);
+        RenderUtils.drawFilledBox(new Box(x, y + 1.0D, z, x + 1.0D, y + 1.0D, z + 1.0D), or, og, ob, a);
+        RenderUtils.drawFilledBox(new Box(x, y + 1.0D, z, x + 1.0D, y + 1.0D, z + 1.0D), or, og, ob, a * 1.5F);
+    }
+
 }
