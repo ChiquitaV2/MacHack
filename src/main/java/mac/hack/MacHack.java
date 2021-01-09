@@ -42,6 +42,12 @@ public class MacHack implements ModInitializer {
 
 		eventBus.register(new ModuleManager());
 
+		if (!MacFileMang.fileExists("xrayblocks.txt")) {
+			MacFileMang.createFile("xrayblocks.txt");
+		}
+		if (!MacFileMang.fileExists("nukerblocks.txt")) {
+			MacFileMang.createFile("nukerblocks.txt");
+		}
 		if (!MacFileMang.fileExists("drawn.txt")) {
 			MacFileMang.createFile("drawn.txt");
 		}

@@ -22,7 +22,6 @@ public class MacFileMang {
 			dir.toFile().mkdirs();
 			ModuleManager.getModuleByName("HUD").setToggled(true);
 			first_run = true;
-			//ModuleManager.getModuleByName("IRC").setToggled(true);
 		}
 	}
 
@@ -121,7 +120,7 @@ public class MacFileMang {
 	}
 
 	/**
-	 * Gets a file by walking down all of the parameters (starts at .minecraft/bleach/).
+	 * Gets a file by walking down all of the parameters (starts at .minecraft/mac/).
 	 **/
 	public static Path stringsToPath(String... strings) {
 		Path path = dir;
