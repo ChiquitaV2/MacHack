@@ -1,6 +1,7 @@
 package mac.hack.command.commands;
 
 import mac.hack.command.Command;
+import mac.hack.command.commands.CmdPeek.PeekShulkerScreen;
 import mac.hack.utils.MacLogger;
 import mac.hack.utils.MacQueue;
 import mac.hack.utils.ItemContentUtils;

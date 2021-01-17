@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SkyProperties.class)
 public class MixinSkyProperties {
 
-    @Inject(at = @At("HEAD"), method = "getSkyColor", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "getFogColorOverride", cancellable = true)
     public void getSkyColor(float skyAngle, float tickDelta, CallbackInfoReturnable<float[]> ci) {
         EventSkyColor.SkyColor event = new EventSkyColor.SkyColor(tickDelta);
         MacHack.eventBus.post(event);

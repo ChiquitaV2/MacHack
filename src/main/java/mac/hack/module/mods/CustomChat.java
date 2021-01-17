@@ -5,6 +5,7 @@ import mac.hack.event.events.EventReadPacket;
 import mac.hack.event.events.EventSendPacket;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
+import mac.hack.module.mods.CustomChat.CustomFont;
 import mac.hack.module.mods.CustomChat.CustomFont.CharMap;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingToggle;
