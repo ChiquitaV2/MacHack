@@ -4,7 +4,7 @@
 
 Very cool client made by Bleach and epearl 
 
-This is designed for people who want to use Bleach had epearl edition
+This is designed for people who want to use BleachHack epearl edition
 but can't because they are on mac or linux. Anyone should be able to use this no matter their OS.
 The only big difference between MacHack and MacHack+, is that MacHack+ has BA and gets modules faster but those modules will come to MacHack with time(like a day or two.) 
 
