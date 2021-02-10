@@ -149,7 +149,8 @@ public class ModuleManager {
 			new Yaw(),
 			new Zoom(),
 			new HUD(),
-			new AutoBuilder()
+			new AutoBuilder(),
+			new SearchESP()
 
 	).stream().sorted(Comparator.comparing(Module::getName, String.CASE_INSENSITIVE_ORDER)).collect(Collectors.toList());
 

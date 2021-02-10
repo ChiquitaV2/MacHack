@@ -48,6 +48,7 @@ public class CommandManager {
 			new CmdSetting(),
 			new CmdSkull(),
 			new CmdToggle(),
+			new CmdSearch(),
 			new CmdXray());
 
 	public static List<Command> getCommands() {
