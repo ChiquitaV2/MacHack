@@ -28,6 +28,9 @@ import static java.lang.Math.round;
 
 //old code don't use new code is like 100 lines not 600 lol
 public class TargetHUD extends Module {
+    private HashMap<String, Integer> pops = new HashMap<>();
+    private PlayerEntity closestTarget;
+    private String lastTickTargetName;
     public TargetHUD() {
         super("TargetHUD", KEY_UNBOUND, Category.CLIENT, "Shows the opps pew pew ewp",
                 new SettingSlider("x", 1, 3840, 1, 0).withDesc("x coordinates"),
@@ -35,18 +38,16 @@ public class TargetHUD extends Module {
                 new SettingToggle("Right Align", true)
         );
     }
-    private HashMap<String, Integer> pops = new HashMap<>();
 
-    private PlayerEntity closestTarget;
-    private String lastTickTargetName;
+    public static boolean isLiving(Entity e) {
+        return e instanceof LivingEntity;
+    }
 
     public void
-    onDisable()
-    {
+    onDisable() {
         super.onDisable();
         pops.clear();
     }
-
 
     @Subscribe
     public void onDrawOverlay(EventDrawOverlay event) {
@@ -72,7 +73,7 @@ public class TargetHUD extends Module {
         String Distance = dist + "";
         String type = "";
 
-        if(target.getEquippedStack(EquipmentSlot.HEAD).getItem() == Items.NETHERITE_HELMET
+        if (target.getEquippedStack(EquipmentSlot.HEAD).getItem() == Items.NETHERITE_HELMET
                 || target.getEquippedStack(EquipmentSlot.HEAD).getItem() == Items.DIAMOND_HELMET
                 && target.getEquippedStack(EquipmentSlot.CHEST).getItem() == Items.NETHERITE_CHESTPLATE
                 || target.getEquippedStack(EquipmentSlot.CHEST).getItem() == Items.DIAMOND_CHESTPLATE
@@ -80,30 +81,24 @@ public class TargetHUD extends Module {
                 || target.getEquippedStack(EquipmentSlot.LEGS).getItem() == Items.DIAMOND_LEGGINGS
                 && target.getEquippedStack(EquipmentSlot.FEET).getItem() == Items.NETHERITE_BOOTS
                 || target.getEquippedStack(EquipmentSlot.FEET).getItem() == Items.DIAMOND_BOOTS
-        )
-        {
+        ) {
             type = "§c Threat";
-        }
-        else if(target.getEquippedStack(EquipmentSlot.HEAD).getItem() == Items.NETHERITE_HELMET
+        } else if (target.getEquippedStack(EquipmentSlot.HEAD).getItem() == Items.NETHERITE_HELMET
                 || target.getEquippedStack(EquipmentSlot.HEAD).getItem() == Items.DIAMOND_HELMET
                 && target.getEquippedStack(EquipmentSlot.CHEST).getItem() == Items.ELYTRA
                 && target.getEquippedStack(EquipmentSlot.LEGS).getItem() == Items.NETHERITE_LEGGINGS
                 || target.getEquippedStack(EquipmentSlot.LEGS).getItem() == Items.DIAMOND_LEGGINGS
                 && target.getEquippedStack(EquipmentSlot.FEET).getItem() == Items.NETHERITE_BOOTS
                 || target.getEquippedStack(EquipmentSlot.FEET).getItem() == Items.DIAMOND_BOOTS
-        )
-        {
+        ) {
             type = "§e Wasp";
-        }
-        else if(target.getEquippedStack(EquipmentSlot.HEAD).getItem() == Items.AIR
+        } else if (target.getEquippedStack(EquipmentSlot.HEAD).getItem() == Items.AIR
                 && target.getEquippedStack(EquipmentSlot.CHEST).getItem() == Items.AIR
                 && target.getEquippedStack(EquipmentSlot.LEGS).getItem() == Items.AIR
                 && target.getEquippedStack(EquipmentSlot.FEET).getItem() == Items.AIR
-        )
-        {
+        ) {
             type = "§a Naked";
-        }
-        else {
+        } else {
             type = "§d New Friend";
         }
 
@@ -121,7 +116,7 @@ public class TargetHUD extends Module {
                 0xffffff);
         mc.textRenderer.drawWithShadow(event.matrix, type + "§7 | " + getPingColor(ping) + ping + "ms" + "§7 |§f " + dist + "m",
                 (int) getSetting(0).asSlider().getValue() + 50,
-                (int) getSetting(1).asSlider().getValue() + 30,ColorUtils.textColor());
+                (int) getSetting(1).asSlider().getValue() + 30, ColorUtils.textColor());
         InventoryScreen.drawEntity((int) getSetting(0).asSlider().getValue() + 20,
                 (int) getSetting(1).asSlider().getValue() + 110,
                 50, -(int) target.yaw, -(int) target.pitch, target);
@@ -412,8 +407,8 @@ public class TargetHUD extends Module {
                     (int) getSetting(0).asSlider().getValue() + 170,
                     (int) getSetting(1).asSlider().getValue() + 90,
                     0xb055ff55, 1.0F);
-            RenderUtils.drawRect((int)getSetting(0).asSlider().getValue() + 160, (int) getSetting(1).asSlider().getValue() + 90,
-                    (int)getSetting(0).asSlider().getValue() + 180, (int) getSetting(1).asSlider().getValue() + 20, 0xb055ff55, 0.5f);
+            RenderUtils.drawRect((int) getSetting(0).asSlider().getValue() + 160, (int) getSetting(1).asSlider().getValue() + 90,
+                    (int) getSetting(0).asSlider().getValue() + 180, (int) getSetting(1).asSlider().getValue() + 20, 0xb055ff55, 0.5f);
             if (Health == 21) {
                 mc.textRenderer.drawWithShadow(event.matrix, "21",
                         (int) getSetting(0).asSlider().getValue() + 160,
@@ -610,21 +605,14 @@ public class TargetHUD extends Module {
         GL11.glPopMatrix();
     }
 
-    public static boolean isLiving(Entity e) {
-        return e instanceof LivingEntity;
-    }
-
     // I'm lazy so this is just pop counter line for line basically
     @Subscribe
     public void
-    onReadPacket(EventReadPacket event)
-    {
-        if(event.getPacket() instanceof EntityStatusS2CPacket)
-        {
+    onReadPacket(EventReadPacket event) {
+        if (event.getPacket() instanceof EntityStatusS2CPacket) {
             EntityStatusS2CPacket pack = (EntityStatusS2CPacket) event.getPacket();
 
-            if(pack.getStatus() == 35)
-            {
+            if (pack.getStatus() == 35) {
                 handlePop(pack.getEntity(mc.world));
             }
         }
@@ -632,36 +620,30 @@ public class TargetHUD extends Module {
 
     @Subscribe
     public void
-    onTick(EventTick tick)
-    {
-        if(mc.world == null)
+    onTick(EventTick tick) {
+        if (mc.world == null)
             return;
 
         mc.world.getPlayers().forEach(player -> {
-            if(player.getHealth() <= 0)
-            {
-                if(pops.containsKey(player.getEntityName()))
-                {
+            if (player.getHealth() <= 0) {
+                if (pops.containsKey(player.getEntityName())) {
                     pops.remove(player.getEntityName(), pops.get(player.getEntityName()));
                 }
             }
         });
     }
+
     private void
-    handlePop(Entity entity)
-    {
-        if(pops == null)
+    handlePop(Entity entity) {
+        if (pops == null)
             pops = new HashMap<>();
 
-        if(entity == mc.player)
+        if (entity == mc.player)
             return;
 
-        if(pops.get(entity.getEntityName()) == null)
-        {
+        if (pops.get(entity.getEntityName()) == null) {
             pops.put(entity.getEntityName(), 1);
-        }
-        else if(!(pops.get(entity.getEntityName()) == null))
-        {
+        } else if (!(pops.get(entity.getEntityName()) == null)) {
             int popc = pops.get(entity.getEntityName());
             popc += 1;
             pops.put(entity.getEntityName(), popc);

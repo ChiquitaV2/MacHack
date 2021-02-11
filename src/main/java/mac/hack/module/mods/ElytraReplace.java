@@ -1,9 +1,9 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.item.ElytraItem;

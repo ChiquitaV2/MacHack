@@ -15,8 +15,7 @@ public class FakePlayer extends Module {
     }
 
     public void
-    onEnable()
-    {
+    onEnable() {
         if (mc.player != null) {
             oldPos = mc.player.getPos();
 
@@ -32,8 +31,7 @@ public class FakePlayer extends Module {
     }
 
     public void
-    onDisable()
-    {
+    onDisable() {
         if (fake != null) {
             newPos = mc.player.getPos();
             fake.despawn();

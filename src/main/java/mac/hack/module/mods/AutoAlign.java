@@ -5,7 +5,6 @@ import mac.hack.module.Module;
 import mac.hack.module.ModuleManager;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
-import mac.hack.utils.MacLogger;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -26,17 +25,32 @@ public class AutoAlign extends Module {
 
         if (getSettings().get(0).asMode().mode == 1) {
             player.yaw = (float) getSettings().get(1).asSlider().getValue();
-        }
-        else if (getSettings().get(0).asMode().mode == 0) {
+        } else if (getSettings().get(0).asMode().mode == 0) {
             switch (determineHighway()) {
-                case 1: player.yaw = -90; break;
-                case 2: player.yaw = -45; break;
-                case 3: player.yaw = -135; break;
-                case 4: player.yaw = 90; break;
-                case 5: player.yaw = 45; break;
-                case 6: player.yaw = 135; break;
-                case 7: player.yaw = 0; break;
-                case 8: player.yaw = 180; break;
+                case 1:
+                    player.yaw = -90;
+                    break;
+                case 2:
+                    player.yaw = -45;
+                    break;
+                case 3:
+                    player.yaw = -135;
+                    break;
+                case 4:
+                    player.yaw = 90;
+                    break;
+                case 5:
+                    player.yaw = 45;
+                    break;
+                case 6:
+                    player.yaw = 135;
+                    break;
+                case 7:
+                    player.yaw = 0;
+                    break;
+                case 8:
+                    player.yaw = 180;
+                    break;
             }
         }
         ModuleManager.getModule(AutoAlign.class).toggle();

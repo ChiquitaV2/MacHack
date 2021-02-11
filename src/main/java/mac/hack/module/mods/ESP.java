@@ -17,13 +17,13 @@
  */
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.MacHack;
 import mac.hack.event.events.EventTick;
-import mac.hack.setting.base.SettingToggle;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
+import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.EntityUtils;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.decoration.EndCrystalEntity;
@@ -35,59 +35,48 @@ import net.minecraft.util.Formatting;
 
 public class ESP extends Module {
 
-	public ESP() {
-		super("ESP", KEY_UNBOUND, Category.RENDER, "Allows you to see entities though walls.",
-				new SettingToggle("Players", true).withDesc("Show Players"),
-				new SettingToggle("Mobs", false).withDesc("Show Mobs"),
-				new SettingToggle("Animals", false).withDesc("Show Animals"),
-				new SettingToggle("Items", true).withDesc("Show Items"),
-				new SettingToggle("Crystals", true).withDesc("Show End Crystals"),
-				new SettingToggle("Vehicles", false).withDesc("Show Vehicles"));
-	}
+    public ESP() {
+        super("ESP", KEY_UNBOUND, Category.RENDER, "Allows you to see entities though walls.",
+                new SettingToggle("Players", true).withDesc("Show Players"),
+                new SettingToggle("Mobs", false).withDesc("Show Mobs"),
+                new SettingToggle("Animals", false).withDesc("Show Animals"),
+                new SettingToggle("Items", true).withDesc("Show Items"),
+                new SettingToggle("Crystals", true).withDesc("Show End Crystals"),
+                new SettingToggle("Vehicles", false).withDesc("Show Vehicles"));
+    }
 
-	@Override
-	public void onDisable() {
-		super.onDisable();
-		for (Entity e: mc.world.getEntities()) {
-			if (e != mc.player) {
-				if (e.isGlowing()) e.setGlowing(false);
-			}
-		}
-	}
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        for (Entity e : mc.world.getEntities()) {
+            if (e != mc.player) {
+                if (e.isGlowing()) e.setGlowing(false);
+            }
+        }
+    }
 
-	@Subscribe
-	public void onTick(EventTick event) {
-		for (Entity e: mc.world.getEntities()) {
-			if (e instanceof PlayerEntity && e != mc.player && getSettings().get(0).asToggle().state) {
-				if (MacHack.friendMang.has(e.getName().asString())) {
-					EntityUtils.setGlowing(e, Formatting.AQUA, "friends");
-				} else {
-					EntityUtils.setGlowing(e, Formatting.RED, "players");
-				}
-			}
-
-			else if (e instanceof Monster && getSettings().get(1).asToggle().state) {
-				EntityUtils.setGlowing(e, Formatting.DARK_BLUE, "mobs");
-			}
-
-			else if (EntityUtils.isAnimal(e) && getSettings().get(2).asToggle().state) {
-				EntityUtils.setGlowing(e, Formatting.GREEN, "passive");
-			}
-
-			else if (e instanceof ItemEntity && getSettings().get(3).asToggle().state) {
-				EntityUtils.setGlowing(e, Formatting.GOLD, "items");
-			}
-
-			else if (e instanceof EndCrystalEntity && getSettings().get(4).asToggle().state) {
-				EntityUtils.setGlowing(e, Formatting.LIGHT_PURPLE, "crystals");
-			}
-
-			else if ((e instanceof BoatEntity || e instanceof AbstractMinecartEntity) && getSettings().get(5).asToggle().state) {
-				EntityUtils.setGlowing(e, Formatting.GRAY, "vehicles");
-			}
-			else {
-				e.setGlowing(false);
-			}
-		}
-	}
+    @Subscribe
+    public void onTick(EventTick event) {
+        for (Entity e : mc.world.getEntities()) {
+            if (e instanceof PlayerEntity && e != mc.player && getSettings().get(0).asToggle().state) {
+                if (MacHack.friendMang.has(e.getName().asString())) {
+                    EntityUtils.setGlowing(e, Formatting.AQUA, "friends");
+                } else {
+                    EntityUtils.setGlowing(e, Formatting.RED, "players");
+                }
+            } else if (e instanceof Monster && getSettings().get(1).asToggle().state) {
+                EntityUtils.setGlowing(e, Formatting.DARK_BLUE, "mobs");
+            } else if (EntityUtils.isAnimal(e) && getSettings().get(2).asToggle().state) {
+                EntityUtils.setGlowing(e, Formatting.GREEN, "passive");
+            } else if (e instanceof ItemEntity && getSettings().get(3).asToggle().state) {
+                EntityUtils.setGlowing(e, Formatting.GOLD, "items");
+            } else if (e instanceof EndCrystalEntity && getSettings().get(4).asToggle().state) {
+                EntityUtils.setGlowing(e, Formatting.LIGHT_PURPLE, "crystals");
+            } else if ((e instanceof BoatEntity || e instanceof AbstractMinecartEntity) && getSettings().get(5).asToggle().state) {
+                EntityUtils.setGlowing(e, Formatting.GRAY, "vehicles");
+            } else {
+                e.setGlowing(false);
+            }
+        }
+    }
 }

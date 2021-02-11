@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftClient.class)
 public class MixinMinecraftClient {
 
-	@Inject(at = @At("HEAD"), method = "openScreen(Lnet/minecraft/client/gui/screen/Screen;)V", cancellable = true)
-	public void openScreen(Screen screen, CallbackInfo info) {
-		EventOpenScreen event = new EventOpenScreen(screen);
-		MacHack.eventBus.post(event);
-		if (event.isCancelled()) info.cancel();
-	}
+    @Inject(at = @At("HEAD"), method = "openScreen(Lnet/minecraft/client/gui/screen/Screen;)V", cancellable = true)
+    public void openScreen(Screen screen, CallbackInfo info) {
+        EventOpenScreen event = new EventOpenScreen(screen);
+        MacHack.eventBus.post(event);
+        if (event.isCancelled()) info.cancel();
+    }
 }

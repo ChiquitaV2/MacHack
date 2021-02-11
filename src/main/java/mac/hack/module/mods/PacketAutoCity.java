@@ -27,15 +27,15 @@ public class PacketAutoCity extends Module {
 
     // Join MacHack discord discord.gg/h8EQyuYTK7
     @Subscribe
-    public void onTick(EventTick event){
+    public void onTick(EventTick event) {
         assert mc.player != null;
         assert mc.interactionManager != null;
         PlayerEntity target = null;
-        for(PlayerEntity player : mc.world.getPlayers()){
+        for (PlayerEntity player : mc.world.getPlayers()) {
             if (player != mc.player && !MacHack.friendMang.has(player.getDisplayName().getString()))
-                if (target == null){
+                if (target == null) {
                     target = player;
-                }else if (mc.player.distanceTo(target) > mc.player.distanceTo(player)){
+                } else if (mc.player.distanceTo(target) > mc.player.distanceTo(player)) {
                     target = player;
                 }
         }
@@ -79,24 +79,24 @@ public class PacketAutoCity extends Module {
 
     public BlockPos findCityBlock(PlayerEntity playerEntity) {
         Vec3d vec = playerEntity.getPos();
-        if(mc.player.getPos().distanceTo(vec) <= 6) {
+        if (mc.player.getPos().distanceTo(vec) <= 6) {
             BlockPos targetX = new BlockPos(vec.add(1, 0, 0));
             BlockPos targetXMinus = new BlockPos(vec.add(-1, 0, 0));
             BlockPos targetZ = new BlockPos(vec.add(0, 0, 1));
             BlockPos targetZMinus = new BlockPos(vec.add(0, 0, -1));
-            if(canBreak(targetX) && below(targetX) ) {
+            if (canBreak(targetX) && below(targetX)) {
                 mineTarget = targetX;
             }
-            if(!canBreak(targetX) && canBreak(targetXMinus) && below(targetXMinus)) {
+            if (!canBreak(targetX) && canBreak(targetXMinus) && below(targetXMinus)) {
                 mineTarget = targetXMinus;
             }
-            if(!canBreak(targetX) && !canBreak(targetXMinus) && canBreak(targetZ) && below(targetZ)) {
+            if (!canBreak(targetX) && !canBreak(targetXMinus) && canBreak(targetZ) && below(targetZ)) {
                 mineTarget = targetZ;
             }
-            if(!canBreak(targetX) && !canBreak(targetXMinus) && !canBreak(targetZ) && canBreak(targetZMinus) && below(targetZMinus)) {
+            if (!canBreak(targetX) && !canBreak(targetXMinus) && !canBreak(targetZ) && canBreak(targetZMinus) && below(targetZMinus)) {
                 mineTarget = targetZMinus;
             }
-            if((!canBreak(targetX) && !canBreak(targetXMinus) && !canBreak(targetZ) && !canBreak(targetZMinus)) || mc.player.getPos().distanceTo(vec) > 6) {
+            if ((!canBreak(targetX) && !canBreak(targetXMinus) && !canBreak(targetZ) && !canBreak(targetZMinus)) || mc.player.getPos().distanceTo(vec) > 6) {
                 mineTarget = null;
             }
         }
@@ -105,11 +105,12 @@ public class PacketAutoCity extends Module {
 
     private boolean canBreak(BlockPos pos) {
         BlockState state = mc.world.getBlockState(pos);
-        return  !(state.getBlock() == Blocks.AIR || state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.LAVA || state.getBlock() == Blocks.BEDROCK || state.getBlock() == Blocks.VOID_AIR || state.getBlock() == Blocks.CAVE_AIR);
+        return !(state.getBlock() == Blocks.AIR || state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.LAVA || state.getBlock() == Blocks.BEDROCK || state.getBlock() == Blocks.VOID_AIR || state.getBlock() == Blocks.CAVE_AIR);
     }
+
     private boolean below(BlockPos pos) {
         BlockState state = mc.world.getBlockState(pos.down(1));
-        return  (state.getBlock() == Blocks.BEDROCK || state.getBlock() == Blocks.OBSIDIAN);
+        return (state.getBlock() == Blocks.BEDROCK || state.getBlock() == Blocks.OBSIDIAN);
     }
 
 }

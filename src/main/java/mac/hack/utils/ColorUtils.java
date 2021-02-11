@@ -14,6 +14,7 @@ public class ColorUtils {
         blue = (int) ModuleManager.getModule(Colours.class).getSettings().get(3).asSlider().getValue();
         return (0xff << 24) | ((red & 0xff) << 16) | ((green & 0xff) << 8) | (blue & 0xff);
     }
+
     public static int textColor() {
         int red;
         int green;

@@ -1,6 +1,7 @@
 package mac.hack.module.mods;
 
-import mac.hack.event.events.EventReadPacket;
+import com.google.common.collect.Maps;
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
@@ -9,16 +10,12 @@ import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.EntityUtils;
-import com.google.common.collect.Maps;
-import com.google.common.eventbus.Subscribe;
 import mac.hack.utils.FabricReflect;
 import mac.hack.utils.WorldUtils;
 import mac.hack.utils.file.MacFileMang;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -33,6 +30,7 @@ import java.util.List;
 public class HighwayNuker extends Module {
 
     private List<Block> blockList = new ArrayList<>();
+    private BlockPos lastPlayerPos = null;
 
     public HighwayNuker() {
         super("HighwayNuker", KEY_UNBOUND, Category.WORLD, "Breaks blocks around you",
@@ -55,8 +53,6 @@ public class HighwayNuker extends Module {
         super.onEnable();
     }
 
-    private BlockPos lastPlayerPos = null;
-
     private List<BlockPos> getBlocks() {
         int mode = getSettings().get(1).asMode().mode;
         List<BlockPos> blocks = new ArrayList<>();
@@ -78,6 +74,7 @@ public class HighwayNuker extends Module {
         }
         return blocks;
     }
+
     public boolean canSeeBlock(BlockPos pos) {
         double diffX = pos.getX() + 0.5 - mc.player.getCameraPosVec(mc.getTickDelta()).x;
         double diffY = pos.getY() + 0.5 - mc.player.getCameraPosVec(mc.getTickDelta()).y;
@@ -348,6 +345,7 @@ public class HighwayNuker extends Module {
         }
         return cubeBlocks;
     }
+
     public List<BlockPos> getHighway4() {
         List<BlockPos> cubeBlocks = new ArrayList<>();
         BlockPos playerPos = new BlockPos(Math.floor(mc.player.getX()), Math.floor(mc.player.getY()), Math.floor(mc.player.getZ()));

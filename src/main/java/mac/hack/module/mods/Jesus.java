@@ -17,37 +17,36 @@
  */
 package mac.hack.module.mods;
 
-import mac.hack.event.events.EventTick;
 import com.google.common.eventbus.Subscribe;
+import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.utils.WorldUtils;
-import org.lwjgl.glfw.GLFW;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import org.lwjgl.glfw.GLFW;
 
 public class Jesus extends Module {
 
-	public Jesus() {
-		super("Jesus", GLFW.GLFW_KEY_J, Category.PLAYER, "Allows you to walk on water");
-	}
+    public Jesus() {
+        super("Jesus", GLFW.GLFW_KEY_J, Category.PLAYER, "Allows you to walk on water");
+    }
 
-	@Subscribe
-	public void onTick(EventTick event) {
-		Entity e = mc.player.getVehicle() != null ? mc.player.getVehicle() : mc.player;
+    @Subscribe
+    public void onTick(EventTick event) {
+        Entity e = mc.player.getVehicle() != null ? mc.player.getVehicle() : mc.player;
 
-		if (e.isSneaking() || e.fallDistance > 3f) return;
+        if (e.isSneaking() || e.fallDistance > 3f) return;
 
-		if (WorldUtils.isFluid(new BlockPos(e.getPos().add(0,0.3,0)))) {
-			e.setVelocity(e.getVelocity().x, 0.08, e.getVelocity().z);
-		} else if (WorldUtils.isFluid(new BlockPos(e.getPos().add(0,0.1,0)))) {
-			e.setVelocity(e.getVelocity().x, 0.05, e.getVelocity().z);
-		} else if (WorldUtils.isFluid(new BlockPos(e.getPos().add(0,0.05,0)))) {
-			e.setVelocity(e.getVelocity().x, 0.01, e.getVelocity().z);
-		} else if (WorldUtils.isFluid(new BlockPos(e.getPos()))) {
-			e.setVelocity(e.getVelocity().x, -0.005, e.getVelocity().z);
-			e.setOnGround(true);
-		}
-	}
+        if (WorldUtils.isFluid(new BlockPos(e.getPos().add(0, 0.3, 0)))) {
+            e.setVelocity(e.getVelocity().x, 0.08, e.getVelocity().z);
+        } else if (WorldUtils.isFluid(new BlockPos(e.getPos().add(0, 0.1, 0)))) {
+            e.setVelocity(e.getVelocity().x, 0.05, e.getVelocity().z);
+        } else if (WorldUtils.isFluid(new BlockPos(e.getPos().add(0, 0.05, 0)))) {
+            e.setVelocity(e.getVelocity().x, 0.01, e.getVelocity().z);
+        } else if (WorldUtils.isFluid(new BlockPos(e.getPos()))) {
+            e.setVelocity(e.getVelocity().x, -0.005, e.getVelocity().z);
+            e.setOnGround(true);
+        }
+    }
 }

@@ -9,52 +9,52 @@ import java.util.Map.Entry;
 
 public class MacQueue {
 
-	/* cum queue */
-	private static HashMap<String, Deque<MutablePair<Runnable, Integer>>> queues = new HashMap<>();
+    /* cum queue */
+    private static HashMap<String, Deque<MutablePair<Runnable, Integer>>> queues = new HashMap<>();
 
-	public static void add(Runnable runnable) {
-		add("", runnable);
-	}
+    public static void add(Runnable runnable) {
+        add("", runnable);
+    }
 
-	public static void add(String id, Runnable runnable) {
-		add(id, runnable, 0);
-	}
+    public static void add(String id, Runnable runnable) {
+        add(id, runnable, 0);
+    }
 
-	public static void add(String id, Runnable runnable, int inTicks) {
-		if (!queues.containsKey(id)) {
-			Deque<MutablePair<Runnable, Integer>> newQueue = new ArrayDeque<>();
-			newQueue.add(MutablePair.of(runnable, inTicks));
+    public static void add(String id, Runnable runnable, int inTicks) {
+        if (!queues.containsKey(id)) {
+            Deque<MutablePair<Runnable, Integer>> newQueue = new ArrayDeque<>();
+            newQueue.add(MutablePair.of(runnable, inTicks));
 
-			queues.put(id, newQueue);
-		}
+            queues.put(id, newQueue);
+        }
 
-		queues.get(id).add(MutablePair.of(runnable, inTicks));
-	}
+        queues.get(id).add(MutablePair.of(runnable, inTicks));
+    }
 
-	public static void cancelQueue(String id) {
-		queues.remove(id);
-	}
+    public static void cancelQueue(String id) {
+        queues.remove(id);
+    }
 
-	public static boolean isEmpty(String id) {
-		return !queues.containsKey(id);
-	}
+    public static boolean isEmpty(String id) {
+        return !queues.containsKey(id);
+    }
 
-	public static void nextQueue() {
-		for (Entry<String, Deque<MutablePair<Runnable, Integer>>> e : new HashMap<>(queues).entrySet()) {
-			Deque<MutablePair<Runnable, Integer>> deque = e.getValue();
+    public static void nextQueue() {
+        for (Entry<String, Deque<MutablePair<Runnable, Integer>>> e : new HashMap<>(queues).entrySet()) {
+            Deque<MutablePair<Runnable, Integer>> deque = e.getValue();
 
-			MutablePair<Runnable, Integer> first = deque.peek();
+            MutablePair<Runnable, Integer> first = deque.peek();
 
-			if (first.right > 0) {
-				first.right--;
-			} else {
-				first.left.run();
-				deque.removeFirst();
-			}
+            if (first.right > 0) {
+                first.right--;
+            } else {
+                first.left.run();
+                deque.removeFirst();
+            }
 
-			if (deque.isEmpty()) {
-				queues.remove(e.getKey());
-			}
-		}
-	}
+            if (deque.isEmpty()) {
+                queues.remove(e.getKey());
+            }
+        }
+    }
 }

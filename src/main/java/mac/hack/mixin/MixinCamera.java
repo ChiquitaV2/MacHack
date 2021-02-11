@@ -14,16 +14,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Camera.class)
 public class MixinCamera {
 
-	@Inject(at = @At("HEAD"), method = "getSubmergedFluidState()Lnet/minecraft/fluid/FluidState;", cancellable = true)
-	private void getSubmergedFluidState(CallbackInfoReturnable<FluidState> cir) {
-		if (ModuleManager.getModule(NoRender.class).isToggled() && ModuleManager.getModule(NoRender.class).getSetting(3).asToggle().state) {
-			cir.setReturnValue(Fluids.EMPTY.getDefaultState());
-		}
-	}
-	@Inject(method = "clipToSpace", at = @At("HEAD"), cancellable = true)
-	private void onClipToSpace(double desiredCameraDistance, CallbackInfoReturnable<Double> info) {
-		if (ModuleManager.getModule(CameraClip.class).isToggled()) {
-			info.setReturnValue(desiredCameraDistance);
-		}
-	}
+    @Inject(at = @At("HEAD"), method = "getSubmergedFluidState()Lnet/minecraft/fluid/FluidState;", cancellable = true)
+    private void getSubmergedFluidState(CallbackInfoReturnable<FluidState> cir) {
+        if (ModuleManager.getModule(NoRender.class).isToggled() && ModuleManager.getModule(NoRender.class).getSetting(3).asToggle().state) {
+            cir.setReturnValue(Fluids.EMPTY.getDefaultState());
+        }
+    }
+
+    @Inject(method = "clipToSpace", at = @At("HEAD"), cancellable = true)
+    private void onClipToSpace(double desiredCameraDistance, CallbackInfoReturnable<Double> info) {
+        if (ModuleManager.getModule(CameraClip.class).isToggled()) {
+            info.setReturnValue(desiredCameraDistance);
+        }
+    }
 }

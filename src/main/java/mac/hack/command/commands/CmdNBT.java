@@ -25,52 +25,52 @@ import net.minecraft.nbt.StringNbtReader;
 
 public class CmdNBT extends Command {
 
-	@Override
-	public String getAlias() {
-		return "nbt";
-	}
+    @Override
+    public String getAlias() {
+        return "nbt";
+    }
 
-	@Override
-	public String getDescription() {
-		return "NBT stuff";
-	}
+    @Override
+    public String getDescription() {
+        return "NBT stuff";
+    }
 
-	@Override
-	public String getSyntax() {
-		return "nbt [get/copy/set/wipe] <nbt>";
-	}
+    @Override
+    public String getSyntax() {
+        return "nbt [get/copy/set/wipe] <nbt>";
+    }
 
-	@Override
-	public void onCommand(String command, String[] args) throws Exception {
-		if (args[0].isEmpty()) {
-			MacLogger.errorMessage("Invalid Syntax!");
-			MacLogger.infoMessage(getSyntax());
-			return;
-		}
-		ItemStack item = mc.player.inventory.getMainHandStack();
+    @Override
+    public void onCommand(String command, String[] args) throws Exception {
+        if (args[0].isEmpty()) {
+            MacLogger.errorMessage("Invalid Syntax!");
+            MacLogger.infoMessage(getSyntax());
+            return;
+        }
+        ItemStack item = mc.player.inventory.getMainHandStack();
 
-		if (args[0].equalsIgnoreCase("get")) {
-			MacLogger.infoMessage("\u00a76\u00a7lNBT:\n" + item.getTag() + "");
-		} else if (args[0].equalsIgnoreCase("copy")) {
-			mc.keyboard.setClipboard(item.getTag() + "");
-			MacLogger.infoMessage("\u00a76Copied\n\u00a7f" + (item.getTag() + "\n") + "\u00a76to clipboard.");
-		} else if (args[0].equalsIgnoreCase("set")) {
-			try {
-				if (args[1].isEmpty()) {
-					MacLogger.errorMessage("Invalid Syntax!");
-					MacLogger.infoMessage(getSyntax());
-					return;
-				}
-				item.setTag(StringNbtReader.parse(args[1]));
-				MacLogger.infoMessage("\u00a76Set NBT of " + item.getItem().getName() + "to\n\u00a7f" + (item.getTag()));
-			} catch (Exception e) {
-				MacLogger.errorMessage("Invalid Syntax!");
-				MacLogger.infoMessage(getSyntax());
-			}
-		} else if (args[0].equalsIgnoreCase("wipe")) {
-			item.setTag(new CompoundTag());
-		}
+        if (args[0].equalsIgnoreCase("get")) {
+            MacLogger.infoMessage("\u00a76\u00a7lNBT:\n" + item.getTag() + "");
+        } else if (args[0].equalsIgnoreCase("copy")) {
+            mc.keyboard.setClipboard(item.getTag() + "");
+            MacLogger.infoMessage("\u00a76Copied\n\u00a7f" + (item.getTag() + "\n") + "\u00a76to clipboard.");
+        } else if (args[0].equalsIgnoreCase("set")) {
+            try {
+                if (args[1].isEmpty()) {
+                    MacLogger.errorMessage("Invalid Syntax!");
+                    MacLogger.infoMessage(getSyntax());
+                    return;
+                }
+                item.setTag(StringNbtReader.parse(args[1]));
+                MacLogger.infoMessage("\u00a76Set NBT of " + item.getItem().getName() + "to\n\u00a7f" + (item.getTag()));
+            } catch (Exception e) {
+                MacLogger.errorMessage("Invalid Syntax!");
+                MacLogger.infoMessage(getSyntax());
+            }
+        } else if (args[0].equalsIgnoreCase("wipe")) {
+            item.setTag(new CompoundTag());
+        }
 
-	}
+    }
 
 }

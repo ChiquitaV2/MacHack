@@ -1,5 +1,6 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventReadPacket;
 import mac.hack.event.events.EventTick;
 import mac.hack.event.events.EventWorldRender;
@@ -9,7 +10,6 @@ import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.EntityUtils;
 import mac.hack.utils.RenderUtils;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.network.packet.s2c.play.CloseScreenS2CPacket;
 import net.minecraft.network.packet.s2c.play.DisconnectS2CPacket;
 import net.minecraft.util.math.BlockPos;
@@ -22,23 +22,18 @@ import java.util.Iterator;
 import java.util.List;
 
 public class StashFinder extends Module {
+    public int range = 0;
+    public int timeout = 0;
+    public ChunkPos nextChunk;
+    public ChunkPos startChunk;
+    public List<ChunkPos> chunks = new ArrayList<>();
+    public List<ChunkPos> nextChunks = new ArrayList<>();
     public StashFinder() {
         super("StashFinder", KEY_UNBOUND, Category.WORLD, "Find Stashes!",
                 new SettingToggle("Render", true),
                 new SettingToggle("Toggle Stash Logger", true),
                 new SettingSlider("Range: ", 1.0D, 10.0D, 4.0D, 0));
     }
-
-    public int range = 0;
-    public int timeout = 0;
-
-    public ChunkPos nextChunk;
-    public ChunkPos startChunk;
-
-    public List<ChunkPos> chunks = new ArrayList<>();
-    public List<ChunkPos> nextChunks = new ArrayList<>();
-
-
 
     public void onEnable() {
         super.onEnable();
@@ -58,7 +53,7 @@ public class StashFinder extends Module {
     }
 
     @Subscribe
-    public void onTick(EventTick event){
+    public void onTick(EventTick event) {
         if (getSetting(1).asToggle().state)
             mc.options.keyForward.setPressed(true);
         if (this.startChunk == null) {
@@ -128,15 +123,14 @@ public class StashFinder extends Module {
         mc.options.keyForward.setPressed(false);
         super.onDisable();
     }
+
     @Subscribe
     public void onRenderWorld(EventWorldRender event) {
-        if (this.getSettings().get(0).asToggle().state)
-        {
+        if (this.getSettings().get(0).asToggle().state) {
             Iterator<ChunkPos> chonkIter = this.chunks.iterator();
 
             ChunkPos c;
-            while (chonkIter.hasNext())
-            {
+            while (chonkIter.hasNext()) {
                 c = chonkIter.next();
                 BlockPos start_coords = new BlockPos(c.getStartX(), 0, c.getStartZ());
                 BlockPos end_coords = new BlockPos(c.getEndX(), 0, c.getEndZ());
@@ -145,16 +139,14 @@ public class StashFinder extends Module {
 
             chonkIter = this.nextChunks.iterator();
 
-            while (chonkIter.hasNext())
-            {
+            while (chonkIter.hasNext()) {
                 c = chonkIter.next();
                 BlockPos start_coords = new BlockPos(c.getStartX(), 0, c.getStartZ());
                 BlockPos end_coords = new BlockPos(c.getEndX(), 0, c.getEndZ());
                 RenderUtils.drawFilledBox(new Box(start_coords, end_coords), 0.0F, 0.0F, 1.0F, 0.3F);
             }
 
-            if (this.nextChunk != null)
-            {
+            if (this.nextChunk != null) {
                 BlockPos start_coords = new BlockPos(this.nextChunk.getStartX(), 0, this.nextChunk.getStartZ());
                 BlockPos end_coords = new BlockPos(this.nextChunk.getEndX(), 0, this.nextChunk.getEndZ());
                 RenderUtils.drawFilledBox(new Box(start_coords, end_coords), 0.0F, 1.0F, 0.0F, 0.3F);

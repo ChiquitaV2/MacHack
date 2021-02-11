@@ -1,5 +1,6 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventClientMove;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
@@ -9,7 +10,6 @@ import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.EntityUtils;
 import mac.hack.utils.Timer;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -19,13 +19,13 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static net.minecraft.util.Hand.MAIN_HAND;
 import static net.minecraft.util.math.Direction.UP;
 
-public class AutoTunnel extends Module
-{
-    public AutoTunnel()
-    {
+public class AutoTunnel extends Module {
+    private List<BlockPos> _blocksToDestroy = new CopyOnWriteArrayList<>();
+    private boolean _needPause = false;
+    private mac.hack.utils.Timer pauseTimer = new Timer();
+    public AutoTunnel() {
         super("AutoTunnel", KEY_UNBOUND, Category.WORLD, "Automines 2d tunnels.",
                 new SettingMode("Blocks", "1x3", "2x3", "3x3", "Highway"),
                 new SettingMode("Mode", "Packet"),
@@ -34,13 +34,8 @@ public class AutoTunnel extends Module
                 new SettingToggle("UseTimerPause", false));
     }
 
-    private List<BlockPos> _blocksToDestroy = new CopyOnWriteArrayList<>();
-    private boolean _needPause = false;
-    private mac.hack.utils.Timer pauseTimer = new Timer();
-
     @Subscribe
-    public void onMove(EventClientMove event)
-    {
+    public void onMove(EventClientMove event) {
         AutoEat autoEat = (AutoEat) ModuleManager.getModule(AutoEat.class);
         if (autoEat.isEating()) return;
 
@@ -48,14 +43,11 @@ public class AutoTunnel extends Module
 
         BlockPos playerPos = new BlockPos(Math.floor(mc.player.getX()), Math.floor(mc.player.getY()), Math.floor(mc.player.getZ()));
 
-        switch (EntityUtils.GetFacing())
-        {
+        switch (EntityUtils.GetFacing()) {
             case East:
-                switch (getSettings().get(0).asMode().mode)
-                {
+                switch (getSettings().get(0).asMode().mode) {
                     case 0:
-                        for (int i = 0; i < 2; ++i)
-                        {
+                        for (int i = 0; i < 2; ++i) {
                             _blocksToDestroy.add(playerPos.east());
                             _blocksToDestroy.add(playerPos.east().up());
                             _blocksToDestroy.add(playerPos.east().up().up());
@@ -63,8 +55,7 @@ public class AutoTunnel extends Module
                             playerPos = new BlockPos(playerPos).east();
                         }
                     case 1:
-                        for (int i = 0; i < 3; ++i)
-                        {
+                        for (int i = 0; i < 3; ++i) {
                             _blocksToDestroy.add(playerPos.east());
                             _blocksToDestroy.add(playerPos.east().up());
                             _blocksToDestroy.add(playerPos.east().up().up());
@@ -76,8 +67,7 @@ public class AutoTunnel extends Module
                         }
                         break;
                     case 2:
-                        for (int i = 0; i < 3; ++i)
-                        {
+                        for (int i = 0; i < 3; ++i) {
                             _blocksToDestroy.add(playerPos.east());
                             _blocksToDestroy.add(playerPos.east().up());
                             _blocksToDestroy.add(playerPos.east().up().up());
@@ -123,11 +113,9 @@ public class AutoTunnel extends Module
                 }
                 break;
             case North:
-                switch (getSettings().get(0).asMode().mode)
-                {
+                switch (getSettings().get(0).asMode().mode) {
                     case 0:
-                        for (int i = 0; i < 2; ++i)
-                        {
+                        for (int i = 0; i < 2; ++i) {
                             _blocksToDestroy.add(playerPos.north());
                             _blocksToDestroy.add(playerPos.north().up());
                             _blocksToDestroy.add(playerPos.north().up().up());
@@ -135,8 +123,7 @@ public class AutoTunnel extends Module
                             playerPos = new BlockPos(playerPos).north();
                         }
                     case 1:
-                        for (int i = 0; i < 3; ++i)
-                        {
+                        for (int i = 0; i < 3; ++i) {
                             _blocksToDestroy.add(playerPos.north());
                             _blocksToDestroy.add(playerPos.north().up());
                             _blocksToDestroy.add(playerPos.north().up().up());
@@ -148,8 +135,7 @@ public class AutoTunnel extends Module
                         }
                         break;
                     case 2:
-                        for (int i = 0; i < 3; ++i)
-                        {
+                        for (int i = 0; i < 3; ++i) {
                             _blocksToDestroy.add(playerPos.north());
                             _blocksToDestroy.add(playerPos.north().up());
                             _blocksToDestroy.add(playerPos.north().up().up());
@@ -195,11 +181,9 @@ public class AutoTunnel extends Module
                 }
                 break;
             case South:
-                switch (getSettings().get(0).asMode().mode)
-                {
+                switch (getSettings().get(0).asMode().mode) {
                     case 0:
-                        for (int i = 0; i < 2; ++i)
-                        {
+                        for (int i = 0; i < 2; ++i) {
                             _blocksToDestroy.add(playerPos.south());
                             _blocksToDestroy.add(playerPos.south().up());
                             _blocksToDestroy.add(playerPos.south().up().up());
@@ -207,8 +191,7 @@ public class AutoTunnel extends Module
                             playerPos = new BlockPos(playerPos).south();
                         }
                     case 1:
-                        for (int i = 0; i < 3; ++i)
-                        {
+                        for (int i = 0; i < 3; ++i) {
                             _blocksToDestroy.add(playerPos.south());
                             _blocksToDestroy.add(playerPos.south().up());
                             _blocksToDestroy.add(playerPos.south().up().up());
@@ -220,8 +203,7 @@ public class AutoTunnel extends Module
                         }
                         break;
                     case 2:
-                        for (int i = 0; i < 3; ++i)
-                        {
+                        for (int i = 0; i < 3; ++i) {
                             _blocksToDestroy.add(playerPos.south());
                             _blocksToDestroy.add(playerPos.south().up());
                             _blocksToDestroy.add(playerPos.south().up().up());
@@ -267,11 +249,9 @@ public class AutoTunnel extends Module
                 }
                 break;
             case West:
-                switch (getSettings().get(0).asMode().mode)
-                {
+                switch (getSettings().get(0).asMode().mode) {
                     case 0:
-                        for (int i = 0; i < 2; ++i)
-                        {
+                        for (int i = 0; i < 2; ++i) {
                             _blocksToDestroy.add(playerPos.west());
                             _blocksToDestroy.add(playerPos.west().up());
                             _blocksToDestroy.add(playerPos.west().up().up());
@@ -280,8 +260,7 @@ public class AutoTunnel extends Module
                         }
                         break;
                     case 1:
-                        for (int i = 0; i < 3; ++i)
-                        {
+                        for (int i = 0; i < 3; ++i) {
                             _blocksToDestroy.add(playerPos.west());
                             _blocksToDestroy.add(playerPos.west().up());
                             _blocksToDestroy.add(playerPos.west().up().up());
@@ -293,8 +272,7 @@ public class AutoTunnel extends Module
                         }
                         break;
                     case 2:
-                        for (int i = 0; i < 3; ++i)
-                        {
+                        for (int i = 0; i < 3; ++i) {
                             _blocksToDestroy.add(playerPos.west());
                             _blocksToDestroy.add(playerPos.west().up());
                             _blocksToDestroy.add(playerPos.west().up().up());
@@ -345,8 +323,7 @@ public class AutoTunnel extends Module
 
         BlockPos toDestroy = null;
 
-        for (BlockPos pos : _blocksToDestroy)
-        {
+        for (BlockPos pos : _blocksToDestroy) {
             BlockState state = mc.world.getBlockState(pos);
 
             if (state.getBlock() == Blocks.AIR || state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.LAVA || state.getBlock() == Blocks.BEDROCK || state.getBlock() == Blocks.NETHERRACK || state.getBlock() == Blocks.CAVE_AIR || state.getBlock() == Blocks.VOID_AIR)
@@ -356,8 +333,7 @@ public class AutoTunnel extends Module
             break;
         }
 
-        if (toDestroy != null)
-        {
+        if (toDestroy != null) {
 //            event.setCancelled(true);
 
 //            float[] rotations = EntityUtils.getLegitRotations(new Vec3d(toDestroy.getX(), toDestroy.getY(), toDestroy.getZ()));
@@ -367,8 +343,7 @@ public class AutoTunnel extends Module
 
             Block td = mc.world.getBlockState(toDestroy).getBlock();
 
-            switch (getSettings().get(1).asMode().mode)
-            {
+            switch (getSettings().get(1).asMode().mode) {
                 case 0:
                     if (td != Blocks.AIR && td != Blocks.NETHERRACK) {
 //                        mc.player.swingHand(MAIN_HAND);
@@ -383,13 +358,11 @@ public class AutoTunnel extends Module
             }
 
             _needPause = true;
-        }
-        else
+        } else
             _needPause = false;
     }
 
-    public boolean PauseAutoWalk()
-    {
+    public boolean PauseAutoWalk() {
         return _needPause && getSettings().get(3).asToggle().state;
     }
 }

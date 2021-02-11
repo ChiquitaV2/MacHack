@@ -1,15 +1,14 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventSendPacket;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.utils.WorldUtils;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.PlayerInteractItemC2SPacket;
 
-public class FootXp extends Module
-{
+public class FootXp extends Module {
     public FootXp() {
         super("FootXP", KEY_UNBOUND, Category.MOVEMENT, "Automatically points xp at feet");
     }

@@ -3,8 +3,7 @@ package mac.hack.event.events;
 
 import mac.hack.event.Event;
 
-public class EventPlayerJoin extends Event
-{
+public class EventPlayerJoin extends Event {
     private final String name;
 
     public EventPlayerJoin(String name) {

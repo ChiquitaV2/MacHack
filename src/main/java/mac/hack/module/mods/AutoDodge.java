@@ -1,10 +1,10 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.setting.base.SettingSlider;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -12,14 +12,12 @@ import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AutoDodge extends Module
-{
+public class AutoDodge extends Module {
     private final List<BlockPos> poses = new ArrayList<>();
     public Vec3d prevPos;
     private double[] rPos;
 
-    public AutoDodge()
-    {
+    public AutoDodge() {
         super("AutoDodge", KEY_UNBOUND, Category.PLAYER, "Automatically dodge obstacles",
                 new SettingSlider("Range: ", 1.0D, 25.0D, 5.0D, 0)
         );

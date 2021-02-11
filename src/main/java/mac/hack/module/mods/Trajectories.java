@@ -1,5 +1,6 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.event.events.EventWorldRender;
 import mac.hack.module.Category;
@@ -9,7 +10,6 @@ import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.ProjectileSimulator;
 import mac.hack.utils.RenderUtils;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -36,9 +36,9 @@ public class Trajectories extends Module {
                 new SettingToggle("XP Bottles", true).withDesc("Shows XP bottles"), //2
                 new SettingToggle("Potions", true).withDesc("Shows splash/lingering potions"), //3
                 new SettingToggle("Flying", true).withDesc("Shows trajectories for flying projectiles"), //4 4
-                        new SettingToggle("Throwables", true).withDesc("Shows flying snowballs/eggs/epearls"),//5
-                        new SettingToggle("XP Bottles", true).withDesc("Shows flying XP bottles"), //6
-                        new SettingToggle("Potions", true).withDesc("Shows flying splash/lingering potions"), //7
+                new SettingToggle("Throwables", true).withDesc("Shows flying snowballs/eggs/epearls"),//5
+                new SettingToggle("XP Bottles", true).withDesc("Shows flying XP bottles"), //6
+                new SettingToggle("Potions", true).withDesc("Shows flying splash/lingering potions"), //7
                 new SettingToggle("Other Players", false).withDesc("Show other players trajectories"), //5 8
                 new SettingSlider("R: ", 0.0D, 255.0D, 255.0D, 0),//9
                 new SettingSlider("G: ", 0.0D, 255.0D, 255.0D, 0),//10

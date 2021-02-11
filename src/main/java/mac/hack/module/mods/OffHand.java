@@ -1,5 +1,6 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
@@ -7,7 +8,6 @@ import mac.hack.module.ModuleManager;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
-import com.google.common.eventbus.Subscribe;
 import mac.hack.utils.MacLogger;
 import mac.hack.utils.MacNotify;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -24,7 +24,7 @@ public class OffHand extends Module {
                 new SettingMode("Mode", "Gap", "Crystal"),
                 new SettingSlider("ToggleHealth", 0, 36, 13, 1).withDesc("What Health to toggle autototem on"),
                 new SettingToggle("Chat", true).withDesc("send you a chat notification when an item is placed in your off hand")
-                );
+        );
     }
 
     @Subscribe
@@ -64,8 +64,7 @@ public class OffHand extends Module {
                     }
                 }
             }
-        }
-        else if (getSettings().get(1).asMode().mode == 1) {
+        } else if (getSettings().get(1).asMode().mode == 1) {
             if (mc.player.getOffHandStack().getItem() == Items.END_CRYSTAL
                     || (!mc.player.getOffHandStack().isEmpty() && !getSetting(0).asToggle().state))
                 return;
@@ -83,7 +82,7 @@ public class OffHand extends Module {
                         if (getSetting(3).asToggle().state) {
                             MacLogger.infoMessage("Your offhand now has endcrystals");
                         }
-                        if (ModuleManager.getModule(Notifications.class).isToggled() && ModuleManager.getModule(Notifications.class).getSetting(2).asToggle().state){
+                        if (ModuleManager.getModule(Notifications.class).isToggled() && ModuleManager.getModule(Notifications.class).getSetting(2).asToggle().state) {
                             MacNotify.Notifications("Offhand", "Your offhand now has endcrystals");
                         }
 

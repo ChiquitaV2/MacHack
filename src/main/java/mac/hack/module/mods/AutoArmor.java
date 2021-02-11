@@ -1,12 +1,12 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.MacQueue;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -45,14 +45,14 @@ public class AutoArmor extends Module {
 
         /* [Slot type, [Armor slot, Armor prot, New armor slot, New armor prot]] */
         HashMap<EquipmentSlot, int[]> armorMap = new HashMap<>(4);
-        armorMap.put(EquipmentSlot.FEET, new int[] { 36, getProtection(mc.player.inventory.getStack(36)), -1, -1 });
-        armorMap.put(EquipmentSlot.LEGS, new int[] { 37, getProtection(mc.player.inventory.getStack(37)), -1, -1 });
-        armorMap.put(EquipmentSlot.CHEST, new int[] { 38, getProtection(mc.player.inventory.getStack(38)), -1, -1 });
-        armorMap.put(EquipmentSlot.HEAD, new int[] { 39, getProtection(mc.player.inventory.getStack(39)), -1, -1 });
+        armorMap.put(EquipmentSlot.FEET, new int[]{36, getProtection(mc.player.inventory.getStack(36)), -1, -1});
+        armorMap.put(EquipmentSlot.LEGS, new int[]{37, getProtection(mc.player.inventory.getStack(37)), -1, -1});
+        armorMap.put(EquipmentSlot.CHEST, new int[]{38, getProtection(mc.player.inventory.getStack(38)), -1, -1});
+        armorMap.put(EquipmentSlot.HEAD, new int[]{39, getProtection(mc.player.inventory.getStack(39)), -1, -1});
 
         /* Anti Break */
         if (getSettings().get(0).asToggle().state) {
-            for (Entry<EquipmentSlot, int[]> e: armorMap.entrySet()) {
+            for (Entry<EquipmentSlot, int[]> e : armorMap.entrySet()) {
                 ItemStack is = mc.player.inventory.getStack(e.getValue()[0]);
                 int armorSlot = (e.getValue()[0] - 34) + (39 - e.getValue()[0]) * 2;
 
@@ -94,7 +94,7 @@ public class AutoArmor extends Module {
                 EquipmentSlot slot = (mc.player.inventory.getStack(s).getItem() instanceof ElytraItem
                         ? EquipmentSlot.CHEST : ((ArmorItem) mc.player.inventory.getStack(s).getItem()).getSlotType());
 
-                for (Entry<EquipmentSlot, int[]> e: armorMap.entrySet()) {
+                for (Entry<EquipmentSlot, int[]> e : armorMap.entrySet()) {
                     if (e.getKey() == slot) {
                         if (prot > e.getValue()[1] && prot > e.getValue()[3]) {
                             e.getValue()[2] = s;
@@ -105,7 +105,7 @@ public class AutoArmor extends Module {
             }
         }
 
-        for (Entry<EquipmentSlot, int[]> e: armorMap.entrySet()) {
+        for (Entry<EquipmentSlot, int[]> e : armorMap.entrySet()) {
             if (e.getValue()[2] != -1) {
                 if (e.getValue()[1] == -1 && e.getValue()[2] < 9) {
                     if (e.getValue()[2] != mc.player.inventory.selectedSlot) {
@@ -148,7 +148,7 @@ public class AutoArmor extends Module {
             }
 
             if (is.hasEnchantments()) {
-                for (Entry<Enchantment, Integer> e: EnchantmentHelper.get(is).entrySet()) {
+                for (Entry<Enchantment, Integer> e : EnchantmentHelper.get(is).entrySet()) {
                     if (e.getKey() instanceof ProtectionEnchantment)
                         prot += e.getValue();
                 }

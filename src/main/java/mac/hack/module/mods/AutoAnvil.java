@@ -1,10 +1,10 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.module.ModuleManager;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
@@ -24,20 +24,20 @@ public class AutoAnvil extends Module {
         assert mc.interactionManager != null;
         int blockSlot = -1;
         PlayerEntity target = null;
-        for(int i = 0; i < 9; i++){
-            if (mc.player.inventory.getStack(i).getItem() == Blocks.ANVIL.asItem()){
+        for (int i = 0; i < 9; i++) {
+            if (mc.player.inventory.getStack(i).getItem() == Blocks.ANVIL.asItem()) {
                 blockSlot = i;
                 break;
             }
         }
         if (blockSlot == -1) return;
-        for(PlayerEntity player : mc.world.getPlayers()){
+        for (PlayerEntity player : mc.world.getPlayers()) {
             target = mc.player;
         }
         int prevSlot = mc.player.inventory.selectedSlot;
         mc.player.inventory.selectedSlot = blockSlot;
         BlockPos targetPos = target.getBlockPos().up();
-        if(mc.world.getBlockState(targetPos.add(0, 1, 0)).getMaterial().isReplaceable()){
+        if (mc.world.getBlockState(targetPos.add(0, 1, 0)).getMaterial().isReplaceable()) {
             mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN_HAND, new BlockHitResult(target.getPos().add(0, 1, 0), Direction.UP, targetPos.add(0, 1, 0), false));
             mc.player.swingHand(Hand.MAIN_HAND);
         }

@@ -4,7 +4,6 @@ import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
-import mac.hack.module.ModuleManager;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.EntityUtils;
 import mac.hack.utils.MacLogger;
@@ -15,14 +14,13 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 
 public class OffAxisAlarm extends Module {
+    Timer chatTimer = new Timer();
+    Timer timer = new Timer();
+    Timer logTimer = new Timer();
     public OffAxisAlarm() {
         super("OffAxisAlarm", KEY_UNBOUND, Category.PLAYER, "Warns you if you're off axis.",
                 new SettingToggle("LogOut", false));
     }
-
-    Timer chatTimer = new Timer();
-    Timer timer = new Timer();
-    Timer logTimer = new Timer();
 
     @Subscribe
     public void onTick(EventTick event) {

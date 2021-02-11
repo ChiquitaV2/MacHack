@@ -7,9 +7,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftClient.class)
-public final class MixinNoTitle{
+public final class MixinNoTitle {
     @Inject(method = "updateWindowTitle()V", at = @At("HEAD"), cancellable = true)
-    private void updateTitle(final CallbackInfo info){
+    private void updateTitle(final CallbackInfo info) {
         info.cancel();
     }
 }

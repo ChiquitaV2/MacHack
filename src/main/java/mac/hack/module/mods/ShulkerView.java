@@ -1,5 +1,6 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventDrawOverlay;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
@@ -8,7 +9,6 @@ import mac.hack.setting.base.SettingSlider;
 import mac.hack.utils.ColorUtils;
 import mac.hack.utils.ItemContentUtils;
 import mac.hack.utils.RenderUtils;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.ItemFrameEntity;

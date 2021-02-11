@@ -23,25 +23,25 @@ import mac.hack.utils.MacLogger;
 
 public class CmdGuiReset extends Command {
 
-	@Override
-	public String getAlias() {
-		return "guireset";
-	}
+    @Override
+    public String getAlias() {
+        return "guireset";
+    }
 
-	@Override
-	public String getDescription() {
-		return "Resets the clickgui windows";
-	}
+    @Override
+    public String getDescription() {
+        return "Resets the clickgui windows";
+    }
 
-	@Override
-	public String getSyntax() {
-		return "guireset";
-	}
+    @Override
+    public String getSyntax() {
+        return "guireset";
+    }
 
-	@Override
-	public void onCommand(String command, String[] args) throws Exception {
-		ClickGui.clickGui.resetGui();
-		MacLogger.infoMessage("Reset the clickgui!");
-	}
+    @Override
+    public void onCommand(String command, String[] args) throws Exception {
+        ClickGui.clickGui.resetGui();
+        MacLogger.infoMessage("Reset the clickgui!");
+    }
 
 }

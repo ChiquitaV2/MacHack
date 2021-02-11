@@ -1,5 +1,6 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
@@ -7,7 +8,6 @@ import mac.hack.module.ModuleManager;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.MacLogger;
 import mac.hack.utils.WorldUtils;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.block.Blocks;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.Hand;
@@ -43,14 +43,14 @@ public class AutoWither extends Module {
         assert mc.interactionManager != null;
         assert mc.world != null;
         ticksPassed++;
-        for(int i = 0; i < 9; i++){
-            if (mc.player.inventory.getStack(i).getItem() == Blocks.SOUL_SAND.asItem()){
+        for (int i = 0; i < 9; i++) {
+            if (mc.player.inventory.getStack(i).getItem() == Blocks.SOUL_SAND.asItem()) {
                 soulSandSlot = i;
                 break;
             }
         }
-        for(int i = 0; i < 9; i++){
-            if (mc.player.inventory.getStack(i).getItem() == Blocks.WITHER_SKELETON_SKULL.asItem()){
+        for (int i = 0; i < 9; i++) {
+            if (mc.player.inventory.getStack(i).getItem() == Blocks.WITHER_SKELETON_SKULL.asItem()) {
                 skullSlot = i;
                 break;
             }
@@ -68,7 +68,7 @@ public class AutoWither extends Module {
         int prevSlot = mc.player.inventory.selectedSlot;
         BlockPos targetPos = mc.player.getBlockPos();
         if (ticksPassed == 1) {
-            if(
+            if (
                 //mc.world.getBlockState(targetPos.add(1, 0, 1)).getMaterial().toString().contains("AIR") &&
                 //mc.world.getBlockState(targetPos.add(1, 0, -1)).getMaterial().toString().contains("AIR") &&
                     mc.world.getBlockState(targetPos.add(1, 0, 0)).getMaterial().isReplaceable() &&
@@ -78,7 +78,7 @@ public class AutoWither extends Module {
                             mc.world.getBlockState(targetPos.add(1, 2, 0)).getMaterial().isReplaceable() &&
                             mc.world.getBlockState(targetPos.add(1, 2, 1)).getMaterial().isReplaceable() &&
                             mc.world.getBlockState(targetPos.add(1, 2, -1)).getMaterial().isReplaceable()
-            ){
+            ) {
                 if (getSetting(1).asToggle().state) {
                     MacLogger.warningMessage("Attempting to place wither body");
                 }
@@ -94,7 +94,7 @@ public class AutoWither extends Module {
             }
         }
         if (ticksPassed == 2) {
-            if(
+            if (
                     mc.world.getBlockState(targetPos.add(2, 2, 0)).getMaterial().isReplaceable() &&
                             mc.world.getBlockState(targetPos.add(2, 2, 1)).getMaterial().isReplaceable() &&
                             mc.world.getBlockState(targetPos.add(2, 2, -1)).getMaterial().isReplaceable()

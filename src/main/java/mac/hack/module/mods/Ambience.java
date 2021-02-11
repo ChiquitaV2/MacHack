@@ -18,44 +18,43 @@
 package mac.hack.module.mods;
 
 import com.google.common.eventbus.Subscribe;
-
 import mac.hack.event.events.EventMovementTick;
 import mac.hack.event.events.EventReadPacket;
+import mac.hack.module.Category;
+import mac.hack.module.Module;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
-import mac.hack.module.Category;
-import mac.hack.module.Module;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 
 public class Ambience extends Module {
 
-	public Ambience() {
-		super("Ambience", KEY_UNBOUND, Category.WORLD, "Changes The World Time/Weather",
-				new SettingToggle("Weather", true),
-				new SettingToggle("Time", false),
-				new SettingMode("Weather: ", "Clear", "Rain"),
-				new SettingSlider("Rain: ", 0, 2, 0, 2),
-				new SettingSlider("Time: ", 0, 24000, 12500, 0));
-	}
+    public Ambience() {
+        super("Ambience", KEY_UNBOUND, Category.WORLD, "Changes The World Time/Weather",
+                new SettingToggle("Weather", true),
+                new SettingToggle("Time", false),
+                new SettingMode("Weather: ", "Clear", "Rain"),
+                new SettingSlider("Rain: ", 0, 2, 0, 2),
+                new SettingSlider("Time: ", 0, 24000, 12500, 0));
+    }
 
-	@Subscribe
-	public void onPreTick(EventMovementTick event) {
-		if (getSettings().get(0).asToggle().state) {
-			if (getSettings().get(2).asMode().mode == 0) mc.world.setRainGradient(0f);
-			else mc.world.setRainGradient((float) getSettings().get(3).asSlider().getValue());
-		}
-		if (getSettings().get(1).asToggle().state) {
-			mc.world.setTimeOfDay((long) getSettings().get(4).asSlider().getValue());
-			mc.world.setTimeOfDay((long) getSettings().get(4).asSlider().getValue());
-		}
-	}
+    @Subscribe
+    public void onPreTick(EventMovementTick event) {
+        if (getSettings().get(0).asToggle().state) {
+            if (getSettings().get(2).asMode().mode == 0) mc.world.setRainGradient(0f);
+            else mc.world.setRainGradient((float) getSettings().get(3).asSlider().getValue());
+        }
+        if (getSettings().get(1).asToggle().state) {
+            mc.world.setTimeOfDay((long) getSettings().get(4).asSlider().getValue());
+            mc.world.setTimeOfDay((long) getSettings().get(4).asSlider().getValue());
+        }
+    }
 
-	@Subscribe
-	public void readPacket(EventReadPacket event) {
-		if (event.getPacket() instanceof WorldTimeUpdateS2CPacket) {
-			event.setCancelled(true);
-		}
-	}
+    @Subscribe
+    public void readPacket(EventReadPacket event) {
+        if (event.getPacket() instanceof WorldTimeUpdateS2CPacket) {
+            event.setCancelled(true);
+        }
+    }
 
 }

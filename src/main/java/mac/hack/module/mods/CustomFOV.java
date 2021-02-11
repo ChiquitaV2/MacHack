@@ -13,7 +13,7 @@ import net.minecraft.network.packet.s2c.play.DisconnectS2CPacket;
 public class CustomFOV extends Module {
 
     public CustomFOV() {
-        super ("CustomFOV", KEY_UNBOUND, Category.RENDER, "a s d f",
+        super("CustomFOV", KEY_UNBOUND, Category.RENDER, "a s d f",
                 new SettingSlider("Scale", 0, 1, 0.3, 1),
                 new SettingSlider("PrevFOV", 30, 110, 100, 0));
     }

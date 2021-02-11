@@ -17,8 +17,6 @@
  */
 package mac.hack.command.commands;
 
-import java.util.List;
-
 import mac.hack.command.Command;
 import mac.hack.module.ModuleManager;
 import mac.hack.module.mods.Nuker;
@@ -28,65 +26,67 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.List;
+
 public class CmdNuker extends Command {
 
-	@Override
-	public String getAlias() {
-		return "nuker";
-	}
+    @Override
+    public String getAlias() {
+        return "nuker";
+    }
 
-	@Override
-	public String getDescription() {
-		return "Edit Nuker Blocks";
-	}
+    @Override
+    public String getDescription() {
+        return "Edit Nuker Blocks";
+    }
 
-	@Override
-	public String getSyntax() {
-		return "nuker add [block] | nuker remove [block] | nuker clear | nuker list";
-	}
+    @Override
+    public String getSyntax() {
+        return "nuker add [block] | nuker remove [block] | nuker clear | nuker list";
+    }
 
-	@Override
-	public void onCommand(String command, String[] args) throws Exception {
-		if (args[0].equalsIgnoreCase("add")) {
-			if (Registry.BLOCK.get(new Identifier(args[1].toLowerCase())) == Blocks.AIR) {
-				MacLogger.errorMessage("Invalid Block: " + args[1]);
-				return;
-			}
+    @Override
+    public void onCommand(String command, String[] args) throws Exception {
+        if (args[0].equalsIgnoreCase("add")) {
+            if (Registry.BLOCK.get(new Identifier(args[1].toLowerCase())) == Blocks.AIR) {
+                MacLogger.errorMessage("Invalid Block: " + args[1]);
+                return;
+            }
 
-			MacFileMang.appendFile(args[1].toLowerCase(), "nukerblocks.txt");
-			ModuleManager.getModule(Nuker.class).toggle();
-			ModuleManager.getModule(Nuker.class).toggle();
-			MacLogger.infoMessage("Added Block: " + args[1]);
+            MacFileMang.appendFile(args[1].toLowerCase(), "nukerblocks.txt");
+            ModuleManager.getModule(Nuker.class).toggle();
+            ModuleManager.getModule(Nuker.class).toggle();
+            MacLogger.infoMessage("Added Block: " + args[1]);
 
-		} else if (args[0].equalsIgnoreCase("remove")) {
-			List<String> lines = MacFileMang.readFileLines("nukerblocks.txt");
+        } else if (args[0].equalsIgnoreCase("remove")) {
+            List<String> lines = MacFileMang.readFileLines("nukerblocks.txt");
 
-			if (lines.contains(args[1].toLowerCase())) {
-				lines.remove(args[1].toLowerCase());
+            if (lines.contains(args[1].toLowerCase())) {
+                lines.remove(args[1].toLowerCase());
 
-				String s = "";
-				for (String s1: lines) s += s1 + "\n";
+                String s = "";
+                for (String s1 : lines) s += s1 + "\n";
 
-				MacFileMang.createEmptyFile("nukerblocks.txt");
-				MacFileMang.appendFile(s, "nukerblocks.txt");
+                MacFileMang.createEmptyFile("nukerblocks.txt");
+                MacFileMang.appendFile(s, "nukerblocks.txt");
 
-				MacLogger.infoMessage("Removed Block: " + args[1]);
-			}
+                MacLogger.infoMessage("Removed Block: " + args[1]);
+            }
 
-			MacLogger.errorMessage("Block Not In List: " + args[1]);
-		} else if (args[0].equalsIgnoreCase("clear")) {
-			MacFileMang.createEmptyFile("nukerblocks.txt");
-			MacLogger.infoMessage("Cleared Nuker Blocks");
-		} else if (args[0].equalsIgnoreCase("list")) {
-			List<String> lines = MacFileMang.readFileLines("nukerblocks.txt");
+            MacLogger.errorMessage("Block Not In List: " + args[1]);
+        } else if (args[0].equalsIgnoreCase("clear")) {
+            MacFileMang.createEmptyFile("nukerblocks.txt");
+            MacLogger.infoMessage("Cleared Nuker Blocks");
+        } else if (args[0].equalsIgnoreCase("list")) {
+            List<String> lines = MacFileMang.readFileLines("nukerblocks.txt");
 
-			String s = "";
-			for (String l: lines) {
-				s += "\u00a76" + l + "\n";
-			}
+            String s = "";
+            for (String l : lines) {
+                s += "\u00a76" + l + "\n";
+            }
 
-			MacLogger.infoMessage(s);
-		}
-	}
+            MacLogger.infoMessage(s);
+        }
+    }
 
 }

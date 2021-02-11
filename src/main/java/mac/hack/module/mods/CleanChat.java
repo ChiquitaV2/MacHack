@@ -1,11 +1,11 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.command.Command;
 import mac.hack.event.events.EventReadPacket;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.utils.file.MacFileMang;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
 
 import java.util.ArrayList;
@@ -15,10 +15,12 @@ import java.util.regex.Pattern;
 
 public class CleanChat extends Module {
 
+    ArrayList blacklistedWords = new ArrayList<String>();
+
     public CleanChat() {
         super("CleanChat", KEY_UNBOUND, Category.CHAT, "checks messages you receive and removes ones with bad words in them! To add words \"" + Command.PREFIX + "cleanchat add/del [word]\"");
     }
-    ArrayList blacklistedWords = new ArrayList<String>();
+
     @Override
     public void onEnable() {
         super.onEnable();
@@ -38,12 +40,10 @@ public class CleanChat extends Module {
                 allMatches.add(m.group(1));
             }
             StringBuilder parsed = new StringBuilder();
-            for (String s : allMatches)
-            {
+            for (String s : allMatches) {
                 parsed.append(s);
             }
-            for (Object s : blacklistedWords)
-            {
+            for (Object s : blacklistedWords) {
                 if (parsed.toString().toLowerCase().contains(s.toString().toLowerCase())) {
                     event.setCancelled(true);
                 }

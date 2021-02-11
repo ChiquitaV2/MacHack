@@ -1,5 +1,6 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.event.events.EventWorldRender;
 import mac.hack.module.Category;
@@ -8,7 +9,6 @@ import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.RenderUtils;
 import mac.hack.utils.WorldUtils;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
@@ -22,15 +22,13 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LiquidRemover extends Module
-{
+public class LiquidRemover extends Module {
     private final List<BlockPos> poses = new ArrayList<>();
     public Vec3d prevPos;
     private double[] rPos;
     private int lastSlot = -1;
 
-    public LiquidRemover()
-    {
+    public LiquidRemover() {
         super("LiquidRemover", KEY_UNBOUND, Category.WORLD, "automatically places netherrack where lava is",
                 new SettingSlider("Range", 0.1, 5, 4.5, 1),
                 new SettingSlider("R: ", 0.0D, 255.0D, 255.0D, 0),
@@ -40,47 +38,41 @@ public class LiquidRemover extends Module
                 new SettingSlider("Tick Delay: ", 0.0D, 40.0D, 10.0D, 0).withDesc("Ticks per block place to avoid kick for packet spam"),
                 new SettingToggle("Water", false));
     }
+
     @Subscribe
-    public void onTick(EventTick event)
-    {
-        if (mc.player.age % 1 == 0 && this.isToggled())
-        {
+    public void onTick(EventTick event) {
+        if (mc.player.age % 1 == 0 && this.isToggled()) {
             this.update((int) this.getSettings().get(0).asSlider().getValue());
         }
     }
 
-    public void update(int range)
-    {
+    public void update(int range) {
         this.poses.clear();
         BlockPos player = mc.player.getBlockPos();
         this.prevPos = mc.player.getPos();
 
-        for (int y = -Math.min(range, player.getY()); y < Math.min(range, 255 - player.getY()); ++y)
-        {
-            for (int x = -range; x < range; ++x)
-            {
-                for (int z = -range; z < range; ++z)
-                {
+        for (int y = -Math.min(range, player.getY()); y < Math.min(range, 255 - player.getY()); ++y) {
+            for (int x = -range; x < range; ++x) {
+                for (int z = -range; z < range; ++z) {
                     BlockPos pos = player.add(x, y, z);
                     assert this.mc.world != null;
                     if (
                             (this.mc.world.getBlockState(pos).getBlock() == Blocks.LAVA && this.mc.world.getBlockState(pos).getFluidState().getLevel() == 8 && this.mc.world.getBlockState(pos).getFluidState().isStill())
 
-                    )
-                    {
+                    ) {
                         this.poses.add(pos);
                     }
 
                     if (
                             (this.mc.world.getBlockState(pos).getBlock() == Blocks.WATER && this.mc.world.getBlockState(pos).getFluidState().getLevel() == 8 && this.mc.world.getBlockState(pos).getFluidState().isStill() && getSettings().get(6).asToggle().state)
-                    )
-                    {
+                    ) {
                         this.poses.add(pos);
                     }
                 }
             }
         }
     }
+
     @Subscribe
     public void onRender(EventWorldRender event) {
 
@@ -95,18 +87,15 @@ public class LiquidRemover extends Module
         float blue = (float) (System.currentTimeMillis() / 10L % 512L) / 255.0F;
         float red = (float) (System.currentTimeMillis() / 16L % 512L) / 255.0F;
 
-        if (blue > 1.0F)
-        {
+        if (blue > 1.0F) {
             blue = 1.0F - blue;
         }
 
-        if (red > 1.0F)
-        {
+        if (red > 1.0F) {
             red = 1.0F - red;
         }
 
-        for (BlockPos p : this.poses)
-        {
+        for (BlockPos p : this.poses) {
             this.drawFilledBlockBox(p, red, 0.7F, blue, 0.25F);
             for (int i = 0; i < 9; i++) {
                 if (mc.player.inventory.getStack(i).getItem() == Items.NETHERRACK) {
@@ -134,8 +123,7 @@ public class LiquidRemover extends Module
         GL11.glPopMatrix();
     }
 
-    public void drawFilledBlockBox(BlockPos blockPos, float r, float g, float b, float a)
-    {
+    public void drawFilledBlockBox(BlockPos blockPos, float r, float g, float b, float a) {
         double x = blockPos.getX();
         double y = blockPos.getY();
         double z = blockPos.getZ();
@@ -156,7 +144,8 @@ public class LiquidRemover extends Module
         RenderUtils.drawFilledBox(new Box(x, y + 1.0D, z, x + 1.0D, y + 1.0D, z + 1.0D), or, og, ob, a);
         RenderUtils.drawFilledBox(new Box(x, y + 1.0D, z, x + 1.0D, y + 1.0D, z + 1.0D), or, og, ob, a * 1.5F);
     }
-    public void onDisable () {
+
+    public void onDisable() {
         this.poses.clear();
     }
 }

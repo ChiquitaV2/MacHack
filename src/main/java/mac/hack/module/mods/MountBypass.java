@@ -1,7 +1,6 @@
 package mac.hack.module.mods;
 
 import com.google.common.eventbus.Subscribe;
-
 import mac.hack.event.events.EventSendPacket;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
@@ -11,20 +10,20 @@ import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket.Inter
 
 public class MountBypass extends Module {
 
-	public boolean dontCancel = false;
+    public boolean dontCancel = false;
 
-	public MountBypass() {
-		super("MountBypass", KEY_UNBOUND, Category.EXPLOITS, "Bypasses illegalstack on non bungeecord servers");
-	}
+    public MountBypass() {
+        super("MountBypass", KEY_UNBOUND, Category.EXPLOITS, "Bypasses illegalstack on non bungeecord servers");
+    }
 
-	@Subscribe
-	public void onPacket(EventSendPacket event) {
-		if (dontCancel) return;
+    @Subscribe
+    public void onPacket(EventSendPacket event) {
+        if (dontCancel) return;
 
-		if (event.getPacket() instanceof PlayerInteractEntityC2SPacket
-				&& ((PlayerInteractEntityC2SPacket) event.getPacket()).getType() == InteractionType.INTERACT_AT
-				&& ((PlayerInteractEntityC2SPacket) event.getPacket()).getEntity(mc.world) instanceof AbstractDonkeyEntity) {
-			event.setCancelled(true);
-		}
-	}
+        if (event.getPacket() instanceof PlayerInteractEntityC2SPacket
+                && ((PlayerInteractEntityC2SPacket) event.getPacket()).getType() == InteractionType.INTERACT_AT
+                && ((PlayerInteractEntityC2SPacket) event.getPacket()).getEntity(mc.world) instanceof AbstractDonkeyEntity) {
+            event.setCancelled(true);
+        }
+    }
 }

@@ -20,25 +20,19 @@ public class PopCounter extends Module {
     }
 
 
-
-
     public void
-    onDisable()
-    {
+    onDisable() {
         super.onDisable();
         pops.clear();
     }
 
     @Subscribe
     public void
-    onReadPacket(EventReadPacket event)
-    {
-        if(event.getPacket() instanceof EntityStatusS2CPacket)
-        {
+    onReadPacket(EventReadPacket event) {
+        if (event.getPacket() instanceof EntityStatusS2CPacket) {
             EntityStatusS2CPacket pack = (EntityStatusS2CPacket) event.getPacket();
 
-            if(pack.getStatus() == 35)
-            {
+            if (pack.getStatus() == 35) {
                 handlePop(pack.getEntity(mc.world));
             }
         }
@@ -46,16 +40,13 @@ public class PopCounter extends Module {
 
     @Subscribe
     public void
-    onTick(EventTick tick)
-    {
-        if(mc.world == null)
+    onTick(EventTick tick) {
+        if (mc.world == null)
             return;
 
         mc.world.getPlayers().forEach(player -> {
-            if(player.getHealth() <= 0)
-            {
-                if(pops.containsKey(player.getEntityName()))
-                {
+            if (player.getHealth() <= 0) {
+                if (pops.containsKey(player.getEntityName())) {
                     MacLogger.infoMessage(player.getEntityName() + " died after popping " + pops.get(player.getEntityName()) + " totems");
                     pops.remove(player.getEntityName(), pops.get(player.getEntityName()));
                 }
@@ -64,21 +55,17 @@ public class PopCounter extends Module {
     }
 
     private void
-    handlePop(Entity entity)
-    {
-        if(pops == null)
+    handlePop(Entity entity) {
+        if (pops == null)
             pops = new HashMap<>();
 
-        if(entity == mc.player)
+        if (entity == mc.player)
             return;
 
-        if(pops.get(entity.getEntityName()) == null)
-        {
+        if (pops.get(entity.getEntityName()) == null) {
             pops.put(entity.getEntityName(), 1);
             MacLogger.infoMessage(entity.getEntityName() + " popped 1 totem");
-        }
-        else if(!(pops.get(entity.getEntityName()) == null))
-        {
+        } else if (!(pops.get(entity.getEntityName()) == null)) {
             int popc = pops.get(entity.getEntityName());
             popc += 1;
             pops.put(entity.getEntityName(), popc);

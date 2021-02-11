@@ -18,14 +18,13 @@
 package mac.hack.module.mods;
 
 import com.google.common.eventbus.Subscribe;
-
 import mac.hack.event.events.EventOpenScreen;
 import mac.hack.event.events.EventReadPacket;
 import mac.hack.event.events.EventSendPacket;
-import mac.hack.setting.base.SettingSlider;
-import mac.hack.setting.base.SettingToggle;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
+import mac.hack.setting.base.SettingSlider;
+import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.FabricReflect;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
@@ -42,78 +41,86 @@ import net.minecraft.text.Text;
 
 public class AutoReconnect extends Module {
 
-	public ServerInfo server;
+    public ServerInfo server;
 
-	public AutoReconnect() {
-		super("AutoReconnect", KEY_UNBOUND, Category.MISC, "Shows reconnect options when disconnecting from a server",
-				new SettingToggle("Auto", true),
-				new SettingSlider("Time: ", 0.2, 10, 5, 2));
-	}
+    public AutoReconnect() {
+        super("AutoReconnect", KEY_UNBOUND, Category.MISC, "Shows reconnect options when disconnecting from a server",
+                new SettingToggle("Auto", true),
+                new SettingSlider("Time: ", 0.2, 10, 5, 2));
+    }
 
-	@Subscribe
-	public void onOpenScreen(EventOpenScreen event) {
-		if (event.getScreen() instanceof DisconnectedScreen
-				&& !(event.getScreen() instanceof newDisconnectScreen)) {
-			mc.openScreen(new newDisconnectScreen((DisconnectedScreen) event.getScreen()));
-			event.setCancelled(true);
-		}
-	}
+    @Subscribe
+    public void onOpenScreen(EventOpenScreen event) {
+        if (event.getScreen() instanceof DisconnectedScreen
+                && !(event.getScreen() instanceof newDisconnectScreen)) {
+            mc.openScreen(new newDisconnectScreen((DisconnectedScreen) event.getScreen()));
+            event.setCancelled(true);
+        }
+    }
 
-	@Subscribe
-	public void readPacket(EventReadPacket event) {
-		if (event.getPacket() instanceof DisconnectS2CPacket) {
-			try { server = mc.getCurrentServerEntry(); } catch (Exception e) {}
-		}
-	}
+    @Subscribe
+    public void readPacket(EventReadPacket event) {
+        if (event.getPacket() instanceof DisconnectS2CPacket) {
+            try {
+                server = mc.getCurrentServerEntry();
+            } catch (Exception e) {
+            }
+        }
+    }
 
-	@Subscribe
-	public void sendPacket(EventSendPacket event) {
-		if (event.getPacket() instanceof HandshakeC2SPacket) {
-			try { server = new ServerInfo("Server",
-					(String) FabricReflect.getFieldValue(event.getPacket(), "field_13159", "address") + ":"
-							+ (int) FabricReflect.getFieldValue(event.getPacket(), "field_13157", "port"), false); } catch (Exception e) {}
-		}
-	}
+    @Subscribe
+    public void sendPacket(EventSendPacket event) {
+        if (event.getPacket() instanceof HandshakeC2SPacket) {
+            try {
+                server = new ServerInfo("Server",
+                        (String) FabricReflect.getFieldValue(event.getPacket(), "field_13159", "address") + ":"
+                                + (int) FabricReflect.getFieldValue(event.getPacket(), "field_13157", "port"), false);
+            } catch (Exception e) {
+            }
+        }
+    }
 
-	public class newDisconnectScreen extends DisconnectedScreen {
+    public class newDisconnectScreen extends DisconnectedScreen {
 
-		public long reconnectTime = Long.MAX_VALUE - 1000000L;
-		public int reasonH = 0;
+        public long reconnectTime = Long.MAX_VALUE - 1000000L;
+        public int reasonH = 0;
 
-		public newDisconnectScreen(DisconnectedScreen screen) {
-			super((Screen) FabricReflect.getFieldValue(screen, "field_2456", "parent"), new LiteralText("Disconnect"),
-					(Text) FabricReflect.getFieldValue(screen, "field_2457", "reason"));
-			reasonH = (int) FabricReflect.getFieldValue(screen, "field_2454", "reasonHeight");
-		}
+        public newDisconnectScreen(DisconnectedScreen screen) {
+            super((Screen) FabricReflect.getFieldValue(screen, "field_2456", "parent"), new LiteralText("Disconnect"),
+                    (Text) FabricReflect.getFieldValue(screen, "field_2457", "reason"));
+            reasonH = (int) FabricReflect.getFieldValue(screen, "field_2454", "reasonHeight");
+        }
 
-		public void init() {
-			super.init();
-			reconnectTime = System.currentTimeMillis();
-			addButton(new ButtonWidget(width / 2 - 100, height / 2 + reasonH / 2 + 35, 200, 20, new LiteralText("Reconnect"), (button) -> {
-				if (server != null) client.openScreen(new ConnectScreen(new MultiplayerScreen(new TitleScreen()), client, server));
-			}));
-			addButton(new ButtonWidget(width / 2 - 100, height / 2 + reasonH / 2 + 57, 200, 20,
-					new LiteralText((getSettings().get(0).asToggle().state ? "\u00a7a" : "\u00a7c") + "AutoReconnect ["
-							+ ((reconnectTime + getSettings().get(1).asSlider().getValue() * 1000) - System.currentTimeMillis())
-							+ "]"), (button) -> {
-				getSettings().get(0).asToggle().state = !getSettings().get(0).asToggle().state;
-				reconnectTime = System.currentTimeMillis();
-			}));
-		}
+        public void init() {
+            super.init();
+            reconnectTime = System.currentTimeMillis();
+            addButton(new ButtonWidget(width / 2 - 100, height / 2 + reasonH / 2 + 35, 200, 20, new LiteralText("Reconnect"), (button) -> {
+                if (server != null)
+                    client.openScreen(new ConnectScreen(new MultiplayerScreen(new TitleScreen()), client, server));
+            }));
+            addButton(new ButtonWidget(width / 2 - 100, height / 2 + reasonH / 2 + 57, 200, 20,
+                    new LiteralText((getSettings().get(0).asToggle().state ? "\u00a7a" : "\u00a7c") + "AutoReconnect ["
+                            + ((reconnectTime + getSettings().get(1).asSlider().getValue() * 1000) - System.currentTimeMillis())
+                            + "]"), (button) -> {
+                getSettings().get(0).asToggle().state = !getSettings().get(0).asToggle().state;
+                reconnectTime = System.currentTimeMillis();
+            }));
+        }
 
-		public void render(MatrixStack matrix, int mouseX, int mouseY, float delta) {
-			super.render(matrix, mouseX, mouseY, delta);
+        public void render(MatrixStack matrix, int mouseX, int mouseY, float delta) {
+            super.render(matrix, mouseX, mouseY, delta);
 
-			buttons.get(2).setMessage(new LiteralText((getSettings().get(0).asToggle().state ? "\u00a7aAutoReconnect ["
-					+ ((reconnectTime + getSettings().get(1).asSlider().getValue() * 1000) - System.currentTimeMillis())
-					+ "]" : "\u00a7cAutoReconnect [" + getSettings().get(1).asSlider().getValue() * 1000 + "]")));
+            buttons.get(2).setMessage(new LiteralText((getSettings().get(0).asToggle().state ? "\u00a7aAutoReconnect ["
+                    + ((reconnectTime + getSettings().get(1).asSlider().getValue() * 1000) - System.currentTimeMillis())
+                    + "]" : "\u00a7cAutoReconnect [" + getSettings().get(1).asSlider().getValue() * 1000 + "]")));
 
-			if (reconnectTime + getSettings().get(1).asSlider().getValue() * 1000 < System.currentTimeMillis() && getSettings().get(0).asToggle().state) {
-				if (server != null) client.openScreen(new ConnectScreen(new MultiplayerScreen(new TitleScreen()), client, server));
-				reconnectTime = System.currentTimeMillis();
-			}
-		}
+            if (reconnectTime + getSettings().get(1).asSlider().getValue() * 1000 < System.currentTimeMillis() && getSettings().get(0).asToggle().state) {
+                if (server != null)
+                    client.openScreen(new ConnectScreen(new MultiplayerScreen(new TitleScreen()), client, server));
+                reconnectTime = System.currentTimeMillis();
+            }
+        }
 
-	}
+    }
 
 }

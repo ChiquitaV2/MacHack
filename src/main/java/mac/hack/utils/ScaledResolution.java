@@ -25,7 +25,7 @@ public class ScaledResolution {
             i = 1000;
         }
 
-        while(this.scaleFactor < i && this.scaledWidth / (this.scaleFactor + 1) >= 320 && this.scaledHeight / (this.scaleFactor + 1) >= 240) {
+        while (this.scaleFactor < i && this.scaledWidth / (this.scaleFactor + 1) >= 320 && this.scaledHeight / (this.scaleFactor + 1) >= 240) {
             ++this.scaleFactor;
         }
 
@@ -33,8 +33,8 @@ public class ScaledResolution {
             --this.scaleFactor;
         }
 
-        this.scaledWidthD = (double)this.scaledWidth / (double)this.scaleFactor;
-        this.scaledHeightD = (double)this.scaledHeight / (double)this.scaleFactor;
+        this.scaledWidthD = (double) this.scaledWidth / (double) this.scaleFactor;
+        this.scaledHeightD = (double) this.scaledHeight / (double) this.scaleFactor;
         this.scaledWidth = MathHelper.ceil(this.scaledWidthD);
         this.scaledHeight = MathHelper.ceil(this.scaledHeightD);
     }

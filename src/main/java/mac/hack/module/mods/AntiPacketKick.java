@@ -22,8 +22,8 @@ import mac.hack.module.Module;
 
 public class AntiPacketKick extends Module {
 
-	public AntiPacketKick() {
-		super("AntiPacketKick", KEY_UNBOUND, Category.EXPLOITS, "bypasses chunks bans and limits packet kicks");
-	}
+    public AntiPacketKick() {
+        super("AntiPacketKick", KEY_UNBOUND, Category.EXPLOITS, "bypasses chunks bans and limits packet kicks");
+    }
 
 }

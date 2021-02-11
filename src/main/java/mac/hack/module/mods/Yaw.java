@@ -1,11 +1,11 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingToggle;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -63,17 +63,32 @@ public class Yaw extends Module {
             } else if (!InputUtil.isKeyPressed(mc.getWindow().getHandle(), GLFW.GLFW_KEY_DOWN)) {
                 dDown = false;
             }
-        }
-        else if (getSetting(3).asToggle().state) {
+        } else if (getSetting(3).asToggle().state) {
             switch (determineHighway()) {
-                case 1: mc.player.yaw = -90; break;
-                case 2: mc.player.yaw = -45; break;
-                case 3: mc.player.yaw = -135; break;
-                case 4: mc.player.yaw = 90; break;
-                case 5: mc.player.yaw = 45; break;
-                case 6: mc.player.yaw = 135; break;
-                case 7: mc.player.yaw = 0; break;
-                case 8: mc.player.yaw = 180; break;
+                case 1:
+                    mc.player.yaw = -90;
+                    break;
+                case 2:
+                    mc.player.yaw = -45;
+                    break;
+                case 3:
+                    mc.player.yaw = -135;
+                    break;
+                case 4:
+                    mc.player.yaw = 90;
+                    break;
+                case 5:
+                    mc.player.yaw = 45;
+                    break;
+                case 6:
+                    mc.player.yaw = 135;
+                    break;
+                case 7:
+                    mc.player.yaw = 0;
+                    break;
+                case 8:
+                    mc.player.yaw = 180;
+                    break;
             }
         }
 
@@ -109,51 +124,40 @@ public class Yaw extends Module {
             if (player.getZ() >= -5 && player.getZ() <= 5) {
                 //+X highway
                 highwayNum = 1;
-            }
-            else if (player.getZ() - player.getX() >= -50 && player.getZ() - player.getX() <= 50) {
+            } else if (player.getZ() - player.getX() >= -50 && player.getZ() - player.getX() <= 50) {
                 //+X+Z highway
                 highwayNum = 2;
-            }
-            else if (player.getZ() + player.getX() >= -50 && player.getZ() + player.getX() <= 50) {
+            } else if (player.getZ() + player.getX() >= -50 && player.getZ() + player.getX() <= 50) {
                 //+X-Z highway
                 highwayNum = 3;
-            }
-            else {
+            } else {
                 highwayNum = -1;
             }
-        }
-        else if (player.getX() <= -100) {
+        } else if (player.getX() <= -100) {
             if (player.getZ() >= -5 && player.getZ() <= 5) {
                 //-X highway
                 highwayNum = 4;
-            }
-            else if (player.getX() + player.getZ() >= -50 && player.getX() + player.getZ() <= 50) {
+            } else if (player.getX() + player.getZ() >= -50 && player.getX() + player.getZ() <= 50) {
                 //-X+Z highway
                 highwayNum = 5;
-            }
-            else if (player.getZ() <= player.getX() + 100 && player.getZ() >= player.getX() - 100) {
+            } else if (player.getZ() <= player.getX() + 100 && player.getZ() >= player.getX() - 100) {
                 //-X-Z highway
                 highwayNum = 6;
-            }
-            else {
+            } else {
                 highwayNum = -1;
             }
-        }
-        else if (player.getZ() >= 100) {
+        } else if (player.getZ() >= 100) {
             if (player.getX() >= -5 && player.getX() <= 5) {
                 //+Z highway
                 highwayNum = 7;
-            }
-            else {
+            } else {
                 highwayNum = -1;
             }
-        }
-        else if (player.getZ() <= -100) {
+        } else if (player.getZ() <= -100) {
             if (player.getX() >= -5 && player.getX() <= 5) {
                 //-Z highway
                 highwayNum = 8;
-            }
-            else {
+            } else {
                 highwayNum = -1;
             }
         }

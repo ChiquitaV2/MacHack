@@ -62,12 +62,9 @@ public class EpearlAC extends Module {
         );
         ArrayList<BlockPos> blocksRangeAdder = new ArrayList<BlockPos>();
         int range = (int) getSetting(9).asSlider().getValue();
-        for(int x = range; x >= -range; x--)
-        {
-            for(int y = range; y >= -range; y--)
-            {
-                for(int z = range; z >= -range; z--)
-                {
+        for (int x = range; x >= -range; x--) {
+            for (int y = range; y >= -range; y--) {
+                for (int z = range; z >= -range; z--) {
                     blocksRangeAdder.add(new BlockPos(x, y, z));
                 }
             }
@@ -78,28 +75,26 @@ public class EpearlAC extends Module {
     @Subscribe
     public void onRenderWorld(EventWorldRender event) {
         if (targetBlock != null) {
-            float r =  (float) (this.getSetting(10).asToggle().getChild(0).asSlider().getValue() / 255.0D);
-            float g =  (float) (this.getSetting(10).asToggle().getChild(1).asSlider().getValue() / 255.0D);
-            float b =  (float) (this.getSetting(10).asToggle().getChild(2).asSlider().getValue() / 255.0D);
+            float r = (float) (this.getSetting(10).asToggle().getChild(0).asSlider().getValue() / 255.0D);
+            float g = (float) (this.getSetting(10).asToggle().getChild(1).asSlider().getValue() / 255.0D);
+            float b = (float) (this.getSetting(10).asToggle().getChild(2).asSlider().getValue() / 255.0D);
             RenderUtils.drawOutlineBox(targetBlock, r, g, b, 1.0f);
         }
     }
 
     public void
-    onDisable()
-    {
+    onDisable() {
         super.onDisable();
-        if(oldSlot != -1)
+        if (oldSlot != -1)
             mc.player.inventory.selectedSlot = oldSlot;
         oldSlot = -1;
     }
 
     @Subscribe
     public void
-    onTick(EventTick event)
-    {
+    onTick(EventTick event) {
         counter++;
-        if(counter < getSetting(7).asSlider().getValue())
+        if (counter < getSetting(7).asSlider().getValue())
             return;
         counter = 0;
 
@@ -121,7 +116,7 @@ public class EpearlAC extends Module {
                 .findFirst()
                 .orElse(null);
 
-        if(target == null)
+        if (target == null)
             return;
 
         blocks.clear();
@@ -135,7 +130,7 @@ public class EpearlAC extends Module {
                 //.filter(block -> CrystalUtils.getCrystalDamage(mc.player, block) < mc.player.getHealth())
                 .filter(block -> {
                     LivingEntity livingEntity = (LivingEntity) target;
-                    if(livingEntity.getHealth() + livingEntity.getAbsorptionAmount() < getSetting(6).asSlider().getValue())
+                    if (livingEntity.getHealth() + livingEntity.getAbsorptionAmount() < getSetting(6).asSlider().getValue())
                         return true;
                     return CrystalUtils.getCrystalDamage(livingEntity, block) > getSetting(5).asSlider().getValue();
                 })
@@ -145,13 +140,15 @@ public class EpearlAC extends Module {
                 .findFirst()
                 .orElse(null);
 
-        if(targetBlock == null)
+        if (targetBlock == null)
             return;
 
-        if(getSetting(3).asToggle().state && mc.player.getMainHandStack().getItem() != Items.END_CRYSTAL)
+        if (getSetting(3).asToggle().state && mc.player.getMainHandStack().getItem() != Items.END_CRYSTAL)
             oldSlot = CrystalUtils.changeHotbarSlotToItem(Items.END_CRYSTAL);
 
-        if (mc.player.getMainHandStack().getItem() != Items.END_CRYSTAL) {return;}
+        if (mc.player.getMainHandStack().getItem() != Items.END_CRYSTAL) {
+            return;
+        }
 
         CrystalUtils.placeBlock(new Vec3d(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ()), Hand.MAIN_HAND, Direction.UP);
         mc.interactionManager.attackEntity(mc.player, crystal);
@@ -161,8 +158,7 @@ public class EpearlAC extends Module {
     }
 
     private boolean
-    canPlace(BlockPos blockPos)
-    {
+    canPlace(BlockPos blockPos) {
         BlockPos up1 = blockPos.add(0, 1, 0);
         BlockPos up2 = blockPos.add(0, 2, 0);
         if (getSetting(8).asToggle().state) {

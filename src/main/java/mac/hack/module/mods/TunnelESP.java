@@ -1,5 +1,6 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.event.events.EventWorldRender;
 import mac.hack.module.Category;
@@ -7,21 +8,21 @@ import mac.hack.module.Module;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.utils.RenderUtils;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
+
 import java.util.ArrayList;
 import java.util.List;
-public class TunnelESP extends Module
-{
+
+public class TunnelESP extends Module {
     private final List<BlockPos> poses = new ArrayList<>();
     public Vec3d prevPos;
     private double[] rPos;
-    public TunnelESP()
-    {
+
+    public TunnelESP() {
         super("TunnelESP", KEY_UNBOUND, Category.RENDER, "ESP for tunnels off the highway",
                 new SettingSlider("Range", 0, 50, 20, 0),
                 new SettingSlider("R: ", 0.0D, 255.0D, 50.0D, 0),
@@ -30,25 +31,21 @@ public class TunnelESP extends Module
                 new SettingMode("Mode", "Flat", "Boxes"),
                 new SettingSlider("Tick Delay", 1, 20, 5, 0));
     }
+
     @Subscribe
-    public void onTick(EventTick event)
-    {
-        if (mc.player.age % (int) this.getSettings().get(5).asSlider().getValue() == 0 && this.isToggled())
-        {
+    public void onTick(EventTick event) {
+        if (mc.player.age % (int) this.getSettings().get(5).asSlider().getValue() == 0 && this.isToggled()) {
             this.update((int) this.getSettings().get(0).asSlider().getValue());
         }
     }
-    public void update(int range)
-    {
+
+    public void update(int range) {
         this.poses.clear();
         BlockPos player = mc.player.getBlockPos();
         this.prevPos = mc.player.getPos();
-        for (int y = -Math.min(range, player.getY()); y < Math.min(range, 255 - player.getY()); ++y)
-        {
-            for (int x = -range; x < range; ++x)
-            {
-                for (int z = -range; z < range; ++z)
-                {
+        for (int y = -Math.min(range, player.getY()); y < Math.min(range, 255 - player.getY()); ++y) {
+            for (int x = -range; x < range; ++x) {
+                for (int z = -range; z < range; ++z) {
                     BlockPos pos = player.add(x, y, z);
                     if (
                             (this.mc.world.getBlockState(pos).getBlock() == Blocks.AIR)
@@ -84,14 +81,14 @@ public class TunnelESP extends Module
                                             && !(this.mc.world.getBlockState(pos.north(1).east(1)).getBlock() == Blocks.AIR)
                                             && !(this.mc.world.getBlockState(pos.north(1).up(1).west(1)).getBlock() == Blocks.AIR)
                                             && !(this.mc.world.getBlockState(pos.north(1).up(1).east(1)).getBlock() == Blocks.AIR)
-                    )
-                    {
+                    ) {
                         this.poses.add(pos);
                     }
                 }
             }
         }
     }
+
     @Subscribe
     public void onRender(EventWorldRender event) {
         GL11.glPushMatrix();
@@ -103,16 +100,13 @@ public class TunnelESP extends Module
         GL11.glLineWidth(2.0F);
         float blue = (float) (System.currentTimeMillis() / 10L % 512L) / 255.0F;
         float red = (float) (System.currentTimeMillis() / 16L % 512L) / 255.0F;
-        if (blue > 1.0F)
-        {
+        if (blue > 1.0F) {
             blue = 1.0F - blue;
         }
-        if (red > 1.0F)
-        {
+        if (red > 1.0F) {
             red = 1.0F - red;
         }
-        for (BlockPos p : this.poses)
-        {
+        for (BlockPos p : this.poses) {
             this.drawFilledBlockBox(p, red, 0.7F, blue, 0.25F);
         }
         GL11.glEnable(2929);
@@ -121,8 +115,8 @@ public class TunnelESP extends Module
         GL11.glDisable(3042);
         GL11.glPopMatrix();
     }
-    public void drawFilledBlockBox(BlockPos blockPos, float r, float g, float b, float a)
-    {
+
+    public void drawFilledBlockBox(BlockPos blockPos, float r, float g, float b, float a) {
         double x = (double) blockPos.getX();
         double y = (double) blockPos.getY();
         double z = (double) blockPos.getZ();
@@ -160,7 +154,8 @@ public class TunnelESP extends Module
             RenderUtils.drawFilledBox(new Box(x, y2 + 1.0D, z, x + 1.0D, y2 + 1.0D, z + 1.0D), or, og, ob, a * 1.5F);
         }
     }
-    public void onDisable () {
+
+    public void onDisable() {
         this.poses.clear();
     }
 }

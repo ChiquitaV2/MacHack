@@ -137,17 +137,14 @@ public class ProjectileSimulator {
      **/
     private static class SimulatedProjectile {
 
+        private final float width;
+        private final float height;
         public double x;
         public double y;
         public double z;
-
         public float pitch;
         public float prevPitch = 0f;
-
         public Vec3d velocity;
-
-        private final float width;
-        private final float height;
 
         public SimulatedProjectile(Entity realProjectile) {
             x = realProjectile.getX();

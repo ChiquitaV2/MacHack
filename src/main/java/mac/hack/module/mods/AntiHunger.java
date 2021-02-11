@@ -1,11 +1,11 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventSendPacket;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.FabricReflect;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 
 public class AntiHunger extends Module {

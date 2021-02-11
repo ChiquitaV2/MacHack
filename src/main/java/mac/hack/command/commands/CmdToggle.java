@@ -25,31 +25,31 @@ import mac.hack.utils.MacQueue;
 
 public class CmdToggle extends Command {
 
-	@Override
-	public String getAlias() {
-		return "toggle";
-	}
+    @Override
+    public String getAlias() {
+        return "toggle";
+    }
 
-	@Override
-	public String getDescription() {
-		return "Toggles a mod with a command.";
-	}
+    @Override
+    public String getDescription() {
+        return "Toggles a mod with a command.";
+    }
 
-	@Override
-	public String getSyntax() {
-		return "toggle [Module]";
-	}
+    @Override
+    public String getSyntax() {
+        return "toggle [Module]";
+    }
 
-	@Override
-	public void onCommand(String command, String[] args) throws Exception {
-		for (Module m: ModuleManager.getModules()) {
-			if (args[0].equalsIgnoreCase(m.getName())) {
-				MacQueue.add(() -> m.toggle());
-				MacLogger.infoMessage(m.getName() + " Toggled");
-				return;
-			}
-		}
-		MacLogger.errorMessage("Module \"" + args[0] + "\" Not Found!");
-	}
+    @Override
+    public void onCommand(String command, String[] args) throws Exception {
+        for (Module m : ModuleManager.getModules()) {
+            if (args[0].equalsIgnoreCase(m.getName())) {
+                MacQueue.add(() -> m.toggle());
+                MacLogger.infoMessage(m.getName() + " Toggled");
+                return;
+            }
+        }
+        MacLogger.errorMessage("Module \"" + args[0] + "\" Not Found!");
+    }
 
 }

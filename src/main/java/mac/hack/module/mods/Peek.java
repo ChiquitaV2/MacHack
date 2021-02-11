@@ -1,5 +1,7 @@
 package mac.hack.module.mods;
 
+import com.google.common.collect.Lists;
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventDrawTooltip;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
@@ -8,8 +10,6 @@ import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.FabricReflect;
 import mac.hack.utils.ItemContentUtils;
-import com.google.common.collect.Lists;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.block.*;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;

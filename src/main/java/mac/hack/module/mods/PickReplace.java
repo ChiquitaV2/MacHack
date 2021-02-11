@@ -1,21 +1,12 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
-import mac.hack.setting.base.SettingMode;
-import mac.hack.setting.base.SettingSlider;
-import mac.hack.utils.Timer;
-import com.google.common.eventbus.Subscribe;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
-
-import java.util.ArrayList;
 
 public class PickReplace extends Module {
 

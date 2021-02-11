@@ -23,10 +23,14 @@ import java.util.Random;
 @Mixin(TextRenderer.class)
 public abstract class MixinTextRenderer {
 
-    @Shadow private TextHandler handler;
+    @Shadow
+    private TextHandler handler;
 
-    @Shadow public abstract int drawInternal(String text, float x, float y, int color, boolean shadow, Matrix4f matrix, VertexConsumerProvider vertexConsumers, boolean seeThrough, int backgroundColor, int light, boolean mirror);
-    @Shadow public abstract int draw(OrderedText text, float x, float y, int color, Matrix4f matrix, boolean shadow);
+    @Shadow
+    public abstract int drawInternal(String text, float x, float y, int color, boolean shadow, Matrix4f matrix, VertexConsumerProvider vertexConsumers, boolean seeThrough, int backgroundColor, int light, boolean mirror);
+
+    @Shadow
+    public abstract int draw(OrderedText text, float x, float y, int color, Matrix4f matrix, boolean shadow);
 
     @Inject(method = "drawWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/text/Text;FFI)I", at = @At("HEAD"), cancellable = true)
     public void drawWithShadow(MatrixStack matrices, Text text, float x, float y, int color, CallbackInfoReturnable<Integer> ci) {
@@ -66,7 +70,7 @@ public abstract class MixinTextRenderer {
     @Inject(method = "getWidth(Lnet/minecraft/text/StringVisitable;)I", at = @At("HEAD"), cancellable = true)
     public void getWidth(StringVisitable text, CallbackInfoReturnable<Integer> ci) {
         if (ModuleManager.getModule(AllahHaram.class).isToggled() && text instanceof Text) {
-            ci.setReturnValue(MathHelper.ceil(this.handler.getWidth(chingChong(((Text)text).asString()))));
+            ci.setReturnValue(MathHelper.ceil(this.handler.getWidth(chingChong(((Text) text).asString()))));
             ci.cancel();
         }
     }

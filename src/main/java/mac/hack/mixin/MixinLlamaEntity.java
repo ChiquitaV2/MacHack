@@ -28,8 +28,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LlamaEntity.class)
 public abstract class MixinLlamaEntity {
 
-	@Inject(at = @At("HEAD"), method = "canBeControlledByRider()Z", cancellable = true)
-	public void canBeControlledByRider(CallbackInfoReturnable<Boolean> info) {
-		info.setReturnValue(ModuleManager.getModule(EntityControl.class).isToggled());
-	}
+    @Inject(at = @At("HEAD"), method = "canBeControlledByRider()Z", cancellable = true)
+    public void canBeControlledByRider(CallbackInfoReturnable<Boolean> info) {
+        info.setReturnValue(ModuleManager.getModule(EntityControl.class).isToggled());
+    }
 }

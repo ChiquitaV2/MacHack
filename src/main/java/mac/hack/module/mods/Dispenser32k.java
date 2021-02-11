@@ -1,5 +1,7 @@
 package mac.hack.module.mods;
 
+import com.google.common.collect.Streams;
+import com.google.common.eventbus.Subscribe;
 import mac.hack.MacHack;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
@@ -9,8 +11,6 @@ import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.MacLogger;
 import mac.hack.utils.WorldUtils;
-import com.google.common.collect.Streams;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShulkerBoxBlock;
@@ -36,253 +36,253 @@ import java.util.stream.Collectors;
 
 public class Dispenser32k extends Module {
 
-	private BlockPos pos;
+    private BlockPos pos;
 
-	private int hopper;
-	private int dispenser;
-	private int redstone;
-	private int shulker;
-	private int block;
-	private int[] rot;
-	private float[] startRot;
+    private int hopper;
+    private int dispenser;
+    private int redstone;
+    private int shulker;
+    private int block;
+    private int[] rot;
+    private float[] startRot;
 
-	private boolean active;
-	private boolean openedDispenser;
-	private int dispenserTicks;
+    private boolean active;
+    private boolean openedDispenser;
+    private int dispenserTicks;
 
-	private int ticksPassed;
-	private int timer = 0;
+    private int ticksPassed;
+    private int timer = 0;
 
-	public Dispenser32k() {
-		super("Dispenser32k", KEY_UNBOUND, Category.COMBAT, "ching chong auto32k no skid 2020",
-				new SettingToggle("Legit Place", true),
-				new SettingToggle("Killaura", true),
-				new SettingSlider("CPS", 0, 20, 20, 0),
-				new SettingMode("CPS", "Clicks/Sec", "Clicks/Tick", "Tick Delay"),
-				new SettingToggle("Timeout", false),
-				new SettingMode("Place", "Auto", "Looking"));
-	}
+    public Dispenser32k() {
+        super("Dispenser32k", KEY_UNBOUND, Category.COMBAT, "ching chong auto32k no skid 2020",
+                new SettingToggle("Legit Place", true),
+                new SettingToggle("Killaura", true),
+                new SettingSlider("CPS", 0, 20, 20, 0),
+                new SettingMode("CPS", "Clicks/Sec", "Clicks/Tick", "Tick Delay"),
+                new SettingToggle("Timeout", false),
+                new SettingMode("Place", "Auto", "Looking"));
+    }
 
-	public void onEnable() {
-		if (mc.world == null) return;
+    public void onEnable() {
+        if (mc.world == null) return;
 
-		super.onEnable();
+        super.onEnable();
 
-		ticksPassed = 0;
-		hopper = -1;
-		dispenser = -1;
-		redstone = -1;
-		shulker = -1;
-		block = -1;
-		active = false;
-		openedDispenser = false;
-		dispenserTicks = 0;
-		timer = 0;
+        ticksPassed = 0;
+        hopper = -1;
+        dispenser = -1;
+        redstone = -1;
+        shulker = -1;
+        block = -1;
+        active = false;
+        openedDispenser = false;
+        dispenserTicks = 0;
+        timer = 0;
 
-		for (int i = 0; i <= 8; i++) {
-			Item item = mc.player.inventory.getStack(i).getItem();
-			if (item == Item.fromBlock(Blocks.HOPPER)) hopper = i;
-			else if (item == Item.fromBlock(Blocks.DISPENSER)) dispenser = i;
-			else if (item == Item.fromBlock(Blocks.REDSTONE_BLOCK)) redstone = i;
-			else if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof ShulkerBoxBlock) shulker = i;
-			else if (item instanceof BlockItem) block = i;
-		}
+        for (int i = 0; i <= 8; i++) {
+            Item item = mc.player.inventory.getStack(i).getItem();
+            if (item == Item.fromBlock(Blocks.HOPPER)) hopper = i;
+            else if (item == Item.fromBlock(Blocks.DISPENSER)) dispenser = i;
+            else if (item == Item.fromBlock(Blocks.REDSTONE_BLOCK)) redstone = i;
+            else if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof ShulkerBoxBlock) shulker = i;
+            else if (item instanceof BlockItem) block = i;
+        }
 
-		if (hopper == -1) MacLogger.errorMessage("Missing Hopper");
-		else if (dispenser == -1) MacLogger.errorMessage("Missing Dispenser");
-		else if (redstone == -1) MacLogger.errorMessage("Missing Redstone Block");
-		else if (shulker == -1) MacLogger.errorMessage("Missing Shulker");
-		else if (block == -1) MacLogger.errorMessage("Missing Generic Block");
+        if (hopper == -1) MacLogger.errorMessage("Missing Hopper");
+        else if (dispenser == -1) MacLogger.errorMessage("Missing Dispenser");
+        else if (redstone == -1) MacLogger.errorMessage("Missing Redstone Block");
+        else if (shulker == -1) MacLogger.errorMessage("Missing Shulker");
+        else if (block == -1) MacLogger.errorMessage("Missing Generic Block");
 
-		if (hopper == -1 || dispenser == -1 || redstone == -1 || shulker == -1 || block == -1) {
-			setToggled(false);
-			return;
-		}
+        if (hopper == -1 || dispenser == -1 || redstone == -1 || shulker == -1 || block == -1) {
+            setToggled(false);
+            return;
+        }
 
-		if (getSetting(5).asMode().mode == 1) {
-			HitResult ray = mc.player.raycast(5, mc.getTickDelta(), false);
-			pos = new BlockPos(ray.getPos()).up();
+        if (getSetting(5).asMode().mode == 1) {
+            HitResult ray = mc.player.raycast(5, mc.getTickDelta(), false);
+            pos = new BlockPos(ray.getPos()).up();
 
-			double x = pos.getX() - mc.player.getPos().x;
-			double z = pos.getZ() - mc.player.getPos().z;
+            double x = pos.getX() - mc.player.getPos().x;
+            double z = pos.getZ() - mc.player.getPos().z;
 
-			rot = Math.abs(x) > Math.abs(z) ? x > 0 ? new int[]{-1, 0} : new int[]{1, 0} : z > 0 ? new int[]{0, -1} : new int[]{0, 1};
+            rot = Math.abs(x) > Math.abs(z) ? x > 0 ? new int[]{-1, 0} : new int[]{1, 0} : z > 0 ? new int[]{0, -1} : new int[]{0, 1};
 
-			if (!(WorldUtils.canPlaceBlock(pos) /*|| canPlaceBlock(pos.add(rot[0], 0, rot[1]))*/)
-					|| !WorldUtils.isBlockEmpty(pos)
-					|| !WorldUtils.isBlockEmpty(pos.add(rot[0], 0, rot[1]))
-					|| !WorldUtils.isBlockEmpty(pos.add(0, 1, 0))
-					|| !WorldUtils.isBlockEmpty(pos.add(0, 2, 0))
-					|| !WorldUtils.isBlockEmpty(pos.add(rot[0], 1, rot[1]))) {
-				MacLogger.errorMessage("Unable to place 32k");
-				setToggled(false);
-				return;
-			}
+            if (!(WorldUtils.canPlaceBlock(pos) /*|| canPlaceBlock(pos.add(rot[0], 0, rot[1]))*/)
+                    || !WorldUtils.isBlockEmpty(pos)
+                    || !WorldUtils.isBlockEmpty(pos.add(rot[0], 0, rot[1]))
+                    || !WorldUtils.isBlockEmpty(pos.add(0, 1, 0))
+                    || !WorldUtils.isBlockEmpty(pos.add(0, 2, 0))
+                    || !WorldUtils.isBlockEmpty(pos.add(rot[0], 1, rot[1]))) {
+                MacLogger.errorMessage("Unable to place 32k");
+                setToggled(false);
+                return;
+            }
 
-			boolean rotate = getSetting(0).asToggle().state;
+            boolean rotate = getSetting(0).asToggle().state;
 
-			WorldUtils.placeBlock(pos, block, rotate, false);
+            WorldUtils.placeBlock(pos, block, rotate, false);
 
-			WorldUtils.facePosPacket(
-					pos.add(-rot[0], 1, -rot[1]).getX() + 0.5, pos.getY() + 1, pos.add(-rot[0], 1, -rot[1]).getZ() + 0.5);
-			WorldUtils.placeBlock(pos.add(0, 1, 0), dispenser, false, false);
-			return;
+            WorldUtils.facePosPacket(
+                    pos.add(-rot[0], 1, -rot[1]).getX() + 0.5, pos.getY() + 1, pos.add(-rot[0], 1, -rot[1]).getZ() + 0.5);
+            WorldUtils.placeBlock(pos.add(0, 1, 0), dispenser, false, false);
+            return;
 
-		} else {
-			for (int x = -2; x <= 2; x++) {
-				for (int y = -1; y <= 1; y++) {
-					for (int z = -2; z <= 2; z++) {
-						rot = Math.abs(x) > Math.abs(z) ? x > 0 ? new int[]{-1, 0} : new int[]{1, 0} : z > 0 ? new int[]{0, -1} : new int[]{0, 1};
+        } else {
+            for (int x = -2; x <= 2; x++) {
+                for (int y = -1; y <= 1; y++) {
+                    for (int z = -2; z <= 2; z++) {
+                        rot = Math.abs(x) > Math.abs(z) ? x > 0 ? new int[]{-1, 0} : new int[]{1, 0} : z > 0 ? new int[]{0, -1} : new int[]{0, 1};
 
-						pos = mc.player.getBlockPos().add(x, y, z);
+                        pos = mc.player.getBlockPos().add(x, y, z);
 
-						if (mc.player.getPos().add(0, mc.player.getEyeHeight(mc.player.getPose()), 0).distanceTo(
-								mc.player.getPos().add(x - rot[0] / 2, y + 0.5, z + rot[1] / 2)) > 4.5
-								|| mc.player.getPos().add(0, mc.player.getEyeHeight(mc.player.getPose()), 0).distanceTo(
-								mc.player.getPos().add(x + 0.5, y + 2.5, z + 0.5)) > 4.5
-								|| !(WorldUtils.canPlaceBlock(pos) /*|| canPlaceBlock(pos.add(rot[0], 0, rot[1]))*/)
-								|| !WorldUtils.isBlockEmpty(pos)
-								|| !WorldUtils.isBlockEmpty(pos.add(rot[0], 0, rot[1]))
-								|| !WorldUtils.isBlockEmpty(pos.add(0, 1, 0))
-								|| !WorldUtils.isBlockEmpty(pos.add(0, 2, 0))
-								|| !WorldUtils.isBlockEmpty(pos.add(rot[0], 1, rot[1]))) continue;
+                        if (mc.player.getPos().add(0, mc.player.getEyeHeight(mc.player.getPose()), 0).distanceTo(
+                                mc.player.getPos().add(x - rot[0] / 2, y + 0.5, z + rot[1] / 2)) > 4.5
+                                || mc.player.getPos().add(0, mc.player.getEyeHeight(mc.player.getPose()), 0).distanceTo(
+                                mc.player.getPos().add(x + 0.5, y + 2.5, z + 0.5)) > 4.5
+                                || !(WorldUtils.canPlaceBlock(pos) /*|| canPlaceBlock(pos.add(rot[0], 0, rot[1]))*/)
+                                || !WorldUtils.isBlockEmpty(pos)
+                                || !WorldUtils.isBlockEmpty(pos.add(rot[0], 0, rot[1]))
+                                || !WorldUtils.isBlockEmpty(pos.add(0, 1, 0))
+                                || !WorldUtils.isBlockEmpty(pos.add(0, 2, 0))
+                                || !WorldUtils.isBlockEmpty(pos.add(rot[0], 1, rot[1]))) continue;
 
-						startRot = new float[]{mc.player.yaw, mc.player.pitch};
-						WorldUtils.facePos(pos.add(-rot[0], 1, -rot[1]).getX() + 0.5, pos.getY() + 1, pos.add(-rot[0], 1, -rot[1]).getZ() + 0.5);
-						WorldUtils.facePosPacket(pos.add(-rot[0], 1, -rot[1]).getX() + 0.5, pos.getY() + 1, pos.add(-rot[0], 1, -rot[1]).getZ() + 0.5);
-						return;
-					}
-				}
-			}
-		}
+                        startRot = new float[]{mc.player.yaw, mc.player.pitch};
+                        WorldUtils.facePos(pos.add(-rot[0], 1, -rot[1]).getX() + 0.5, pos.getY() + 1, pos.add(-rot[0], 1, -rot[1]).getZ() + 0.5);
+                        WorldUtils.facePosPacket(pos.add(-rot[0], 1, -rot[1]).getX() + 0.5, pos.getY() + 1, pos.add(-rot[0], 1, -rot[1]).getZ() + 0.5);
+                        return;
+                    }
+                }
+            }
+        }
 
-		MacLogger.errorMessage("Unable to place 32k");
-		setToggled(false);
-	}
+        MacLogger.errorMessage("Unable to place 32k");
+        setToggled(false);
+    }
 
-	@Subscribe
-	public void onTick(EventTick event) {
-		if ((getSetting(4).asToggle().state && !active && ticksPassed > 25) || (active && !(mc.currentScreen instanceof HopperScreen))) {
-			setToggled(false);
-			return;
-		}
+    @Subscribe
+    public void onTick(EventTick event) {
+        if ((getSetting(4).asToggle().state && !active && ticksPassed > 25) || (active && !(mc.currentScreen instanceof HopperScreen))) {
+            setToggled(false);
+            return;
+        }
 
-		if (ticksPassed == 1) {
-			//boolean rotate = getSetting(0).toToggle().state;
+        if (ticksPassed == 1) {
+            //boolean rotate = getSetting(0).toToggle().state;
 
-			WorldUtils.placeBlock(pos, block, false, false);
-			WorldUtils.placeBlock(pos.add(0, 1, 0), dispenser, false, false);
-			mc.player.yaw = startRot[0];
-			mc.player.pitch = startRot[1];
+            WorldUtils.placeBlock(pos, block, false, false);
+            WorldUtils.placeBlock(pos.add(0, 1, 0), dispenser, false, false);
+            mc.player.yaw = startRot[0];
+            mc.player.pitch = startRot[1];
 
-			ticksPassed++;
-			return;
-		}
+            ticksPassed++;
+            return;
+        }
 
-		if (active && getSetting(1).asToggle().state && timer == 0) killAura();
+        if (active && getSetting(1).asToggle().state && timer == 0) killAura();
 
-		if (mc.currentScreen instanceof Generic3x3ContainerScreen) {
-			openedDispenser = true;
-		}
+        if (mc.currentScreen instanceof Generic3x3ContainerScreen) {
+            openedDispenser = true;
+        }
 
-		if (mc.currentScreen instanceof HopperScreen) {
-			HopperScreen gui = (HopperScreen) mc.currentScreen;
+        if (mc.currentScreen instanceof HopperScreen) {
+            HopperScreen gui = (HopperScreen) mc.currentScreen;
 
-			for (int i = 32; i <= 40; i++) {
-				//System.out.println(EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, gui.inventorySlots.getSlot(i).getStack()));
-				if (EnchantmentHelper.getLevel(Enchantments.SHARPNESS, gui.getScreenHandler().getSlot(i).getStack()) > 5) {
-					mc.player.inventory.selectedSlot = i - 32;
-					break;
-				}
-			}
+            for (int i = 32; i <= 40; i++) {
+                //System.out.println(EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, gui.inventorySlots.getSlot(i).getStack()));
+                if (EnchantmentHelper.getLevel(Enchantments.SHARPNESS, gui.getScreenHandler().getSlot(i).getStack()) > 5) {
+                    mc.player.inventory.selectedSlot = i - 32;
+                    break;
+                }
+            }
 
-			active = true;
+            active = true;
 
-			if (active) {
-				if (getSetting(3).asMode().mode == 0) {
-					timer = timer >= Math.round(20 / getSetting(2).asSlider().getValue()) ? 0 : timer + 1;
-				} else if (getSetting(3).asMode().mode == 1) {
-					timer = 0;
-				} else if (getSetting(3).asMode().mode == 2) {
-					timer = timer >= getSetting(2).asSlider().getValue() ? 0 : timer + 1;
-				}
-			}
+            if (active) {
+                if (getSetting(3).asMode().mode == 0) {
+                    timer = timer >= Math.round(20 / getSetting(2).asSlider().getValue()) ? 0 : timer + 1;
+                } else if (getSetting(3).asMode().mode == 1) {
+                    timer = 0;
+                } else if (getSetting(3).asMode().mode == 2) {
+                    timer = timer >= getSetting(2).asSlider().getValue() ? 0 : timer + 1;
+                }
+            }
 
-			//System.out.println(EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, mc.player.inventory.getCurrentItem()));
-			if (!(gui.getScreenHandler().getSlot(0).getStack().getItem() instanceof AirBlockItem) && active) {
-				int slot = mc.player.inventory.selectedSlot;
-				boolean pull = false;
-				for (int i = 40; i >= 32; i--) {
-					if (gui.getScreenHandler().getSlot(i).getStack().isEmpty()) {
-						slot = i;
-						pull = true;
-						break;
-					}
-				}
+            //System.out.println(EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, mc.player.inventory.getCurrentItem()));
+            if (!(gui.getScreenHandler().getSlot(0).getStack().getItem() instanceof AirBlockItem) && active) {
+                int slot = mc.player.inventory.selectedSlot;
+                boolean pull = false;
+                for (int i = 40; i >= 32; i--) {
+                    if (gui.getScreenHandler().getSlot(i).getStack().isEmpty()) {
+                        slot = i;
+                        pull = true;
+                        break;
+                    }
+                }
 
-				//mc.playerController.windowClick(gui.inventorySlots.windowId, 0, 0, ClickType.QUICK_MOVE, mc.player);
-				if (pull) {
-					//mc.interactionManager.method_2906(gui.getContainer().syncId, 0, 0, SlotActionType.PICKUP, mc.player);
-					//mc.interactionManager.method_2906(gui.getContainer().syncId, slot, 0, SlotActionType.PICKUP, mc.player);
-					mc.interactionManager.clickSlot(gui.getScreenHandler().syncId, 0, 0, SlotActionType.QUICK_MOVE, mc.player);
-					mc.player.inventory.selectedSlot = slot - 32;
-				}
-			}
-		}
+                //mc.playerController.windowClick(gui.inventorySlots.windowId, 0, 0, ClickType.QUICK_MOVE, mc.player);
+                if (pull) {
+                    //mc.interactionManager.method_2906(gui.getContainer().syncId, 0, 0, SlotActionType.PICKUP, mc.player);
+                    //mc.interactionManager.method_2906(gui.getContainer().syncId, slot, 0, SlotActionType.PICKUP, mc.player);
+                    mc.interactionManager.clickSlot(gui.getScreenHandler().syncId, 0, 0, SlotActionType.QUICK_MOVE, mc.player);
+                    mc.player.inventory.selectedSlot = slot - 32;
+                }
+            }
+        }
 
-		if (ticksPassed == 2) {
-			openBlock(pos.add(0, 1, 0));
-		}
+        if (ticksPassed == 2) {
+            openBlock(pos.add(0, 1, 0));
+        }
 
-		if (openedDispenser && dispenserTicks == 0) {
-			mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, 36 + shulker, 0, SlotActionType.QUICK_MOVE, mc.player);
-		}
+        if (openedDispenser && dispenserTicks == 0) {
+            mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, 36 + shulker, 0, SlotActionType.QUICK_MOVE, mc.player);
+        }
 
-		if (dispenserTicks == 1) {
-			mc.openScreen(null);
-			WorldUtils.placeBlock(pos.add(0, 2, 0), redstone, getSetting(0).asToggle().state, false);
-		}
+        if (dispenserTicks == 1) {
+            mc.openScreen(null);
+            WorldUtils.placeBlock(pos.add(0, 2, 0), redstone, getSetting(0).asToggle().state, false);
+        }
 
-		if (mc.world.getBlockState(pos.add(rot[0], 1, rot[1])).getBlock() instanceof ShulkerBoxBlock
-				&& mc.world.getBlockState(pos.add(rot[0], 0, rot[1])).getBlock() != Blocks.HOPPER) {
-			WorldUtils.placeBlock(pos.add(rot[0], 0, rot[1]), hopper, getSetting(0).asToggle().state, false);
-			openBlock(pos.add(rot[0], 0, rot[1]));
-		}
+        if (mc.world.getBlockState(pos.add(rot[0], 1, rot[1])).getBlock() instanceof ShulkerBoxBlock
+                && mc.world.getBlockState(pos.add(rot[0], 0, rot[1])).getBlock() != Blocks.HOPPER) {
+            WorldUtils.placeBlock(pos.add(rot[0], 0, rot[1]), hopper, getSetting(0).asToggle().state, false);
+            openBlock(pos.add(rot[0], 0, rot[1]));
+        }
 
-		if (openedDispenser) dispenserTicks++;
-		ticksPassed++;
-	}
+        if (openedDispenser) dispenserTicks++;
+        ticksPassed++;
+    }
 
-	private void killAura() {
-		for (int i = 0; i < (getSetting(3).asMode().mode == 1 ? getSetting(2).asSlider().getValue() : 1); i++) {
-			Entity target = null;
+    private void killAura() {
+        for (int i = 0; i < (getSetting(3).asMode().mode == 1 ? getSetting(2).asSlider().getValue() : 1); i++) {
+            Entity target = null;
 
-			List<Entity> players = Streams.stream(mc.world.getEntities())
-					.filter((e) -> e instanceof PlayerEntity && e != mc.player && !(MacHack.friendMang.has(e.getName().asString())))
-					.sorted((a, b) -> Double.compare(a.squaredDistanceTo(mc.player), b.squaredDistanceTo(mc.player)))
-					.collect(Collectors.toList());
+            List<Entity> players = Streams.stream(mc.world.getEntities())
+                    .filter((e) -> e instanceof PlayerEntity && e != mc.player && !(MacHack.friendMang.has(e.getName().asString())))
+                    .sorted((a, b) -> Double.compare(a.squaredDistanceTo(mc.player), b.squaredDistanceTo(mc.player)))
+                    .collect(Collectors.toList());
 
-			if (!players.isEmpty() && players.get(0).getPos().distanceTo(mc.player.getPos()) < 8) {
-				target = players.get(0);
-			} else {
-				return;
-			}
+            if (!players.isEmpty() && players.get(0).getPos().distanceTo(mc.player.getPos()) < 8) {
+                target = players.get(0);
+            } else {
+                return;
+            }
 
-			WorldUtils.facePos(target.getPos().x, target.getPos().y + 1, target.getPos().z);
+            WorldUtils.facePos(target.getPos().x, target.getPos().y + 1, target.getPos().z);
 
-			if (target.getPos().distanceTo(mc.player.getPos()) > 6) return;
-			mc.interactionManager.attackEntity(mc.player, target);
-		}
-	}
+            if (target.getPos().distanceTo(mc.player.getPos()) > 6) return;
+            mc.interactionManager.attackEntity(mc.player, target);
+        }
+    }
 
-	private void openBlock(BlockPos pos) {
-		for (Direction d : Direction.values()) {
-			Block neighborBlock = mc.world.getBlockState(pos.offset(d)).getBlock();
-			if (!WorldUtils.NONSOLID_BLOCKS.contains(neighborBlock)) continue;
+    private void openBlock(BlockPos pos) {
+        for (Direction d : Direction.values()) {
+            Block neighborBlock = mc.world.getBlockState(pos.offset(d)).getBlock();
+            if (!WorldUtils.NONSOLID_BLOCKS.contains(neighborBlock)) continue;
 
-			mc.interactionManager.interactBlock(
-					mc.player, mc.world, Hand.MAIN_HAND, new BlockHitResult(Vec3d.of(pos), d.getOpposite(), pos, false));
-			return;
-		}
-	}
+            mc.interactionManager.interactBlock(
+                    mc.player, mc.world, Hand.MAIN_HAND, new BlockHitResult(Vec3d.of(pos), d.getOpposite(), pos, false));
+            return;
+        }
+    }
 }

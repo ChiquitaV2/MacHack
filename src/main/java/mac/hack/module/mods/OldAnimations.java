@@ -1,11 +1,11 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.mixin.FirstPersonRendererAccessor;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.setting.base.SettingToggle;
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.item.Items;
 import net.minecraft.item.ToolItem;
 

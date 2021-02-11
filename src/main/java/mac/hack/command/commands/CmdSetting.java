@@ -18,50 +18,50 @@
 package mac.hack.command.commands;
 
 import mac.hack.command.Command;
+import mac.hack.module.Module;
+import mac.hack.module.ModuleManager;
 import mac.hack.setting.base.SettingBase;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
-import mac.hack.module.Module;
-import mac.hack.module.ModuleManager;
 import mac.hack.utils.MacLogger;
 
 public class CmdSetting extends Command {
 
-	@Override
-	public String getAlias() {
-		return "setting";
-	}
+    @Override
+    public String getAlias() {
+        return "setting";
+    }
 
-	@Override
-	public String getDescription() {
-		return "Changes a setting in a module";
-	}
+    @Override
+    public String getDescription() {
+        return "Changes a setting in a module";
+    }
 
-	@Override
-	public String getSyntax() {
-		return "setting [Module] [Setting number (starts at 0)] [value]";
-	}
+    @Override
+    public String getSyntax() {
+        return "setting [Module] [Setting number (starts at 0)] [value]";
+    }
 
-	@Override
-	public void onCommand(String command, String[] args) throws Exception {
-		if (args.length < 2) {
-			MacLogger.errorMessage(getSyntax());
-			return;
-		}
+    @Override
+    public void onCommand(String command, String[] args) throws Exception {
+        if (args.length < 2) {
+            MacLogger.errorMessage(getSyntax());
+            return;
+        }
 
-		Module m = ModuleManager.getModuleByName(args[0]);
-		SettingBase s = m.getSettings().get(Integer.parseInt(args[1]));
+        Module m = ModuleManager.getModuleByName(args[0]);
+        SettingBase s = m.getSettings().get(Integer.parseInt(args[1]));
 
-		if (s instanceof SettingSlider) s.asSlider().setValue(Double.parseDouble(args[2]));
-		else if (s instanceof SettingToggle) s.asToggle().state = Boolean.valueOf(args[2]);
-		else if (s instanceof SettingMode) s.asMode().mode = Integer.parseInt(args[2]);
-		else {
-			MacLogger.errorMessage("Invalid Command");
-			return;
-		}
+        if (s instanceof SettingSlider) s.asSlider().setValue(Double.parseDouble(args[2]));
+        else if (s instanceof SettingToggle) s.asToggle().state = Boolean.valueOf(args[2]);
+        else if (s instanceof SettingMode) s.asMode().mode = Integer.parseInt(args[2]);
+        else {
+            MacLogger.errorMessage("Invalid Command");
+            return;
+        }
 
-		MacLogger.infoMessage("Set Setting " + args[1] + " Of " + m.getName() + " To " + args[2]);
-	}
+        MacLogger.infoMessage("Set Setting " + args[1] + " Of " + m.getName() + " To " + args[2]);
+    }
 
 }

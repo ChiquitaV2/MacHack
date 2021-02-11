@@ -25,8 +25,8 @@ public class LoginScreen extends Screen {
     }
 
     public void init() {
-        userField = new TextFieldWidget(textRenderer, height/ 2 + 30, height / 4 + 15, 196, 18, LiteralText.EMPTY);
-        passField = new TextPassFieldWidget(textRenderer, height/ 2 + 30, height / 4 + 45, 196, 18, LiteralText.EMPTY);
+        userField = new TextFieldWidget(textRenderer, height / 2 + 30, height / 4 + 15, 196, 18, LiteralText.EMPTY);
+        passField = new TextPassFieldWidget(textRenderer, height / 2 + 30, height / 4 + 45, 196, 18, LiteralText.EMPTY);
         addButton(new ButtonWidget(width / 2 - 100, height / 2 + 50, 98, 20, new LiteralText("Exit"), button -> {
             client.openScreen(titleScreen);
         }));
@@ -62,6 +62,7 @@ public class LoginScreen extends Screen {
 
         return super.mouseClicked(double_1, double_2, int_1);
     }
+
     public boolean charTyped(char p_charTyped_1_, int p_charTyped_2_) {
         if (userField.isFocused()) userField.charTyped(p_charTyped_1_, p_charTyped_2_);
         if (passField.isFocused()) passField.charTyped(p_charTyped_1_, p_charTyped_2_);

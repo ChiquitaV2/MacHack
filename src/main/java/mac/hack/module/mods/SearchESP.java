@@ -1,5 +1,6 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventLoadChunk;
 import mac.hack.event.events.EventReadPacket;
 import mac.hack.event.events.EventUnloadChunk;
@@ -10,16 +11,12 @@ import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
 import mac.hack.utils.MacLogger;
 import mac.hack.utils.RenderUtils;
-import mac.hack.utils.file.MacFileHelper;
-import com.google.common.eventbus.Subscribe;
 import mac.hack.utils.file.MacFileMang;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
@@ -30,20 +27,17 @@ import org.lwjgl.opengl.GL11;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class SearchESP extends Module
-{
+public class SearchESP extends Module {
     private final HashMap<DimensionType, ArrayBlockingQueue<BlockPos>> blocks = new HashMap<DimensionType, ArrayBlockingQueue<BlockPos>>();
+    private final Stack<WorldChunk> chunkStack = new Stack<>(); // Lol stacks is so cool
+    private final Set<Block> highlightBlocks = new HashSet<>();
     // Man, race condition is killing me wtf
     public Vec3d prevPos;
     private double[] rPos;
-    private final Stack<WorldChunk> chunkStack = new Stack<>(); // Lol stacks is so cool
     private boolean running;
 
-    private final Set<Block> highlightBlocks = new HashSet<>();
 
-
-    public SearchESP()
-    {
+    public SearchESP() {
         super("SearchESP", KEY_UNBOUND, Category.RENDER, "ESP for blocks",
                 new SettingSlider("R: ", 0.0D, 255.0D, 115.0D, 0),
                 new SettingSlider("G: ", 0.0D, 255.0D, 0.0D, 0),
@@ -63,13 +57,12 @@ public class SearchESP extends Module
             blocks.put(d, new ArrayBlockingQueue<BlockPos>(65455));
             return shown(pos, d);
         }
-        for(BlockPos p : blocks.get(d)) {
+        for (BlockPos p : blocks.get(d)) {
             if (p.equals(pos))
                 return true;
         }
         return false;
     }
-
 
 
     private void chunkyBoi() {
@@ -98,7 +91,7 @@ public class SearchESP extends Module
     public void onPacket(EventReadPacket e) {
         if (!isToggled()) return;
         if (e.getPacket() instanceof ChunkDeltaUpdateS2CPacket) {
-            ChunkDeltaUpdateS2CPacket p = (ChunkDeltaUpdateS2CPacket)e.getPacket();
+            ChunkDeltaUpdateS2CPacket p = (ChunkDeltaUpdateS2CPacket) e.getPacket();
             p.visitUpdates((bp, bs) -> {
                 if (mc.player == null)
                     return;
@@ -164,8 +157,7 @@ public class SearchESP extends Module
         GL11.glPopMatrix();
     }
 
-    public void drawFilledBlockBox(BlockPos blockPos, float r, float g, float b, float a)
-    {
+    public void drawFilledBlockBox(BlockPos blockPos, float r, float g, float b, float a) {
 
         float or = (float) (this.getSettings().get(0).asSlider().getValue() / 255.0D);
         float og = (float) (this.getSettings().get(1).asSlider().getValue() / 255.0D);
@@ -179,7 +171,8 @@ public class SearchESP extends Module
                 ob,
                 1f);
     }
-    public void onDisable () {
+
+    public void onDisable() {
         blocks.clear();
     }
 

@@ -1,11 +1,11 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
+import com.google.gson.JsonParser;
 import mac.hack.event.events.EventEntityRender;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.module.ModuleManager;
-import com.google.common.eventbus.Subscribe;
-import com.google.gson.JsonParser;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.HorseBaseEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -21,14 +21,15 @@ import java.util.Objects;
 
 
 public class MobOwner extends Module {
-    public MobOwner(){
+    private final Map<String, String> cachedUUIDs = new HashMap<String, String>() {{
+    }};
+
+    public MobOwner() {
         super("MobOwner", KEY_UNBOUND, Category.RENDER, "Renders owner tags above entity.");
 
     }
-    private final Map<String, String> cachedUUIDs = new HashMap<String, String>() {{}};
 
-    public String getNameFromUUID(String uuid)
-    {
+    public String getNameFromUUID(String uuid) {
 
         uuid = uuid.replace("-", "");
         for (Map.Entry<String, String> entries : cachedUUIDs.entrySet()) {
@@ -38,11 +39,9 @@ public class MobOwner extends Module {
         }
         final String url = "https://api.mojang.com/user/profiles/" + uuid + "/names";
         System.out.println("Querying " + url + " for owner ID");
-        try
-        {
+        try {
             final String nameJson = IOUtils.toString(new URL(url), StandardCharsets.UTF_8);
-            if (nameJson != null && nameJson.length() > 0)
-            {
+            if (nameJson != null && nameJson.length() > 0) {
                 JsonParser parser = new JsonParser();
                 String name = parser.parse(nameJson).getAsJsonArray().get(parser.parse(nameJson).getAsJsonArray().size() - 1)
                         .getAsJsonObject().get("name").toString();
@@ -64,7 +63,7 @@ public class MobOwner extends Module {
 
     @Subscribe
     public void onLivingRender(EventEntityRender.Render event) {
-        if(mc.world == null){
+        if (mc.world == null) {
             return;
         }
         for (final Entity e : mc.world.getEntities()) {
@@ -93,6 +92,7 @@ public class MobOwner extends Module {
             }
         }
     }
+
     @Override
     public void onDisable() {
         super.onDisable();

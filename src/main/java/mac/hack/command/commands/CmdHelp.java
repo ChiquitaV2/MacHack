@@ -25,35 +25,38 @@ import net.minecraft.text.LiteralText;
 
 public class CmdHelp extends Command {
 
-	@Override
-	public String getAlias() {
-		return "help";
-	}
+    @Override
+    public String getAlias() {
+        return "help";
+    }
 
-	@Override
-	public String getDescription() {
-		return "Displays all the commands";
-	}
+    @Override
+    public String getDescription() {
+        return "Displays all the commands";
+    }
 
-	@Override
-	public String getSyntax() {
-		return "help | help [Command]";
-	}
+    @Override
+    public String getSyntax() {
+        return "help | help [Command]";
+    }
 
-	@Override
-	public void onCommand(String command, String[] args) throws Exception {
-		String cmd = null;
-		try { cmd = args[0]; } catch (Exception e) {}
+    @Override
+    public void onCommand(String command, String[] args) throws Exception {
+        String cmd = null;
+        try {
+            cmd = args[0];
+        } catch (Exception e) {
+        }
 
-		for (Command c: CommandManager.getCommands()) {
-			if (!cmd.isEmpty() && !cmd.equalsIgnoreCase(c.getAlias())) continue;
+        for (Command c : CommandManager.getCommands()) {
+            if (!cmd.isEmpty() && !cmd.equalsIgnoreCase(c.getAlias())) continue;
 
-			LiteralText text = new LiteralText("\u00a75" + Command.PREFIX + c.getAlias() + " ->\u00a7d " + c.getSyntax());
-			text.setStyle(text.getStyle().withHoverEvent(
-					new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText(
-							"\u00a7a" + Command.PREFIX + c.getAlias() + "\n\u00a75" + c.getSyntax() + "\n\u00a7d" + c.getDescription()))));
-			MacLogger.noPrefixMessage(text);
-		}
-	}
+            LiteralText text = new LiteralText("\u00a75" + Command.PREFIX + c.getAlias() + " ->\u00a7d " + c.getSyntax());
+            text.setStyle(text.getStyle().withHoverEvent(
+                    new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText(
+                            "\u00a7a" + Command.PREFIX + c.getAlias() + "\n\u00a75" + c.getSyntax() + "\n\u00a7d" + c.getDescription()))));
+            MacLogger.noPrefixMessage(text);
+        }
+    }
 
 }

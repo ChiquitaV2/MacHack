@@ -16,12 +16,12 @@ public class EventSkyColor extends Event {
         return tickDelta;
     }
 
-    public void setColor(float[] color) {
-        this.color = new Vec3d(color[0], color[1], color[2]);
-    }
-
     public Vec3d getColor() {
         return color;
+    }
+
+    public void setColor(float[] color) {
+        this.color = new Vec3d(color[0], color[1], color[2]);
     }
 
     public static class SkyColor extends EventSkyColor {

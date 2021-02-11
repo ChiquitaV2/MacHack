@@ -17,14 +17,12 @@
  */
 package mac.hack.module.mods;
 
-import mac.hack.event.events.EventTick;
 import com.google.common.eventbus.Subscribe;
+import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.setting.base.SettingSlider;
 import mac.hack.setting.base.SettingToggle;
-import org.lwjgl.glfw.GLFW;
-
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket.Action;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
@@ -33,17 +31,18 @@ import net.minecraft.util.math.Direction;
 
 public class OffhandCrash extends Module {
 
-	public OffhandCrash() {
-		super("OffhandCrash", KEY_UNBOUND, Category.EXPLOITS, "Lags people using the snowball exploit",
-				new SettingSlider("Switches: ", 0, 2000, 420, 0),
-				new SettingToggle("Player Packet", true));
-	}
+    public OffhandCrash() {
+        super("OffhandCrash", KEY_UNBOUND, Category.EXPLOITS, "Lags people using the snowball exploit",
+                new SettingSlider("Switches: ", 0, 2000, 420, 0),
+                new SettingToggle("Player Packet", true));
+    }
 
-	@Subscribe
-	public void onTick(EventTick event) {
-		for (int i = 0; i < getSettings().get(0).asSlider().getValue(); i++) {
-			mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.SWAP_ITEM_WITH_OFFHAND, BlockPos.ORIGIN, Direction.UP));
-			if (getSettings().get(1).asToggle().state) mc.player.networkHandler.sendPacket(new PlayerMoveC2SPacket(true));
-		}
-	}
+    @Subscribe
+    public void onTick(EventTick event) {
+        for (int i = 0; i < getSettings().get(0).asSlider().getValue(); i++) {
+            mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.SWAP_ITEM_WITH_OFFHAND, BlockPos.ORIGIN, Direction.UP));
+            if (getSettings().get(1).asToggle().state)
+                mc.player.networkHandler.sendPacket(new PlayerMoveC2SPacket(true));
+        }
+    }
 }

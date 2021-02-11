@@ -10,6 +10,7 @@ public interface IKeyBinding {
 
     @Accessor
     InputUtil.Key getBoundKey();
+
     @Accessor
     void setPressed(boolean pressed);
 

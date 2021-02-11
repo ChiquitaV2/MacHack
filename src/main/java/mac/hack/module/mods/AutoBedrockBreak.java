@@ -34,6 +34,7 @@ public class AutoBedrockBreak extends Module {
     BlockPos lookingCoords;
     BlockPos coords;
     String direction;
+
     // TODO: make player obstructing check && make sufficient blocks check
     public AutoBedrockBreak() {
         super("AutoBedrockBreak", KEY_UNBOUND, Category.EXPLOITS, "automatically breaks bedrock (IN DEVELOPMENT)",
@@ -58,9 +59,11 @@ public class AutoBedrockBreak extends Module {
             return;
         }
 
-        if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) {return;}
+        if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) {
+            return;
+        }
         lookingCoords = mc.crosshairTarget.getType() == HitResult.Type.BLOCK ? ((BlockHitResult) mc.crosshairTarget).getBlockPos() : null;
-        if(
+        if (
                 WorldUtils.isBlockEmpty(lookingCoords.up()) &&
                         WorldUtils.isBlockEmpty(lookingCoords.up(2)) &&
                         WorldUtils.isBlockEmpty(lookingCoords.up().east()) &&
@@ -103,7 +106,7 @@ public class AutoBedrockBreak extends Module {
             active = false;
             super.setToggled(false);
         }
-        switch(direction) {
+        switch (direction) {
             case "west":
                 coords = lookingCoords.north().east().up();
                 break;
@@ -128,7 +131,7 @@ public class AutoBedrockBreak extends Module {
         if (!enabled) return;
 
 
-        switch(this.getSetting(0).asMode().mode) {
+        switch (this.getSetting(0).asMode().mode) {
             case 0:
                 pistonType = Items.PISTON;
                 break;
@@ -138,18 +141,18 @@ public class AutoBedrockBreak extends Module {
         }
 
 
-        switch(direction) {
+        switch (direction) {
             case "west":
-                pistonPos = new BlockPos(coords.getX()-1, coords.getY(), coords.getZ()+1);
+                pistonPos = new BlockPos(coords.getX() - 1, coords.getY(), coords.getZ() + 1);
                 break;
             case "east":
-                pistonPos = new BlockPos(coords.getX()+1, coords.getY(), coords.getZ()-1);
+                pistonPos = new BlockPos(coords.getX() + 1, coords.getY(), coords.getZ() - 1);
                 break;
             case "north":
-                pistonPos = new BlockPos(coords.getX()-1, coords.getY(), coords.getZ()-1);
+                pistonPos = new BlockPos(coords.getX() - 1, coords.getY(), coords.getZ() - 1);
                 break;
             case "south":
-                pistonPos = new BlockPos(coords.getX()+1, coords.getY(), coords.getZ()+1);
+                pistonPos = new BlockPos(coords.getX() + 1, coords.getY(), coords.getZ() + 1);
                 break;
         }
         if (mc.world.getBlockState(pistonPos.down(1)).getBlock() != Blocks.BEDROCK && !active) {
@@ -161,7 +164,7 @@ public class AutoBedrockBreak extends Module {
         }
 
         if (ticksPassed == 1) {
-            switch(this.getSetting(2).asMode().mode) {
+            switch (this.getSetting(2).asMode().mode) {
                 case 0:
                     CrystalUtils.changeHotbarSlotToItem(Items.NETHERRACK);
                     break;
@@ -172,7 +175,7 @@ public class AutoBedrockBreak extends Module {
                     CrystalUtils.changeHotbarSlotToItem(Items.IRON_BLOCK);
                     break;
             }
-            switch(direction) {
+            switch (direction) {
                 case "west":
                     if (this.mc.world.getBlockState(lookingCoords.north()).getBlock() == Blocks.AIR) {
                         CrystalUtils.placeBlock(new Vec3d(lookingCoords.getX(), lookingCoords.getY(), lookingCoords.getZ()), Hand.MAIN_HAND, Direction.NORTH);
@@ -197,7 +200,7 @@ public class AutoBedrockBreak extends Module {
 
 
         if (ticksPassed == 2) {
-            switch(this.getSetting(2).asMode().mode) {
+            switch (this.getSetting(2).asMode().mode) {
                 case 0:
                     CrystalUtils.changeHotbarSlotToItem(Items.OBSIDIAN);
                     break;
@@ -209,23 +212,23 @@ public class AutoBedrockBreak extends Module {
                     break;
             }
             active = true;
-            switch(direction) {
+            switch (direction) {
                 case "west":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY()-1, coords.getZ()), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() - 1, coords.getY() - 1, coords.getZ()), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "east":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY()-1, coords.getZ()), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() + 1, coords.getY() - 1, coords.getZ()), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "north":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY()-1, coords.getZ()-1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY() - 1, coords.getZ() - 1), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "south":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY()-1, coords.getZ()+1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY() - 1, coords.getZ() + 1), Hand.MAIN_HAND, Direction.UP);
                     break;
             }
         }
         if (ticksPassed == 3) {
-            switch(this.getSetting(2).asMode().mode) {
+            switch (this.getSetting(2).asMode().mode) {
                 case 0:
                     CrystalUtils.changeHotbarSlotToItem(Items.NETHERRACK);
                     break;
@@ -236,102 +239,102 @@ public class AutoBedrockBreak extends Module {
                     CrystalUtils.changeHotbarSlotToItem(Items.IRON_BLOCK);
                     break;
             }
-            switch(direction) {
+            switch (direction) {
                 case "west":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY(), coords.getZ()), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() - 1, coords.getY(), coords.getZ()), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "east":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY(), coords.getZ()), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() + 1, coords.getY(), coords.getZ()), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "north":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY(), coords.getZ()-1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY(), coords.getZ() - 1), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "south":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY(), coords.getZ()+1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY(), coords.getZ() + 1), Hand.MAIN_HAND, Direction.UP);
                     break;
             }
         }
         if (ticksPassed == 4) {
             CrystalUtils.changeHotbarSlotToItem(Items.TNT);
-            switch(direction) {
+            switch (direction) {
                 case "west":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY(), coords.getZ()), Hand.MAIN_HAND, Direction.NORTH);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() - 1, coords.getY(), coords.getZ()), Hand.MAIN_HAND, Direction.NORTH);
                     break;
                 case "east":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY(), coords.getZ()), Hand.MAIN_HAND, Direction.SOUTH);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() + 1, coords.getY(), coords.getZ()), Hand.MAIN_HAND, Direction.SOUTH);
                     break;
                 case "north":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY(), coords.getZ()-1), Hand.MAIN_HAND, Direction.EAST);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY(), coords.getZ() - 1), Hand.MAIN_HAND, Direction.EAST);
                     break;
                 case "south":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY(), coords.getZ()+1), Hand.MAIN_HAND, Direction.WEST);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY(), coords.getZ() + 1), Hand.MAIN_HAND, Direction.WEST);
                     break;
             }
         }
         if (ticksPassed == 5) {
             CrystalUtils.changeHotbarSlotToItem(Items.LEVER);
-            switch(direction) {
+            switch (direction) {
                 case "west":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY()+1, coords.getZ()), Hand.MAIN_HAND, Direction.NORTH);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() - 1, coords.getY() + 1, coords.getZ()), Hand.MAIN_HAND, Direction.NORTH);
                     break;
                 case "east":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY()+1, coords.getZ()), Hand.MAIN_HAND, Direction.SOUTH);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() + 1, coords.getY() + 1, coords.getZ()), Hand.MAIN_HAND, Direction.SOUTH);
                     break;
                 case "north":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY()+1, coords.getZ()-1), Hand.MAIN_HAND, Direction.EAST);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY() + 1, coords.getZ() - 1), Hand.MAIN_HAND, Direction.EAST);
                     break;
                 case "south":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY()+1, coords.getZ()+1), Hand.MAIN_HAND, Direction.WEST);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX(), coords.getY() + 1, coords.getZ() + 1), Hand.MAIN_HAND, Direction.WEST);
                     break;
             }
         }
         if (ticksPassed == 6) {
             CrystalUtils.changeHotbarSlotToItem(pistonType);
-            switch(direction) {
+            switch (direction) {
                 case "west":
                     WorldUtils.facePosPacket(mc.player.getX(), mc.player.getY() - 2, mc.player.getZ());
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY()-1, coords.getZ()+1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() - 1, coords.getY() - 1, coords.getZ() + 1), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "east":
                     WorldUtils.facePosPacket(mc.player.getX(), mc.player.getY() - 2, mc.player.getZ());
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY()-1, coords.getZ()-1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() + 1, coords.getY() - 1, coords.getZ() - 1), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "north":
                     WorldUtils.facePosPacket(mc.player.getX(), mc.player.getY() - 2, mc.player.getZ());
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY()-1, coords.getZ()-1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() - 1, coords.getY() - 1, coords.getZ() - 1), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "south":
                     WorldUtils.facePosPacket(mc.player.getX(), mc.player.getY() - 2, mc.player.getZ());
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY()-1, coords.getZ()+1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() + 1, coords.getY() - 1, coords.getZ() + 1), Hand.MAIN_HAND, Direction.UP);
                     break;
             }
         }
         if (ticksPassed == 7) {
             CrystalUtils.changeHotbarSlotToItem(Items.TNT);
-            switch(direction) {
+            switch (direction) {
                 case "west":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY(), coords.getZ()+1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() - 1, coords.getY(), coords.getZ() + 1), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "east":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY(), coords.getZ()-1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() + 1, coords.getY(), coords.getZ() - 1), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "north":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY(), coords.getZ()-1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() - 1, coords.getY(), coords.getZ() - 1), Hand.MAIN_HAND, Direction.UP);
                     break;
                 case "south":
-                    CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY(), coords.getZ()+1), Hand.MAIN_HAND, Direction.UP);
+                    CrystalUtils.placeBlock(new Vec3d(coords.getX() + 1, coords.getY(), coords.getZ() + 1), Hand.MAIN_HAND, Direction.UP);
                     break;
             }
         }
         if (ticksPassed == 8) {
-            switch(direction) {
+            switch (direction) {
                 case "west":
                     mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN_HAND,
-                            new BlockHitResult(mc.player.getPos(), Direction.UP, new BlockPos(coords.getX()-1, coords.getY()+1, coords.getZ()-1), true));
+                            new BlockHitResult(mc.player.getPos(), Direction.UP, new BlockPos(coords.getX() - 1, coords.getY() + 1, coords.getZ() - 1), true));
                     break;
                 case "east":
                     mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN_HAND,
-                            new BlockHitResult(mc.player.getPos(), Direction.UP, new BlockPos(coords.getX()+1, coords.getY()+1, coords.getZ()+1), true));
+                            new BlockHitResult(mc.player.getPos(), Direction.UP, new BlockPos(coords.getX() + 1, coords.getY() + 1, coords.getZ() + 1), true));
                     break;
                 case "north":
                     mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN_HAND,
@@ -339,7 +342,7 @@ public class AutoBedrockBreak extends Module {
                     break;
                 case "south":
                     mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN_HAND,
-                            new BlockHitResult(mc.player.getPos(), Direction.UP, new BlockPos(coords.getX()-1, coords.getY()+1, coords.getZ()+1), true));
+                            new BlockHitResult(mc.player.getPos(), Direction.UP, new BlockPos(coords.getX() - 1, coords.getY() + 1, coords.getZ() + 1), true));
                     break;
             }
         }
@@ -356,26 +359,26 @@ public class AutoBedrockBreak extends Module {
             //}
             if (mc.world.getBlockState(pistonPos.down(1)).getBlock() == Blocks.BEDROCK) {
                 CrystalUtils.changeHotbarSlotToItem(pistonType);
-                switch(direction) {
+                switch (direction) {
                     case "west":
                         WorldUtils.facePosPacket(mc.player.getX(), mc.player.getY() + 2, mc.player.getZ());
-                        CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY(), coords.getZ()+1), Hand.MAIN_HAND, Direction.DOWN);
+                        CrystalUtils.placeBlock(new Vec3d(coords.getX() - 1, coords.getY(), coords.getZ() + 1), Hand.MAIN_HAND, Direction.DOWN);
                         break;
                     case "east":
                         WorldUtils.facePosPacket(mc.player.getX(), mc.player.getY() + 2, mc.player.getZ());
-                        CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY(), coords.getZ()-1), Hand.MAIN_HAND, Direction.DOWN);
+                        CrystalUtils.placeBlock(new Vec3d(coords.getX() + 1, coords.getY(), coords.getZ() - 1), Hand.MAIN_HAND, Direction.DOWN);
                         break;
                     case "north":
                         WorldUtils.facePosPacket(mc.player.getX(), mc.player.getY() + 2, mc.player.getZ());
-                        CrystalUtils.placeBlock(new Vec3d(coords.getX()-1, coords.getY(), coords.getZ()-1), Hand.MAIN_HAND, Direction.DOWN);
+                        CrystalUtils.placeBlock(new Vec3d(coords.getX() - 1, coords.getY(), coords.getZ() - 1), Hand.MAIN_HAND, Direction.DOWN);
                         break;
                     case "south":
                         WorldUtils.facePosPacket(mc.player.getX(), mc.player.getY() + 2, mc.player.getZ());
-                        CrystalUtils.placeBlock(new Vec3d(coords.getX()+1, coords.getY(), coords.getZ()+1), Hand.MAIN_HAND, Direction.DOWN);
+                        CrystalUtils.placeBlock(new Vec3d(coords.getX() + 1, coords.getY(), coords.getZ() + 1), Hand.MAIN_HAND, Direction.DOWN);
                         break;
                 }
                 if (getSetting(1).asToggle().state) {
-                    MacLogger.infoMessage("WAITING FOR PISTON TO BREAK! CURRENT BLOCKSTATE: "+mc.world.getBlockState(pistonPos).getBlock().toString());
+                    MacLogger.infoMessage("WAITING FOR PISTON TO BREAK! CURRENT BLOCKSTATE: " + mc.world.getBlockState(pistonPos).getBlock().toString());
                 }
             } else {
                 MacLogger.infoMessage("SUCCESSFULLY BROKE BEDROCK");
@@ -390,8 +393,8 @@ public class AutoBedrockBreak extends Module {
     @Subscribe
     public void onRender(EventWorldRender event) {
 
-        if(!active) return;
-        if(lookingCoords == null) return;
+        if (!active) return;
+        if (lookingCoords == null) return;
 
 
         GL11.glPushMatrix();
@@ -405,13 +408,11 @@ public class AutoBedrockBreak extends Module {
         float blue = (float) (System.currentTimeMillis() / 10L % 512L) / 255.0F;
         float red = (float) (System.currentTimeMillis() / 16L % 512L) / 255.0F;
 
-        if (blue > 1.0F)
-        {
+        if (blue > 1.0F) {
             blue = 1.0F - blue;
         }
 
-        if (red > 1.0F)
-        {
+        if (red > 1.0F) {
             red = 1.0F - red;
         }
 
@@ -424,8 +425,7 @@ public class AutoBedrockBreak extends Module {
         GL11.glPopMatrix();
     }
 
-    public void drawFilledBlockBox(BlockPos blockPos, float r, float g, float b, float a)
-    {
+    public void drawFilledBlockBox(BlockPos blockPos, float r, float g, float b, float a) {
         double x = (double) blockPos.getX();
         double y = (double) blockPos.getY();
         double z = (double) blockPos.getZ();

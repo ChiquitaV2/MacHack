@@ -1,11 +1,11 @@
 package mac.hack.module.mods;
 
+import com.google.common.eventbus.Subscribe;
 import mac.hack.event.events.EventTick;
 import mac.hack.module.Category;
 import mac.hack.module.Module;
 import mac.hack.setting.base.SettingMode;
 import mac.hack.setting.base.SettingSlider;
-import com.google.common.eventbus.Subscribe;
 
 public class Speed extends Module {
 
