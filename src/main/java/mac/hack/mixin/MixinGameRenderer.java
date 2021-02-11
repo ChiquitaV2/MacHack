@@ -3,12 +3,15 @@ package mac.hack.mixin;
 import mac.hack.MacHack;
 import mac.hack.event.events.EventWorldRender;
 import mac.hack.module.ModuleManager;
+import mac.hack.module.mods.LiquidInteract;
 import mac.hack.module.mods.NoRender;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -51,5 +54,16 @@ public class MixinGameRenderer {
             return MathHelper.lerp(delta, first, second);
 
         return 0;
+    }
+
+
+    @Redirect(method = "updateTargetedEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;raycast(DFZ)Lnet/minecraft/util/hit/HitResult;"))
+    private HitResult updateTargetedEntityEntityRayTraceProxy(Entity entity, double maxDistance, float tickDelta, boolean includeFluids) {
+        if (ModuleManager.getModule(LiquidInteract.class).isToggled()) {
+            HitResult result = entity.raycast(maxDistance, tickDelta, includeFluids);
+            if (result.getType() != HitResult.Type.MISS) return result;
+            return entity.raycast(maxDistance, tickDelta, true);
+        }
+        return entity.raycast(maxDistance, tickDelta, includeFluids);
     }
 }

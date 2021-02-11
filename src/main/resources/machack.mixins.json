@@ -42,6 +42,7 @@
     "MixinTextRenderer",
     "MixinSignBlockEntityRenderer",
     "MixinClientChunkManager",
+    "MixinTabList",
     "IKeyBinding"
   ],
   "injectors": {

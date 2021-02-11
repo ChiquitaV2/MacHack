@@ -145,6 +145,7 @@ public class ModuleManager {
             new Yaw(),
             new Zoom(),
             new HUD(),
+            new LiquidInteract(),
             new AutoBuilder(),
             new TargetHUD(),
             new SearchESP()
