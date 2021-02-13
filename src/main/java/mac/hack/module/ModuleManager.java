@@ -75,6 +75,7 @@ public class ModuleManager {
             new DiscordRPCMod(),
             new Dispenser32k(),
             new ElytraFly(),
+            new ElytraflyKami(),
             new EntityControl(),
             new ElytraReplace(),
             new ElytraSwap(),
