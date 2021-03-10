@@ -2,11 +2,11 @@
 [![discord](https://img.shields.io/badge/Discord-h8EQyuYTK7-9080c2)](https://discord.gg/h8EQyuYTK7)
 ![](https://img.shields.io/github/languages/code-size/ChiquitaV2/MacHack.svg)
 
-Very cool client made by Bleach and epearl 
+Very cool mac version of a client made by Bleach and epearl 
 
-This is designed for people who want to use BleachHack epearl edition
+This is designed for people who want to use BleachHack
 but can't because they are on mac or linux. Anyone should be able to use this no matter their OS.
-The only big difference between MacHack and MacHack+, is that MacHack+ has BA and gets modules faster but those modules will come to MacHack with time(like a day or two.) 
+
 
 Works on fabric 1.16.2/3/4
 
